@@ -57,28 +57,45 @@ Code for the FRC 1757 teaching platform robot
 | rear_right_encoder | sensors | 40 - 59 | 43 |
 
 ### Install robotpy
-1. Download modules from internet
+* **IMPORTANT: Perform ALL operations in a python virtualenv**
+#### Create virtualenv (if not previously done)
+Recommend placing the virtualenv in the `mentorbot` repo folder under `.venv` (to keep everything together) however the virtualenv is local to your system and should not be uploaded (ignored in `.gitignore`)
+```bash
+cd <path-to-mentorbot-repo>
+py -3 -m venv ./.venv
+```
+#### Workflow
+1. **Activate virtualenv**
+   (Virtualenv activation may differ depending on your operating system and terminal)
+   * Git Bash (Windows)
+     ```bash
+     source <path-to-mentorbot-repo>/.venv/Scripts/activate
+     ```
+1. **Install / update robotpy**
    (must have internet connection)
-1. ```bash
+   ```bash
    py -3 -m pip install -U robotpy
    ```
-1.
+   (examples: `robotpy`, `robotpy[ctre,navx]`, `robotpy[all]`) (see: [robotpy on pypi](https://pypi.org/project/robotpy/))
+1. **Download python for roboRIO**
+   (must have internet connection)
    ```bash
    py -3 -m robotpy_installer download-python
    ```
-1.
+1. **Download robotpy modules for roboRIO**
+   (must have internet connection)
    ```bash
    py -3 -m robotpy_installer download robotpy
    ```
    (examples: `robotpy`, `robotpy[ctre,navx]`, `robotpy[all]`) (see: [robotpy on pypi](https://pypi.org/project/robotpy/))
-1. Upload modules to roboRIO
+1. **Install python on roboRIO**
    (must be connected to roboRIO)
-1.
    ```bash
    py -3 -m robotpy_installer install-python
    ```
-1.
+1. **Upload robotpy modules to roboRIO**
+   (must be connected to roboRIO)
    ```bash
    py -3 -m robotpy_installer install robotpy
    ```
-   (examples: `robotpy`, `robotpy[ctre,navx]`, `robotpy[all]`)
+   (examples: `robotpy`, `robotpy[ctre,navx]`, `robotpy[all]`) (see: [robotpy on pypi](https://pypi.org/project/robotpy/))
