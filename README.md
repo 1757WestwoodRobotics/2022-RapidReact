@@ -47,14 +47,14 @@ Code for the FRC 1757 teaching platform robot
 | front_left_steer | motors | 10 - 29 | 11 |
 | front_right_drive | motors | 10 - 29 | 12 |
 | front_right_steer | motors | 10 - 29 | 13 |
-| rear_left_drive | motors | 10 - 29 | 14 |
-| rear_left_steer | motors | 10 - 29 | 15 |
-| rear_right_drive | motors | 10 - 29 | 16 |
-| rear_right_steer | motors | 10 - 29 | 17 |
+| back_left_drive | motors | 10 - 29 | 14 |
+| back_left_steer | motors | 10 - 29 | 15 |
+| back_right_drive | motors | 10 - 29 | 16 |
+| back_right_steer | motors | 10 - 29 | 17 |
 | front_left_encoder | sensors | 40 - 59 | 40 |
 | front_right_encoder | sensors | 40 - 59 | 41 |
-| rear_left_encoder | sensors | 40 - 59 | 42 |
-| rear_right_encoder | sensors | 40 - 59 | 43 |
+| back_left_encoder | sensors | 40 - 59 | 42 |
+| back_right_encoder | sensors | 40 - 59 | 43 |
 
 ### Install robotpy
 * **IMPORTANT: Perform ALL operations in a python virtualenv**
