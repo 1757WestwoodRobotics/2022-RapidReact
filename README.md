@@ -15,6 +15,9 @@ Code for the FRC 1757 teaching platform robot
 ### FRC Game Tools
 [FRC Game Tools](https://www.ni.com/en-us/support/downloads/drivers/download.frc-game-tools.html#369633)
 
+### FRC Radio Configuration Utility
+[FRC Configuration Utility](https://firstfrc.blob.core.windows.net/frc2020/Radio/FRC_Radio_Configuration_20_0_0.zip)
+
 ### CTRE Phoenix
 [Phoenix Tuner](https://github.com/CrossTheRoadElec/Phoenix-Releases/releases)
 
@@ -29,7 +32,7 @@ Code for the FRC 1757 teaching platform robot
    | Team number | `1757` |
    | Firmware | `6.0.0f1` |
    | Image | `FRC_roboRIO_2021_v3.0` |
-   | Static IP | `10.17.57.1` |
+   | Static IP | `10.17.57.2` |
    | Subnet Mask | `255.255.255.0` |
 
 ### Run Phoenix Tuner
@@ -56,6 +59,13 @@ Code for the FRC 1757 teaching platform robot
 | back_left_encoder | sensors | 40 - 59 | 42 |
 | back_right_encoder | sensors | 40 - 59 | 43 |
 
+#### Configure network devices
+| Device | IP Address | Subnet Mask |
+| - | - | - |
+| OpenMesh radio | `10.17.57.1` | `???.???.???.???` |
+| roboRIO | `10.17.57.2` | `255.255.255.000` |
+| Driver Station (laptop) | `10.17.57.5` | `255.000.000.000` |
+
 ### Install robotpy
 * **IMPORTANT: Perform ALL operations in a python virtualenv**
 #### Create virtualenv (if not previously done)
@@ -74,28 +84,37 @@ py -3 -m venv ./.venv
 1. **Install / update robotpy**
    (must have internet connection)
    ```bash
-   py -3 -m pip install -U robotpy
+   python -m pip install -U robotpy
    ```
    (examples: `robotpy`, `robotpy[ctre,navx]`, `robotpy[all]`) (see: [robotpy on pypi](https://pypi.org/project/robotpy/))
 1. **Download python for roboRIO**
    (must have internet connection)
    ```bash
-   py -3 -m robotpy_installer download-python
+   python -m robotpy_installer download-python
    ```
 1. **Download robotpy modules for roboRIO**
    (must have internet connection)
    ```bash
-   py -3 -m robotpy_installer download robotpy
+   python -m robotpy_installer download robotpy
    ```
    (examples: `robotpy`, `robotpy[ctre,navx]`, `robotpy[all]`) (see: [robotpy on pypi](https://pypi.org/project/robotpy/))
 1. **Install python on roboRIO**
    (must be connected to roboRIO)
    ```bash
-   py -3 -m robotpy_installer install-python
+   python -m robotpy_installer install-python
    ```
 1. **Upload robotpy modules to roboRIO**
    (must be connected to roboRIO)
    ```bash
-   py -3 -m robotpy_installer install robotpy
+   python -m robotpy_installer install robotpy
    ```
    (examples: `robotpy`, `robotpy[ctre,navx]`, `robotpy[all]`) (see: [robotpy on pypi](https://pypi.org/project/robotpy/))
+
+
+# Build Notes
+## Electronics
+1. Benchtop 12V power supply (battery replacement)
+1. 3D printed enclosures for electronics to protect devices / prevent shorts / easier mounting
+### Radio
+1. Make sure the radio is not buried inside the bot (wireless signal issues)
+1. Make sure the radio is able to be removed easily from the bot (needs to be programed at the kiosk during competion)
