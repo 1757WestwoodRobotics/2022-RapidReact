@@ -4,6 +4,15 @@
 #
 
 import math
+from pyfrc.physics.units import units
+
+# Physical parameters
+kDriveTrainMotorsPerSide = 2
+kTrackWidth = (30 * units.inches).to(units.meter).magnitude
+kWheelDiameter = (6 * units.inches).to(units.meter).magnitude
+kWheelRadius = kWheelDiameter / 2
+kWheelCircumference = (kWheelDiameter * math.pi)
+kGearingRatio = 8
 
 # Motors
 kLeftMotor1Port = 0
@@ -17,23 +26,15 @@ kRightEncoderPorts = (2, 3)
 kLeftEncoderReversed = False
 kRightEncoderReversed = True
 
-kEncoderCPR = 1024
-kWheelDiameterInches = 6
+kEncoderPulsesPerRevolution = 1024
 # Assumes the encoders are directly mounted on the wheel shafts
-kEncoderDistancePerPulse = (kWheelDiameterInches * math.pi) / kEncoderCPR
+kEncoderDistancePerPulse = kWheelCircumference / kEncoderPulsesPerRevolution
 
 # Autonomous
-kAutoDriveDistanceInches = 60
-kAutoBackupDistanceInches = 20
-kAutoDriveSpeed = 0.5
+kAutoDriveDistance = 3 * kEncoderPulsesPerRevolution * \
+    kEncoderDistancePerPulse  # three wheel revolutions
+kAutoBackupDistance = (20 * units.inches).to(units.meter).magnitude
+kAutoDriveSpeedFactor = 0.5
 
 # Operator Interface
 kDriverControllerPort = 0
-
-# Physical parameters
-kDriveTrainMotorCount = 2
-kTrackWidth = 0.381 * 2
-kGearingRatio = 8
-kWheelRadius = 0.0508
-
-# kEncoderResolution = -

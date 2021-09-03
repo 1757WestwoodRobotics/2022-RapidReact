@@ -36,7 +36,7 @@ class RobotContainer:
 
         # A simple auto routine that drives forward a specified distance, and then stops.
         self.simpleAuto = DriveDistance(
-            constants.kAutoDriveDistanceInches, constants.kAutoDriveSpeed, self.drive
+            constants.kAutoDriveDistance, constants.kAutoDriveSpeedFactor, self.drive
         )
 
         # A complex auto routine that drives forward, and then drives backward.

@@ -33,28 +33,32 @@ class DriveSubsystem(commands2.SubsystemBase):
         )
 
         # Sets the distance per pulse for the encoders
-        self.leftEncoder.setDistancePerPulse(constants.kEncoderDistancePerPulse)
-        self.rightEncoder.setDistancePerPulse(constants.kEncoderDistancePerPulse)
+        self.leftEncoder.setDistancePerPulse(
+            constants.kEncoderDistancePerPulse)
+        self.rightEncoder.setDistancePerPulse(
+            constants.kEncoderDistancePerPulse)
 
-    def arcadeDrive(self, fwd: float, rot: float) -> None:
+    def arcadeDrive(self, forwardSpeedFactor: float, rotationSpeedFactor: float) -> None:
         """
         Drives the robot using arcade controls.
 
-        :param fwd: the commanded forward movement
-        :param rot: the commanded rotation
+        :param forwardSpeedFactor: the commanded forward movement
+        :param rotationSpeedFactor: the commanded rotation
         """
-        self.drive.arcadeDrive(fwd, rot)
+        self.drive.arcadeDrive(forwardSpeedFactor, rotationSpeedFactor)
 
     def resetEncoders(self) -> None:
         """Resets the drive encoders to currently read a position of 0."""
+        self.leftEncoder.reset()
+        self.rightEncoder.reset()
 
     def getAverageEncoderDistance(self) -> float:
         """Gets the average distance of the TWO encoders."""
         return (self.leftEncoder.getDistance() + self.rightEncoder.getDistance()) / 2.0
 
-    def setMaxOutput(self, maxOutput: float):
+    def setMaxOutput(self, maxOutputFactor: float):
         """
         Sets the max output of the drive. Useful for scaling the
         drive to drive more slowly.
         """
-        self.drive.setMaxOutput(maxOutput)
+        self.drive.setMaxOutput(maxOutputFactor)

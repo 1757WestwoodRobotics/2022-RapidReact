@@ -16,10 +16,10 @@ class ComplexAuto(commands2.SequentialCommandGroup):
         super().__init__(
             # Drive forward the specified distance
             DriveDistance(
-                constants.kAutoDriveDistanceInches, constants.kAutoDriveSpeed, drive
+                constants.kAutoDriveDistance, constants.kAutoDriveSpeedFactor, drive
             ),
             # Drive backward the specified distance
             DriveDistance(
-                constants.kAutoBackupDistanceInches, -constants.kAutoDriveSpeed, drive
+                constants.kAutoBackupDistance, -constants.kAutoDriveSpeedFactor, drive
             ),
         )

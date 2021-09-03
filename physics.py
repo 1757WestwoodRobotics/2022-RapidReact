@@ -21,9 +21,7 @@ from pyfrc.physics.core import PhysicsInterface
 
 class PhysicsEngine:
     """
-    Simulates a motor moving something that strikes two limit switches,
-    one on each end of the track. Obviously, this is not particularly
-    realistic, but it's good enough to illustrate the point
+    Simulates a drivetrain
     """
 
     def __init__(self, physics_controller: PhysicsInterface):
@@ -31,14 +29,15 @@ class PhysicsEngine:
         self.physics_controller = physics_controller
 
         # Motors
-        self.l_motor = wpilib.simulation.PWMSim(1)
-        self.r_motor = wpilib.simulation.PWMSim(2)
+        self.l_motor = wpilib.simulation.PWMSim(constants.kLeftMotor1Port)
+        self.r_motor = wpilib.simulation.PWMSim(constants.kRightMotor1Port)
 
-        self.system = LinearSystemId.identifyDrivetrainSystem(1.98, 0.2, 1.5, 0.3)
+        self.system = LinearSystemId.identifyDrivetrainSystem(
+            1.98, 0.2, 1.5, 0.3)
         self.drivesim = wpilib.simulation.DifferentialDrivetrainSim(
             self.system,
             constants.kTrackWidth,
-            DCMotor.CIM(constants.kDriveTrainMotorCount),
+            DCMotor.falcon500(constants.kDriveTrainMotorsPerSide),
             constants.kGearingRatio,
             constants.kWheelRadius,
         )
@@ -46,9 +45,12 @@ class PhysicsEngine:
         self.leftEncoderSim = wpilib.simulation.EncoderSim.createForChannel(
             constants.kLeftEncoderPorts[0]
         )
+        self.leftEncoderSimOffset = 0
+
         self.rightEncoderSim = wpilib.simulation.EncoderSim.createForChannel(
             constants.kRightEncoderPorts[0]
         )
+        self.rightEncoderSimOffset = 0
 
     def update_sim(self, now: float, tm_diff: float) -> None:
         """
@@ -60,6 +62,13 @@ class PhysicsEngine:
                         time that this function was called
         """
 
+        # Handle encoder reset
+        # TODO: investigate why self.leftEncoderSim.registerResetCallback() leads to a crash when the callback is called
+        if self.leftEncoderSim.getReset():
+            self.leftEncoderSimOffset = self.drivesim.getLeftPosition()
+        if self.rightEncoderSim.getReset():
+            self.rightEncoderSimOffset = self.drivesim.getRightPosition()
+
         # Simulate the drivetrain
         l_motor = self.l_motor.getSpeed()
         r_motor = self.r_motor.getSpeed()
@@ -68,9 +77,11 @@ class PhysicsEngine:
         self.drivesim.setInputs(l_motor * voltage, -r_motor * voltage)
         self.drivesim.update(tm_diff)
 
-        self.leftEncoderSim.setDistance(self.drivesim.getLeftPosition() * 39.37)
-        self.leftEncoderSim.setRate(self.drivesim.getLeftVelocity() * 39.37)
-        self.rightEncoderSim.setDistance(self.drivesim.getRightPosition() * 39.37)
-        self.rightEncoderSim.setRate(self.drivesim.getRightVelocity() * 39.37)
+        self.leftEncoderSim.setDistance(
+            self.drivesim.getLeftPosition() - self.leftEncoderSimOffset)
+        self.leftEncoderSim.setRate(self.drivesim.getLeftVelocity())
+        self.rightEncoderSim.setDistance(
+            self.drivesim.getRightPosition() - self.rightEncoderSimOffset)
+        self.rightEncoderSim.setRate(self.drivesim.getRightVelocity())
 
         self.physics_controller.field.setRobotPose(self.drivesim.getPose())
