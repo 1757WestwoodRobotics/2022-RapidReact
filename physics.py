@@ -29,8 +29,10 @@ class PhysicsEngine:
         self.physics_controller = physics_controller
 
         # Motors
-        self.l_motor = wpilib.simulation.PWMSim(constants.kLeftMotor1Port)
-        self.r_motor = wpilib.simulation.PWMSim(constants.kRightMotor1Port)
+        self.frontLeftMotorSim = wpilib.simulation.PWMSim(
+            constants.kFrontLeftMotorPort)
+        self.frontRightMotorSim = wpilib.simulation.PWMSim(
+            constants.kFrontRightMotorPort)
 
         self.system = LinearSystemId.identifyDrivetrainSystem(
             1.98, 0.2, 1.5, 0.3)
@@ -52,6 +54,8 @@ class PhysicsEngine:
         )
         self.rightEncoderSimOffset = 0
 
+        self.gyro = wpilib.simulation.ADXRS450_GyroSim(wpilib.ADXRS450_Gyro())
+
     def update_sim(self, now: float, tm_diff: float) -> None:
         """
         Called when the simulation parameters for the program need to be
@@ -69,12 +73,15 @@ class PhysicsEngine:
         if self.rightEncoderSim.getReset():
             self.rightEncoderSimOffset = self.drivesim.getRightPosition()
 
+        self.gyro.setAngle(-self.drivesim.getHeading().degrees())
+
         # Simulate the drivetrain
-        l_motor = self.l_motor.getSpeed()
-        r_motor = self.r_motor.getSpeed()
+        frontLeftMotorSim = self.frontLeftMotorSim.getSpeed()
+        frontRightMotorSim = self.frontRightMotorSim.getSpeed()
 
         voltage = wpilib.RobotController.getInputVoltage()
-        self.drivesim.setInputs(l_motor * voltage, -r_motor * voltage)
+        self.drivesim.setInputs(
+            frontLeftMotorSim * voltage, -frontRightMotorSim * voltage)
         self.drivesim.update(tm_diff)
 
         self.leftEncoderSim.setDistance(

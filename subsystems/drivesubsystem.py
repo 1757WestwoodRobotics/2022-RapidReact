@@ -1,6 +1,7 @@
 import commands2
 import wpilib
 import wpilib.drive
+import wpimath.kinematics
 
 import constants
 
@@ -9,15 +10,21 @@ class DriveSubsystem(commands2.SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
 
-        self.left1 = wpilib.PWMVictorSPX(constants.kLeftMotor1Port)
-        self.left2 = wpilib.PWMVictorSPX(constants.kLeftMotor2Port)
-        self.right1 = wpilib.PWMVictorSPX(constants.kRightMotor1Port)
-        self.right2 = wpilib.PWMVictorSPX(constants.kRightMotor2Port)
+        self.frontLeftMotor = wpilib.PWMVictorSPX(
+            constants.kFrontLeftMotorPort)
+        self.backLeftMotor = wpilib.PWMVictorSPX(
+            constants.kBackLeftMotorPort)
+        self.frontRightMotor = wpilib.PWMVictorSPX(
+            constants.kFrontRightMotorPort)
+        self.backRightMotor = wpilib.PWMVictorSPX(
+            constants.kBackRightMotorPort)
 
         # The robot's drive
         self.drive = wpilib.drive.DifferentialDrive(
-            wpilib.SpeedControllerGroup(self.left1, self.left2),
-            wpilib.SpeedControllerGroup(self.right1, self.right2),
+            wpilib.SpeedControllerGroup(
+                self.frontLeftMotor, self.backLeftMotor),
+            wpilib.SpeedControllerGroup(
+                self.frontRightMotor, self.backRightMotor),
         )
 
         # The left-side drive encoder
@@ -38,6 +45,26 @@ class DriveSubsystem(commands2.SubsystemBase):
         self.rightEncoder.setDistancePerPulse(
             constants.kEncoderDistancePerPulse)
 
+        # Create the gyro, a sensor which can indicate the heading of the robot relative
+        # to a customizable position.
+        self.gyro = wpilib.ADXRS450_Gyro()
+
+        # Create the an object for our odometry, which will utilize sensor data to
+        # keep a record of our position on the field.
+        self.odometry = wpimath.kinematics.DifferentialDriveOdometry(
+            self.gyro.getRotation2d())
+
+    def periodic(self):
+        """
+        Called periodically when it can be called. Updates the robot's
+        odometry with sensor data.
+        """
+        self.odometry.update(
+            self.gyro.getRotation2d(),
+            self.leftEncoder.getDistance(),
+            self.rightEncoder.getDistance(),
+        )
+
     def arcadeDrive(self, forwardSpeedFactor: float, rotationSpeedFactor: float) -> None:
         """
         Drives the robot using arcade controls.
@@ -52,9 +79,10 @@ class DriveSubsystem(commands2.SubsystemBase):
         self.leftEncoder.reset()
         self.rightEncoder.reset()
 
-    def getAverageEncoderDistance(self) -> float:
-        """Gets the average distance of the TWO encoders."""
-        return (self.leftEncoder.getDistance() + self.rightEncoder.getDistance()) / 2.0
+    def resetOdometry(self, pose):
+        """ Resets the robot's odometry to a given position."""
+        self.resetEncoders()
+        self.odometry.resetPosition(pose, self.gyro.getRotation2d())
 
     def setMaxOutput(self, maxOutputFactor: float):
         """

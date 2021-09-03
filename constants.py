@@ -15,10 +15,10 @@ kWheelCircumference = (kWheelDiameter * math.pi)
 kGearingRatio = 8
 
 # Motors
-kLeftMotor1Port = 0
-kLeftMotor2Port = 1
-kRightMotor1Port = 2
-kRightMotor2Port = 3
+kFrontLeftMotorPort = 0
+kBackLeftMotorPort = 1
+kFrontRightMotorPort = 2
+kBackRightMotorPort = 3
 
 # Encoders
 kLeftEncoderPorts = (0, 1)
@@ -34,6 +34,7 @@ kEncoderDistancePerPulse = kWheelCircumference / kEncoderPulsesPerRevolution
 kAutoDriveDistance = 3 * kEncoderPulsesPerRevolution * \
     kEncoderDistancePerPulse  # three wheel revolutions
 kAutoBackupDistance = (20 * units.inches).to(units.meter).magnitude
+kAutoDistanceThreshold = (6 * units.inches).to(units.meter).magnitude
 kAutoDriveSpeedFactor = 0.5
 
 # Operator Interface
