@@ -58,8 +58,11 @@ class RobotContainer:
         self.drive.setDefaultCommand(
             DefaultDrive(
                 self.drive,
-                lambda: -self.driverController.getY(GenericHID.Hand.kLeftHand),
+                lambda: -1 *
+                self.driverController.getY(GenericHID.Hand.kLeftHand),
                 lambda: self.driverController.getX(GenericHID.Hand.kLeftHand),
+                lambda: -1 *
+                self.driverController.getX(GenericHID.Hand.kRightHand),
             )
         )
 

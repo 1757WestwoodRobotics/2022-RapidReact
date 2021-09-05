@@ -11,6 +11,9 @@ class DriveSubsystem(commands2.SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
 
+        self.kinematics = wpimath.kinematics.DifferentialDriveKinematics(
+            constants.kTrackWidth.to(units.meters).magnitude)
+
         self.frontLeftMotor = wpilib.PWMVictorSPX(
             constants.kFrontLeftMotorPort)
         self.backLeftMotor = wpilib.PWMVictorSPX(
@@ -21,12 +24,13 @@ class DriveSubsystem(commands2.SubsystemBase):
             constants.kBackRightMotorPort)
 
         # The robot's drive
-        self.drive = wpilib.drive.DifferentialDrive(
-            wpilib.SpeedControllerGroup(
-                self.frontLeftMotor, self.backLeftMotor),
-            wpilib.SpeedControllerGroup(
-                self.frontRightMotor, self.backRightMotor),
-        )
+        self.leftMotors = wpilib.SpeedControllerGroup(
+            self.frontLeftMotor, self.backLeftMotor)
+        self.rightMotors = wpilib.SpeedControllerGroup(
+            self.frontRightMotor, self.backRightMotor)
+
+        self.leftMotors.setInverted(constants.kInvertLeftMotors)
+        self.rightMotors.setInverted(constants.kInvertRightMotors)
 
         # The left-side drive encoder
         self.leftEncoder = wpilib.Encoder(
@@ -66,14 +70,33 @@ class DriveSubsystem(commands2.SubsystemBase):
             self.rightEncoder.getDistance(),
         )
 
-    def arcadeDrive(self, forwardSpeedFactor: float, rotationSpeedFactor: float) -> None:
+    def arcadeDriveWithFactors(self, forwardSpeedFactor: float, sidewaysSpeedFactor: float, rotationSpeedFactor: float) -> None:
         """
         Drives the robot using arcade controls.
 
         :param forwardSpeedFactor: the commanded forward movement
+        :param sidewaysSpeedFactor: the commanded sideways movement
         :param rotationSpeedFactor: the commanded rotation
         """
-        self.drive.arcadeDrive(forwardSpeedFactor, rotationSpeedFactor)
+
+        chassisSpeeds = wpimath.kinematics.ChassisSpeeds(
+            (forwardSpeedFactor * constants.kMaxForwardSpeed).to(units.meters /
+                                                                 units.second).magnitude,
+            (sidewaysSpeedFactor * constants.kMaxSidewaysSpeed).to(units.meters /
+                                                                   units.second).magnitude,
+            (rotationSpeedFactor * constants.kMaxRotationAngularSpeed).to(units.radians / units.second).magnitude)
+
+        self.arcadeDriveWithSpeeds(chassisSpeeds)
+
+    def arcadeDriveWithSpeeds(self, chassisSpeeds: wpimath.kinematics.ChassisSpeeds) -> None:
+        wheelSpeeds = self.kinematics.toWheelSpeeds(chassisSpeeds)
+        wheelSpeeds.normalize(constants.kMaxWheelSpeed.to(
+            units.meters / units.second).magnitude)
+        # TODO: wheel speeds as input to PID loop
+        self.leftMotors.set(
+            wheelSpeeds.left / constants.kMaxWheelSpeed.to(units.meters / units.second).magnitude)
+        self.rightMotors.set(
+            wheelSpeeds.right / constants.kMaxWheelSpeed.to(units.meters / units.second).magnitude)
 
     def resetEncoders(self) -> None:
         """Resets the drive encoders to currently read a position of 0."""

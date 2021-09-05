@@ -26,10 +26,10 @@ class DriveDistance(commands2.CommandBase):
 
     def execute(self) -> None:
         self.updateDistanceToTarget()
-        self.drive.arcadeDrive(self.speedFactor, 0)
+        self.drive.arcadeDriveWithFactors(self.speedFactor, 0, 0)
 
     def end(self, interrupted: bool) -> None:
-        self.drive.arcadeDrive(0, 0)
+        self.drive.arcadeDriveWithFactors(0, 0, 0)
 
     def isFinished(self) -> bool:
         return self.distanceToTarget < constants.kAutoDistanceThreshold

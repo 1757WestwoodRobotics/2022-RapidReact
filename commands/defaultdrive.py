@@ -8,15 +8,18 @@ class DefaultDrive(commands2.CommandBase):
         self,
         drive: DriveSubsystem,
         forward: typing.Callable[[], float],
+        sideways: typing.Callable[[], float],
         rotation: typing.Callable[[], float],
     ) -> None:
         super().__init__()
 
         self.drive = drive
         self.forward = forward
+        self.sideways = sideways
         self.rotation = rotation
 
         self.addRequirements([self.drive])
 
     def execute(self) -> None:
-        self.drive.arcadeDrive(self.forward(), self.rotation())
+        self.drive.arcadeDriveWithFactors(
+            self.forward(), self.sideways(), self.rotation())
