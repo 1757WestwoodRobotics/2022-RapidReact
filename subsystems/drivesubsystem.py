@@ -2,6 +2,7 @@ import commands2
 import wpilib
 import wpilib.drive
 import wpimath.kinematics
+from pyfrc.physics.units import units
 
 import constants
 
@@ -41,9 +42,9 @@ class DriveSubsystem(commands2.SubsystemBase):
 
         # Sets the distance per pulse for the encoders
         self.leftEncoder.setDistancePerPulse(
-            constants.kEncoderDistancePerPulse)
+            constants.kEncoderDistancePerPulse.to(units.meters / units.count).magnitude)
         self.rightEncoder.setDistancePerPulse(
-            constants.kEncoderDistancePerPulse)
+            constants.kEncoderDistancePerPulse.to(units.meters / units.count).magnitude)
 
         # Create the gyro, a sensor which can indicate the heading of the robot relative
         # to a customizable position.

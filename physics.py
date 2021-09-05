@@ -17,6 +17,7 @@ from wpimath.system.plant import DCMotor
 import constants
 
 from pyfrc.physics.core import PhysicsInterface
+from pyfrc.physics.units import units
 
 
 class PhysicsEngine:
@@ -38,10 +39,10 @@ class PhysicsEngine:
             1.98, 0.2, 1.5, 0.3)
         self.drivesim = wpilib.simulation.DifferentialDrivetrainSim(
             self.system,
-            constants.kTrackWidth,
+            constants.kTrackWidth.to(units.meters).magnitude,
             DCMotor.falcon500(constants.kDriveTrainMotorsPerSide),
             constants.kGearingRatio,
-            constants.kWheelRadius,
+            constants.kWheelRadius.to(units.meters).magnitude,
         )
 
         self.leftEncoderSim = wpilib.simulation.EncoderSim.createForChannel(
