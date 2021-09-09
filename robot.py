@@ -7,7 +7,7 @@ import commands2
 from robotcontainer import RobotContainer
 
 
-class MyRobot(commands2.TimedCommandRobot):
+class MentorBot(commands2.TimedCommandRobot):
     """
     Our default robot class, pass it to wpilib.run
 
@@ -60,4 +60,4 @@ class MyRobot(commands2.TimedCommandRobot):
 
 
 if __name__ == "__main__":
-    wpilib.run(MyRobot)
+    wpilib.run(MentorBot)

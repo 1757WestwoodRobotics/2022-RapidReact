@@ -9,9 +9,10 @@ import constants
 from commands.complexauto import ComplexAuto
 from commands.drivedistance import DriveDistance
 from commands.defaultdrive import DefaultDrive
-from commands.halvedrivespeed import HalveDriveSpeed
 
 from subsystems.drivesubsystem import DriveSubsystem
+
+from units import units
 
 
 class RobotContainer:
@@ -26,8 +27,10 @@ class RobotContainer:
 
         # The driver's controller
         # self.driverController = wpilib.XboxController(constants.kDriverControllerPort)
-        self.driverController = wpilib.Joystick(
-            constants.kDriverControllerPort)
+        self.translationController = wpilib.Joystick(
+            constants.kTranslationControllerPort
+        )
+        self.rotationController = wpilib.Joystick(constants.kRotationControllerPort)
 
         # The robot's subsystems
         self.drive = DriveSubsystem()
@@ -36,10 +39,13 @@ class RobotContainer:
 
         # A simple auto routine that drives forward a specified distance, and then stops.
         self.simpleAuto = DriveDistance(
-            constants.kAutoDriveDistance, constants.kAutoDriveSpeedFactor, self.drive
+            constants.kAutoDriveDistance.to(units.meters),
+            constants.kAutoDriveSpeedFactor,
+            DriveDistance.Axis.X,
+            self.drive,
         )
 
-        # A complex auto routine that drives forward, and then drives backward.
+        # A complex auto routine that drives forward, right, back, left
         self.complexAuto = ComplexAuto(self.drive)
 
         # Chooser
@@ -58,11 +64,9 @@ class RobotContainer:
         self.drive.setDefaultCommand(
             DefaultDrive(
                 self.drive,
-                lambda: -1 *
-                self.driverController.getY(GenericHID.Hand.kLeftHand),
-                lambda: self.driverController.getX(GenericHID.Hand.kLeftHand),
-                lambda: -1 *
-                self.driverController.getX(GenericHID.Hand.kRightHand),
+                lambda: -1 * self.translationController.getY(GenericHID.Hand.kLeftHand),
+                lambda: -1 * self.translationController.getX(GenericHID.Hand.kLeftHand),
+                lambda: -1 * self.rotationController.getX(GenericHID.Hand.kRightHand),
             )
         )
 
@@ -72,10 +76,6 @@ class RobotContainer:
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
         and then passing it to a JoystickButton.
         """
-
-        commands2.button.JoystickButton(self.driverController, 3).whenHeld(
-            HalveDriveSpeed(self.drive)
-        )
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()

@@ -5,49 +5,93 @@
 #
 
 import math
+from wpimath.geometry import Translation2d
 from wpimath.system.plant import DCMotor
-from pyfrc.physics.units import units
+from units import units
 
 # Physical parameters
-kDriveTrainMotorsPerSide = 2
-kTrackWidth = 30 * units.inches
-kWheelDiameter = 6 * units.inches
+kSwerveModuleCenterToCenterSideDistance = 21.5 * units.inches
+kHalfSwerveModuleCenterToCenterSideDistance = (
+    kSwerveModuleCenterToCenterSideDistance / 2
+)
+kSwerveModuleDistanceFromRobotCenter = pow(
+    pow(kHalfSwerveModuleCenterToCenterSideDistance, 2)
+    + pow(kHalfSwerveModuleCenterToCenterSideDistance, 2),
+    0.5,
+)  # c = (a^2 + b^2) ^ 0.5
+
+# +x forward, +y right
+kFrontLeftWheelPosition = Translation2d(
+    kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
+    -1 * kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
+)
+kFrontRightWheelPosition = Translation2d(
+    kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
+    kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
+)
+kBackLeftWheelPosition = Translation2d(
+    -1 * kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
+    -1 * kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
+)
+kBackRightWheelPosition = Translation2d(
+    -1 * kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
+    kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
+)
+
+kWheelDiameter = 4 * units.inches
 kWheelRadius = kWheelDiameter / 2
 kWheelCircumference = kWheelDiameter * math.pi
 kWheelDistancePerRevolution = kWheelCircumference / units.revolution
-kGearingRatio = 8
-kMaxMotorAngularSpeed = DCMotor.falcon500().freeSpeed * \
-    (units.radians / units.seconds)
-kMaxWheelAngularSpeed = kMaxMotorAngularSpeed / kGearingRatio
+kDriveGearingRatio = (48 / 16) * (16 / 28) * (60 / 15)
+kSteerGearingRatio = (32 / 15) * (60 / 10)
+kMaxMotorAngularSpeed = DCMotor.falcon500().freeSpeed * (units.radians / units.seconds)
+kMaxWheelAngularSpeed = kMaxMotorAngularSpeed / kDriveGearingRatio
 kMaxWheelSpeed = kWheelDistancePerRevolution * kMaxWheelAngularSpeed
+kMaxSteerAngularSpeed = kMaxMotorAngularSpeed / kSteerGearingRatio
 kMaxForwardSpeed = kMaxWheelSpeed
-kMaxSidewaysSpeed = 0 * units.meters / units.second  # differential drive
-kMaxRotationAngularSpeed = (kMaxWheelSpeed / (kTrackWidth / 2)) * units.radians
+kMaxSidewaysSpeed = kMaxWheelSpeed
+kMaxRotationAngularSpeed = (
+    kMaxWheelSpeed / kSwerveModuleDistanceFromRobotCenter
+) * units.radians  # omega = v / r
 
 # Motors
-kFrontLeftMotorPort = 0
-kBackLeftMotorPort = 1
-kFrontRightMotorPort = 2
-kBackRightMotorPort = 3
-kInvertLeftMotors = False
-kInvertRightMotors = True
+kFrontLeftDriveMotorPort = 0
+kFrontLeftSteerMotorPort = 1
+kFrontRightDriveMotorPort = 2
+kFrontRightSteerMotorPort = 3
+kBackLeftDriveMotorPort = 4
+kBackLeftSteerMotorPort = 5
+kBackRightDriveMotorPort = 6
+kBackRightSteerMotorPort = 7
 
 # Encoders
-kLeftEncoderPorts = (0, 1)
-kRightEncoderPorts = (2, 3)
-kLeftEncoderReversed = False
-kRightEncoderReversed = True
+kFrontLeftDriveEncoderPorts = (0, 1)
+kFrontLeftSteerEncoderPorts = (2, 3)
+kFrontRightDriveEncoderPorts = (4, 5)
+kFrontRightSteerEncoderPorts = (6, 7)
+kBackLeftDriveEncoderPorts = (8, 9)
+kBackLeftSteerEncoderPorts = (10, 11)
+kBackRightDriveEncoderPorts = (12, 13)
+kBackRightSteerEncoderPorts = (14, 15)
 
-kEncoderPulsesPerRevolution = 1024 * units.count / units.revolution
+kEncoderPulsesPerRevolution = 4096 * units.count / units.revolution
 # Assumes the encoders are directly mounted on the wheel shafts
-kEncoderDistancePerPulse = kWheelDistancePerRevolution / kEncoderPulsesPerRevolution
+kWheelEncoderDistancePerPulse = (
+    kWheelDistancePerRevolution / kEncoderPulsesPerRevolution
+)
+kSwerveEncoderAnglePerPulse = 1 / kEncoderPulsesPerRevolution
 
 # Autonomous
-kAutoDriveDistance = (3 * units.revolutions) * kEncoderPulsesPerRevolution * \
-    kEncoderDistancePerPulse  # three wheel revolutions
-kAutoBackupDistance = 20 * units.inches
+kAutoDriveDistance = (
+    (3 * units.revolutions)
+    * kEncoderPulsesPerRevolution
+    * kWheelEncoderDistancePerPulse
+)  # three wheel revolutions
+kAutoFrontwaysDistance = 24 * units.inches
+kAutoSidewaysDistance = 24 * units.inches
 kAutoDistanceThreshold = 6 * units.inches
 kAutoDriveSpeedFactor = 0.5
 
 # Operator Interface
-kDriverControllerPort = 0
+kTranslationControllerPort = 0
+kRotationControllerPort = 1

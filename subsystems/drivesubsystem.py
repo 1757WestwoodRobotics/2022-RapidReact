@@ -1,54 +1,99 @@
 import commands2
 import wpilib
 import wpilib.drive
-import wpimath.kinematics
-from pyfrc.physics.units import units
+from wpimath.geometry import Rotation2d
+from wpimath.kinematics import (
+    ChassisSpeeds,
+    SwerveModuleState,
+    SwerveDrive4Kinematics,
+    SwerveDrive4Odometry,
+)
 
 import constants
+
+from units import units
+
+
+class SwerveModule:
+    def __init__(
+        self,
+        driveMotor: wpilib.PWMVictorSPX,
+        steerMotor: wpilib.PWMVictorSPX,
+        driveEncoder: wpilib.Encoder,
+        steerEncoder: wpilib.Encoder,
+    ) -> None:
+        self.driveMotor = driveMotor
+        self.steerMotor = steerMotor
+        self.driveEncoder = driveEncoder
+        self.steerEncoder = steerEncoder
+
+        self.driveEncoder.setDistancePerPulse(
+            constants.kWheelEncoderDistancePerPulse.to(
+                units.meters / units.count
+            ).magnitude
+        )
+        self.steerEncoder.setDistancePerPulse(
+            constants.kSwerveEncoderAnglePerPulse.to(
+                units.radians / units.count
+            ).magnitude
+        )
+
+    def getState(self) -> SwerveModuleState:
+        return SwerveModuleState(
+            self.driveEncoder.getRate(),
+            Rotation2d(self.steerEncoder.getDistance()),
+        )
+
+    def applyState(self, state: SwerveModuleState) -> None:
+        optimizedState = SwerveModuleState.optimize(
+            state, Rotation2d(self.steerEncoder.getDistance())
+        )
+        speedFactor = (
+            optimizedState.speed
+            / constants.kMaxWheelSpeed.to(units.meters / units.second).magnitude
+        )
+        speedFactorClamped = min(max(speedFactor, -1), 1)
+        self.driveMotor.setSpeed(speedFactorClamped)
+        steerError = optimizedState.angle.radians() - self.steerEncoder.getDistance()
+        steerErrorClamped = min(max(steerError, -1), 1)
+        self.steerMotor.setSpeed(steerErrorClamped)
 
 
 class DriveSubsystem(commands2.SubsystemBase):
     def __init__(self) -> None:
         super().__init__()
 
-        self.kinematics = wpimath.kinematics.DifferentialDriveKinematics(
-            constants.kTrackWidth.to(units.meters).magnitude)
-
-        self.frontLeftMotor = wpilib.PWMVictorSPX(
-            constants.kFrontLeftMotorPort)
-        self.backLeftMotor = wpilib.PWMVictorSPX(
-            constants.kBackLeftMotorPort)
-        self.frontRightMotor = wpilib.PWMVictorSPX(
-            constants.kFrontRightMotorPort)
-        self.backRightMotor = wpilib.PWMVictorSPX(
-            constants.kBackRightMotorPort)
-
-        # The robot's drive
-        self.leftMotors = wpilib.SpeedControllerGroup(
-            self.frontLeftMotor, self.backLeftMotor)
-        self.rightMotors = wpilib.SpeedControllerGroup(
-            self.frontRightMotor, self.backRightMotor)
-
-        self.leftMotors.setInverted(constants.kInvertLeftMotors)
-        self.rightMotors.setInverted(constants.kInvertRightMotors)
-
-        # The left-side drive encoder
-        self.leftEncoder = wpilib.Encoder(
-            *constants.kLeftEncoderPorts,
-            reverseDirection=constants.kLeftEncoderReversed
+        self.frontLeftModule = SwerveModule(
+            wpilib.PWMVictorSPX(constants.kFrontLeftDriveMotorPort),
+            wpilib.PWMVictorSPX(constants.kFrontLeftSteerMotorPort),
+            wpilib.Encoder(*constants.kFrontLeftDriveEncoderPorts),
+            wpilib.Encoder(*constants.kFrontLeftSteerEncoderPorts),
+        )
+        self.frontRightModule = SwerveModule(
+            wpilib.PWMVictorSPX(constants.kFrontRightDriveMotorPort),
+            wpilib.PWMVictorSPX(constants.kFrontRightSteerMotorPort),
+            wpilib.Encoder(*constants.kFrontRightDriveEncoderPorts),
+            wpilib.Encoder(*constants.kFrontRightSteerEncoderPorts),
+        )
+        self.backLeftModule = SwerveModule(
+            wpilib.PWMVictorSPX(constants.kBackLeftDriveMotorPort),
+            wpilib.PWMVictorSPX(constants.kBackLeftSteerMotorPort),
+            wpilib.Encoder(*constants.kBackLeftDriveEncoderPorts),
+            wpilib.Encoder(*constants.kBackLeftSteerEncoderPorts),
+        )
+        self.backRightModule = SwerveModule(
+            wpilib.PWMVictorSPX(constants.kBackRightDriveMotorPort),
+            wpilib.PWMVictorSPX(constants.kBackRightSteerMotorPort),
+            wpilib.Encoder(*constants.kBackRightDriveEncoderPorts),
+            wpilib.Encoder(*constants.kBackRightSteerEncoderPorts),
         )
 
-        # The right-side drive encoder
-        self.rightEncoder = wpilib.Encoder(
-            *constants.kRightEncoderPorts,
-            reverseDirection=constants.kRightEncoderReversed
+        self.kinematics = SwerveDrive4Kinematics(
+            constants.kFrontLeftWheelPosition,
+            constants.kFrontRightWheelPosition,
+            constants.kBackLeftWheelPosition,
+            constants.kBackRightWheelPosition,
         )
-
-        # Sets the distance per pulse for the encoders
-        self.leftEncoder.setDistancePerPulse(
-            constants.kEncoderDistancePerPulse.to(units.meters / units.count).magnitude)
-        self.rightEncoder.setDistancePerPulse(
-            constants.kEncoderDistancePerPulse.to(units.meters / units.count).magnitude)
 
         # Create the gyro, a sensor which can indicate the heading of the robot relative
         # to a customizable position.
@@ -56,8 +101,7 @@ class DriveSubsystem(commands2.SubsystemBase):
 
         # Create the an object for our odometry, which will utilize sensor data to
         # keep a record of our position on the field.
-        self.odometry = wpimath.kinematics.DifferentialDriveOdometry(
-            self.gyro.getRotation2d())
+        self.odometry = SwerveDrive4Odometry(self.kinematics, self.gyro.getRotation2d())
 
     def periodic(self):
         """
@@ -66,11 +110,64 @@ class DriveSubsystem(commands2.SubsystemBase):
         """
         self.odometry.update(
             self.gyro.getRotation2d(),
-            self.leftEncoder.getDistance(),
-            self.rightEncoder.getDistance(),
+            self.frontLeftModule.getState(),
+            self.frontRightModule.getState(),
+            self.backLeftModule.getState(),
+            self.backRightModule.getState(),
         )
 
-    def arcadeDriveWithFactors(self, forwardSpeedFactor: float, sidewaysSpeedFactor: float, rotationSpeedFactor: float) -> None:
+        rX = self.odometry.getPose().translation().X()
+        rY = self.odometry.getPose().translation().Y()
+        rAngle = int(self.odometry.getPose().rotation().degrees())
+
+        flAngle = int(
+            (self.frontLeftModule.steerEncoder.getDistance() * units.radians)
+            .to(units.degrees)
+            .magnitude
+        )
+        frAngle = int(
+            (self.frontRightModule.steerEncoder.getDistance() * units.radians)
+            .to(units.degrees)
+            .magnitude
+        )
+        blAngle = int(
+            (self.backLeftModule.steerEncoder.getDistance() * units.radians)
+            .to(units.degrees)
+            .magnitude
+        )
+        brAngle = int(
+            (self.backRightModule.steerEncoder.getDistance() * units.radians)
+            .to(units.degrees)
+            .magnitude
+        )
+
+        flSpeed = self.frontLeftModule.driveMotor.getSpeed()
+        frSpeed = self.frontRightModule.driveMotor.getSpeed()
+        blSpeed = self.backLeftModule.driveMotor.getSpeed()
+        brSpeed = self.backRightModule.driveMotor.getSpeed()
+
+        print(
+            "r: {:.1f}, {:.1f}, {}* fl: {}* {:.1f} fr: {}* {:.1f} bl: {}* {:.1f} br: {}* {:.1f}".format(
+                rX,
+                rY,
+                rAngle,
+                flAngle,
+                flSpeed,
+                frAngle,
+                frSpeed,
+                blAngle,
+                blSpeed,
+                brAngle,
+                brSpeed,
+            )
+        )
+
+    def arcadeDriveWithFactors(
+        self,
+        forwardSpeedFactor: float,
+        sidewaysSpeedFactor: float,
+        rotationSpeedFactor: float,
+    ) -> None:
         """
         Drives the robot using arcade controls.
 
@@ -78,39 +175,37 @@ class DriveSubsystem(commands2.SubsystemBase):
         :param sidewaysSpeedFactor: the commanded sideways movement
         :param rotationSpeedFactor: the commanded rotation
         """
-
-        chassisSpeeds = wpimath.kinematics.ChassisSpeeds(
-            (forwardSpeedFactor * constants.kMaxForwardSpeed).to(units.meters /
-                                                                 units.second).magnitude,
-            (sidewaysSpeedFactor * constants.kMaxSidewaysSpeed).to(units.meters /
-                                                                   units.second).magnitude,
-            (rotationSpeedFactor * constants.kMaxRotationAngularSpeed).to(units.radians / units.second).magnitude)
+        # print(
+        #     "inputs: x: {:.2f} y: {:.2f} *: {:.2f}".format(
+        #         forwardSpeedFactor, sidewaysSpeedFactor, rotationSpeedFactor
+        #     )
+        # )
+        chassisSpeeds = ChassisSpeeds(
+            (forwardSpeedFactor * constants.kMaxForwardSpeed)
+            .to(units.meters / units.second)
+            .magnitude,
+            (sidewaysSpeedFactor * constants.kMaxSidewaysSpeed)
+            .to(units.meters / units.second)
+            .magnitude,
+            (rotationSpeedFactor * constants.kMaxRotationAngularSpeed)
+            .to(units.radians / units.second)
+            .magnitude,
+        )
 
         self.arcadeDriveWithSpeeds(chassisSpeeds)
 
-    def arcadeDriveWithSpeeds(self, chassisSpeeds: wpimath.kinematics.ChassisSpeeds) -> None:
-        wheelSpeeds = self.kinematics.toWheelSpeeds(chassisSpeeds)
-        wheelSpeeds.normalize(constants.kMaxWheelSpeed.to(
-            units.meters / units.second).magnitude)
-        # TODO: wheel speeds as input to PID loop
-        self.leftMotors.set(
-            wheelSpeeds.left / constants.kMaxWheelSpeed.to(units.meters / units.second).magnitude)
-        self.rightMotors.set(
-            wheelSpeeds.right / constants.kMaxWheelSpeed.to(units.meters / units.second).magnitude)
-
-    def resetEncoders(self) -> None:
-        """Resets the drive encoders to currently read a position of 0."""
-        self.leftEncoder.reset()
-        self.rightEncoder.reset()
-
-    def resetOdometry(self, pose):
-        """ Resets the robot's odometry to a given position."""
-        self.resetEncoders()
-        self.odometry.resetPosition(pose, self.gyro.getRotation2d())
-
-    def setMaxOutput(self, maxOutputFactor: float):
-        """
-        Sets the max output of the drive. Useful for scaling the
-        drive to drive more slowly.
-        """
-        self.drive.setMaxOutput(maxOutputFactor)
+    def arcadeDriveWithSpeeds(self, chassisSpeeds: ChassisSpeeds) -> None:
+        moduleStates = self.kinematics.toSwerveModuleStates(chassisSpeeds)
+        (
+            frontLeftState,
+            frontRightState,
+            backLeftState,
+            backRightState,
+        ) = SwerveDrive4Kinematics.normalizeWheelSpeeds(
+            moduleStates,
+            constants.kMaxWheelSpeed.to(units.meters / units.second).magnitude,
+        )
+        self.frontLeftModule.applyState(frontLeftState)
+        self.frontRightModule.applyState(frontRightState)
+        self.backLeftModule.applyState(backLeftState)
+        self.backRightModule.applyState(backRightState)
