@@ -1,8 +1,6 @@
 import wpilib
-from wpilib.interfaces import GenericHID
 
 import commands2
-import commands2.button
 
 import constants
 
@@ -12,7 +10,8 @@ from commands.defaultdrive import DefaultDrive
 
 from subsystems.drivesubsystem import DriveSubsystem
 
-from units import units
+from operatorinterface import OperatorInterface
+from util.units import units
 
 
 class RobotContainer:
@@ -25,12 +24,8 @@ class RobotContainer:
 
     def __init__(self) -> None:
 
-        # The driver's controller
-        # self.driverController = wpilib.XboxController(constants.kDriverControllerPort)
-        self.translationController = wpilib.Joystick(
-            constants.kTranslationControllerPort
-        )
-        self.rotationController = wpilib.Joystick(constants.kRotationControllerPort)
+        # The operator interface (driver controls)
+        self.operatorInterface = OperatorInterface()
 
         # The robot's subsystems
         self.drive = DriveSubsystem()
@@ -60,13 +55,12 @@ class RobotContainer:
 
         self.configureButtonBindings()
 
-        # set up default drive command
         self.drive.setDefaultCommand(
             DefaultDrive(
                 self.drive,
-                lambda: -1 * self.translationController.getY(GenericHID.Hand.kLeftHand),
-                lambda: -1 * self.translationController.getX(GenericHID.Hand.kLeftHand),
-                lambda: -1 * self.rotationController.getX(GenericHID.Hand.kRightHand),
+                self.operatorInterface.chassisControls.forwardsBackwards,
+                self.operatorInterface.chassisControls.sideToSide,
+                self.operatorInterface.chassisControls.rotation,
             )
         )
 

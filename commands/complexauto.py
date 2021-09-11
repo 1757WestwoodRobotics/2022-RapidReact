@@ -1,13 +1,12 @@
-import commands2
+from commands2 import SequentialCommandGroup
 
 import constants
 
 from .drivedistance import DriveDistance
-
 from subsystems.drivesubsystem import DriveSubsystem
 
 
-class ComplexAuto(commands2.SequentialCommandGroup):
+class ComplexAuto(SequentialCommandGroup):
     """
     A complex auto command that drives forward, right, backwards, left.
     """
@@ -42,3 +41,4 @@ class ComplexAuto(commands2.SequentialCommandGroup):
                 drive,
             ),
         )
+        self.setName(__class__.__name__)

@@ -7,7 +7,7 @@
 import math
 from wpimath.geometry import Translation2d
 from wpimath.system.plant import DCMotor
-from units import units
+from util.units import units
 
 # Physical parameters
 kSwerveModuleCenterToCenterSideDistance = 21.5 * units.inches
@@ -93,5 +93,8 @@ kAutoDistanceThreshold = 6 * units.inches
 kAutoDriveSpeedFactor = 0.5
 
 # Operator Interface
+kXboxControllerPort = 0
 kTranslationControllerPort = 0
 kRotationControllerPort = 1
+kXboxJoystickDeadband = 0.1
+kKeyboardJoystickDeadband = 0.0

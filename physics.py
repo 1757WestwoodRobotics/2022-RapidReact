@@ -11,7 +11,7 @@
 
 import typing
 import wpilib
-import wpilib.simulation
+from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim
 import wpimath.kinematics
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
 
@@ -20,7 +20,7 @@ from wpimath.system.plant import DCMotor
 import constants
 
 from pyfrc.physics.core import PhysicsInterface
-from units import units
+from util.units import units
 
 
 class SwerveDriveSimOutput:
@@ -155,63 +155,47 @@ class PhysicsEngine:
 
         self.frontLeftModuleSim = SwerveModuleSim(
             constants.kFrontLeftWheelPosition,
-            wpilib.simulation.PWMSim(constants.kFrontLeftDriveMotorPort),
+            PWMSim(constants.kFrontLeftDriveMotorPort),
             DCMotor.falcon500(),
             constants.kDriveGearingRatio,
-            wpilib.simulation.PWMSim(constants.kFrontLeftSteerMotorPort),
+            PWMSim(constants.kFrontLeftSteerMotorPort),
             DCMotor.falcon500(),
             constants.kSteerGearingRatio,
-            wpilib.simulation.EncoderSim.createForChannel(
-                constants.kFrontLeftDriveEncoderPorts[0]
-            ),
-            wpilib.simulation.EncoderSim.createForChannel(
-                constants.kFrontLeftSteerEncoderPorts[0]
-            ),
+            EncoderSim.createForChannel(constants.kFrontLeftDriveEncoderPorts[0]),
+            EncoderSim.createForChannel(constants.kFrontLeftSteerEncoderPorts[0]),
         )
         self.frontRightModuleSim = SwerveModuleSim(
             constants.kFrontRightWheelPosition,
-            wpilib.simulation.PWMSim(constants.kFrontRightDriveMotorPort),
+            PWMSim(constants.kFrontRightDriveMotorPort),
             DCMotor.falcon500(),
             constants.kDriveGearingRatio,
-            wpilib.simulation.PWMSim(constants.kFrontRightSteerMotorPort),
+            PWMSim(constants.kFrontRightSteerMotorPort),
             DCMotor.falcon500(),
             constants.kSteerGearingRatio,
-            wpilib.simulation.EncoderSim.createForChannel(
-                constants.kFrontRightDriveEncoderPorts[0]
-            ),
-            wpilib.simulation.EncoderSim.createForChannel(
-                constants.kFrontRightSteerEncoderPorts[0]
-            ),
+            EncoderSim.createForChannel(constants.kFrontRightDriveEncoderPorts[0]),
+            EncoderSim.createForChannel(constants.kFrontRightSteerEncoderPorts[0]),
         )
         self.backLeftModuleSim = SwerveModuleSim(
             constants.kBackLeftWheelPosition,
-            wpilib.simulation.PWMSim(constants.kBackLeftDriveMotorPort),
+            PWMSim(constants.kBackLeftDriveMotorPort),
             DCMotor.falcon500(),
             constants.kDriveGearingRatio,
-            wpilib.simulation.PWMSim(constants.kBackLeftSteerMotorPort),
+            PWMSim(constants.kBackLeftSteerMotorPort),
             DCMotor.falcon500(),
             constants.kSteerGearingRatio,
-            wpilib.simulation.EncoderSim.createForChannel(
-                constants.kBackLeftDriveEncoderPorts[0]
-            ),
-            wpilib.simulation.EncoderSim.createForChannel(
-                constants.kBackLeftSteerEncoderPorts[0]
-            ),
+            EncoderSim.createForChannel(constants.kBackLeftDriveEncoderPorts[0]),
+            EncoderSim.createForChannel(constants.kBackLeftSteerEncoderPorts[0]),
         )
         self.backRightModuleSim = SwerveModuleSim(
             constants.kBackRightWheelPosition,
-            wpilib.simulation.PWMSim(constants.kBackRightDriveMotorPort),
+            PWMSim(constants.kBackRightDriveMotorPort),
             DCMotor.falcon500(),
             constants.kDriveGearingRatio,
-            wpilib.simulation.PWMSim(constants.kBackRightSteerMotorPort),
+            PWMSim(constants.kBackRightSteerMotorPort),
             DCMotor.falcon500(),
             constants.kSteerGearingRatio,
-            wpilib.simulation.EncoderSim.createForChannel(
-                constants.kBackRightDriveEncoderPorts[0]
-            ),
-            wpilib.simulation.EncoderSim.createForChannel(
-                constants.kBackRightSteerEncoderPorts[0]
-            ),
+            EncoderSim.createForChannel(constants.kBackRightDriveEncoderPorts[0]),
+            EncoderSim.createForChannel(constants.kBackRightSteerEncoderPorts[0]),
         )
 
         self.swerveModuleSims = [
@@ -221,9 +205,10 @@ class PhysicsEngine:
             self.backRightModuleSim,
         ]
 
-        self.drivesim = SwerveDriveSim(tuple(self.swerveModuleSims))
+        self.driveSim = SwerveDriveSim(tuple(self.swerveModuleSims))
 
-        self.gyro = wpilib.simulation.ADXRS450_GyroSim(wpilib.ADXRS450_Gyro())
+        self.gyroSim = SimDeviceSim("navX-Sensor[4]")
+        self.gyroYaw = self.gyroSim.getDouble("Yaw")
 
     def update_sim(self, now: float, tm_diff: float) -> None:
         """
@@ -235,11 +220,11 @@ class PhysicsEngine:
                         time that this function was called
         """
 
-        self.gyro.setAngle(-self.drivesim.getHeading().degrees())
+        self.gyroYaw.set(-self.driveSim.getHeading().degrees())
 
         # Simulate the drivetrain
         voltage = wpilib.RobotController.getInputVoltage()
 
-        self.drivesim.update(tm_diff, voltage)
+        self.driveSim.update(tm_diff, voltage)
 
-        self.physics_controller.field.setRobotPose(self.drivesim.getPose())
+        self.physics_controller.field.setRobotPose(self.driveSim.getPose())

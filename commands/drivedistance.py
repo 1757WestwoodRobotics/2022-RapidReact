@@ -1,16 +1,15 @@
-import commands2
-import wpimath.geometry
+from commands2 import CommandBase
+from wpimath.geometry import Transform2d
 
 import math
 from enum import Enum, auto
 
 import constants
 from subsystems.drivesubsystem import DriveSubsystem
+from util.units import units
 
-from units import units
 
-
-class DriveDistance(commands2.CommandBase):
+class DriveDistance(CommandBase):
     class Axis(Enum):
         X = auto()
         Y = auto()
@@ -18,7 +17,9 @@ class DriveDistance(commands2.CommandBase):
     def __init__(
         self, distance, speedFactor, axis: Axis, drive: DriveSubsystem
     ) -> None:
-        super().__init__()
+        CommandBase.__init__(self)
+        self.setName(__class__.__name__)
+
         distanceMag = distance.magnitude
         self.distance = (
             math.copysign(distanceMag, distanceMag * speedFactor) * distance.units
@@ -31,11 +32,11 @@ class DriveDistance(commands2.CommandBase):
     def initialize(self) -> None:
         currentPose = self.drive.odometry.getPose()
         if self.axis is DriveDistance.Axis.X:
-            self.targetPose = currentPose + wpimath.geometry.Transform2d(
+            self.targetPose = currentPose + Transform2d(
                 self.distance.to(units.meters).magnitude, 0, 0
             )
         elif self.axis is DriveDistance.Axis.Y:
-            self.targetPose = currentPose + wpimath.geometry.Transform2d(
+            self.targetPose = currentPose + Transform2d(
                 0, self.distance.to(units.meters).magnitude, 0
             )
         self.updateDistanceToTarget()
