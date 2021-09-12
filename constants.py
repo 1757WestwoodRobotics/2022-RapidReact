@@ -16,6 +16,7 @@ import math
 from wpimath.geometry import Translation2d
 from wpimath.system.plant import DCMotor
 
+# Basic units
 kCentimetersPerInch = 2.54
 """centimeters / inch"""
 
@@ -28,6 +29,20 @@ kMetersPerInch = kCentimetersPerInch / kCentimetersPerMeter
 kRadiansPerRevolution = 2 * math.pi
 """radians / revolution"""
 
+kDegeersPerRevolution = 360
+"""degrees / revolution"""
+
+kRadiansPerDegree = kRadiansPerRevolution / kDegeersPerRevolution
+"""radians / degree"""
+
+kMillisecondsPerSecond = 1000 / 1
+"""milliseconds / second"""
+
+# Debug parameters
+kPrintFrequency = 2
+""" 1 / second"""
+
+kPrintPeriod = 1 / kPrintFrequency
 
 # Physical parameters
 kSwerveModuleCenterToCenterSideDistance = 21.5 * kMetersPerInch
@@ -108,6 +123,10 @@ kMaxRotationAngularVelocity = (
 )
 """radians / second (omega = v / r)"""
 
+kFrontLeftModuleName = "front_left"
+kFrontRightModuleName = "front_right"
+kBackLeftModuleName = "back_left"
+kBackRightModuleName = "back_right"
 
 # Motors
 kFrontLeftDriveMotorSimPort = 0
@@ -189,8 +208,50 @@ kSwerveEncoderPulsesPerRadian = (
 )
 """pulses / radian"""
 
+# CTRE
 k100MillisecondsPerSecond = 10 / 1  # there are 10 groups of 100 milliseconds per second
-"""100 milliseconds / second"""
+"""100 milliseconds / second
+   CTRE reports velocities in units of (quantity / 100 milliseconds)
+   This factor is used to convert to (quantity / 1 second)
+"""
+kConfigurationTimeoutLimit = int(5 * kMillisecondsPerSecond)
+"""milliseconds"""
+
+kDrivePIDSlot = 0
+kDrivePGain = 0.01
+kDriveIGain = 0.0
+kDriveDGain = 0.0
+
+kSteerPIDSlot = 0
+kSteerPGain = 0.6
+kSteerIGain = 0.0
+kSteerDGain = 12.0
+
+"""
+To determine encoder offsets (with robot ON and DISABLED):
+  1. Rotate all swerve modules so that the wheels:
+     * are running in the forwards-backwards direction
+     * have the wheel bevel gears facing inwards towards the
+       center-line of the robot
+  2. Run Phoenix Tuner
+  3. Select desired encoder
+  4. Go to "Config" tab
+  5. Click "Factory Default"
+  6. Go to "Self-Test Snapshot" tab
+  7. Click "Self-Test Snapshot"
+  8. Record value from line: "Absolute Position (unsigned):"
+"""
+kFrontLeftAbsoluteEncoderOffset = 314.912
+"""degrees"""
+
+kFrontRightAbsoluteEncoderOffset = 5.713
+"""degrees"""
+
+kBackLeftAbsoluteEncoderOffset = 19.424
+"""degrees"""
+
+kBackRightAbsoluteEncoderOffset = 142.998
+"""degrees"""
 
 # Autonomous
 kAutoDriveDistance = 3 * kWheelCircumference

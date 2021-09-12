@@ -1,12 +1,14 @@
 import wpilib
 
 import commands2
+import commands2.button
 
 import constants
 
 from commands.complexauto import ComplexAuto
 from commands.drivedistance import DriveDistance
 from commands.defaultdrive import DefaultDrive
+from commands.resetdrive import ResetDrive
 
 from subsystems.drivesubsystem import DriveSubsystem
 
@@ -69,6 +71,9 @@ class RobotContainer:
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
         and then passing it to a JoystickButton.
         """
+        commands2.button.JoystickButton(
+            *self.operatorInterface.resetSwerveControl
+        ).whenPressed(ResetDrive(self.drive))
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()
