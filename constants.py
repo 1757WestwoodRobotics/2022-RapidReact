@@ -64,19 +64,19 @@ kSwerveModuleDistanceFromRobotCenter = pow(
 # +x forward, +y right
 kFrontLeftWheelPosition = Translation2d(
     kHalfSwerveModuleCenterToCenterSideDistance,
-    -1 * kHalfSwerveModuleCenterToCenterSideDistance,
+    kHalfSwerveModuleCenterToCenterSideDistance,
 )
 kFrontRightWheelPosition = Translation2d(
     kHalfSwerveModuleCenterToCenterSideDistance,
-    kHalfSwerveModuleCenterToCenterSideDistance,
+    -1 * kHalfSwerveModuleCenterToCenterSideDistance,
 )
 kBackLeftWheelPosition = Translation2d(
     -1 * kHalfSwerveModuleCenterToCenterSideDistance,
-    -1 * kHalfSwerveModuleCenterToCenterSideDistance,
+    kHalfSwerveModuleCenterToCenterSideDistance,
 )
 kBackRightWheelPosition = Translation2d(
     -1 * kHalfSwerveModuleCenterToCenterSideDistance,
-    kHalfSwerveModuleCenterToCenterSideDistance,
+    -1 * kHalfSwerveModuleCenterToCenterSideDistance,
 )
 
 kWheelDiameter = 4 * kMetersPerInch
@@ -226,6 +226,16 @@ kSteerPIDSlot = 0
 kSteerPGain = 0.6
 kSteerIGain = 0.0
 kSteerDGain = 12.0
+
+kFrontLeftDriveInverted = False
+kFrontRightDriveInverted = True
+kBackLeftDriveInverted = False
+kBackRightDriveInverted = True
+
+kFrontLeftSteerInverted = False
+kFrontRightSteerInverted = False
+kBackLeftSteerInverted = False
+kBackRightSteerInverted = False
 
 """
 To determine encoder offsets (with robot ON and DISABLED):

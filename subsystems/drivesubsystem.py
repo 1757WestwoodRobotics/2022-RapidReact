@@ -47,8 +47,8 @@ class SwerveModule:
         )
 
     def applyState(self, state: SwerveModuleState) -> None:
-        # optimizedState = SwerveModuleState.optimize(state, self.getSwerveAngle())
-        optimizedState = state
+        optimizedState = SwerveModuleState.optimize(state, self.getSwerveAngle())
+        # optimizedState = state
         self.setWheelLinearVelocityTarget(optimizedState.speed)
         self.setSwerveAngleTarget(optimizedState.angle)
 
@@ -111,13 +111,17 @@ class CTRESwerveModule(SwerveModule):
         self,
         name: str,
         driveMotor: WPI_TalonFX,
+        driveMotorInverted: bool,
         steerMotor: WPI_TalonFX,
+        steerMotorInverted: bool,
         swerveEncoder: CANCoder,
         swerveEncoderOffset: float,
     ) -> None:
         SwerveModule.__init__(self, name)
         self.driveMotor = driveMotor
+        self.driveMotorInverted = driveMotorInverted
         self.steerMotor = steerMotor
+        self.steerMotorInverted = steerMotorInverted
         self.swerveEncoder = swerveEncoder
         self.swerveEncoderOffset = swerveEncoderOffset
 
@@ -190,6 +194,7 @@ class CTRESwerveModule(SwerveModule):
         #     return
         # else:
         #     print("   Config:\n{}".format(config.toString()))
+        self.driveMotor.setInverted(self.driveMotorInverted)
         if not ctreCheckError(
             "config_kP",
             self.driveMotor.config_kP(
@@ -237,6 +242,7 @@ class CTRESwerveModule(SwerveModule):
         #     return
         # else:
         #     print("   Config:\n{}".format(config.toString()))
+        self.steerMotor.setInverted(self.steerMotorInverted)
         if not ctreCheckError(
             "config_kP",
             self.steerMotor.config_kP(
@@ -315,28 +321,36 @@ class DriveSubsystem(SubsystemBase):
             self.frontLeftModule = CTRESwerveModule(
                 constants.kFrontLeftModuleName,
                 WPI_TalonFX(constants.kFrontLeftDriveMotorId),
+                constants.kFrontLeftDriveInverted,
                 WPI_TalonFX(constants.kFrontLeftSteerMotorId),
+                constants.kFrontLeftSteerInverted,
                 CANCoder(constants.kFrontLeftSteerEncoderId),
                 constants.kFrontLeftAbsoluteEncoderOffset,
             )
             self.frontRightModule = CTRESwerveModule(
                 constants.kFrontRightModuleName,
                 WPI_TalonFX(constants.kFrontRightDriveMotorId),
+                constants.kFrontRightDriveInverted,
                 WPI_TalonFX(constants.kFrontRightSteerMotorId),
+                constants.kFrontRightSteerInverted,
                 CANCoder(constants.kFrontRightSteerEncoderId),
                 constants.kFrontRightAbsoluteEncoderOffset,
             )
             self.backLeftModule = CTRESwerveModule(
                 constants.kBackLeftModuleName,
                 WPI_TalonFX(constants.kBackLeftDriveMotorId),
+                constants.kBackLeftDriveInverted,
                 WPI_TalonFX(constants.kBackLeftSteerMotorId),
+                constants.kBackLeftSteerInverted,
                 CANCoder(constants.kBackLeftSteerEncoderId),
                 constants.kBackLeftAbsoluteEncoderOffset,
             )
             self.backRightModule = CTRESwerveModule(
                 constants.kBackRightModuleName,
                 WPI_TalonFX(constants.kBackRightDriveMotorId),
+                constants.kBackRightDriveInverted,
                 WPI_TalonFX(constants.kBackRightSteerMotorId),
+                constants.kBackRightSteerInverted,
                 CANCoder(constants.kBackRightSteerEncoderId),
                 constants.kBackRightAbsoluteEncoderOffset,
             )
@@ -393,7 +407,7 @@ class DriveSubsystem(SubsystemBase):
         self.odometry = SwerveDrive4Odometry(self.kinematics, self.gyro.getRotation2d())
 
         self.printTimer = Timer()
-        self.printTimer.start()
+        # self.printTimer.start()
 
     def resetSwerveModules(self):
         for module in self.modules:
