@@ -6,7 +6,6 @@ from enum import Enum, auto
 
 import constants
 from subsystems.drivesubsystem import DriveSubsystem
-from util.units import units
 
 
 class DriveDistance(CommandBase):
@@ -20,11 +19,8 @@ class DriveDistance(CommandBase):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
 
-        distanceMag = distance.magnitude
-        self.distance = (
-            math.copysign(distanceMag, distanceMag * speedFactor) * distance.units
-        )
-        self.speedFactor = math.copysign(speedFactor, distanceMag * speedFactor)
+        self.distance = math.copysign(distance, distance * speedFactor)
+        self.speedFactor = math.copysign(speedFactor, distance * speedFactor)
         self.axis = axis
         self.drive = drive
         self.addRequirements(drive)
@@ -32,13 +28,9 @@ class DriveDistance(CommandBase):
     def initialize(self) -> None:
         currentPose = self.drive.odometry.getPose()
         if self.axis is DriveDistance.Axis.X:
-            self.targetPose = currentPose + Transform2d(
-                self.distance.to(units.meters).magnitude, 0, 0
-            )
+            self.targetPose = currentPose + Transform2d(self.distance, 0, 0)
         elif self.axis is DriveDistance.Axis.Y:
-            self.targetPose = currentPose + Transform2d(
-                0, self.distance.to(units.meters).magnitude, 0
-            )
+            self.targetPose = currentPose + Transform2d(0, self.distance, 0)
         self.updateDistanceToTarget()
 
     def execute(self) -> None:
@@ -56,6 +48,6 @@ class DriveDistance(CommandBase):
 
     def updateDistanceToTarget(self) -> None:
         currentPose = self.drive.odometry.getPose()
-        self.distanceToTarget = (
-            currentPose.translation().distance(self.targetPose.translation())
-        ) * units.meters
+        self.distanceToTarget = currentPose.translation().distance(
+            self.targetPose.translation()
+        )

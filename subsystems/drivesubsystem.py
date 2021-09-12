@@ -1,5 +1,6 @@
 from commands2 import SubsystemBase
-from wpilib import Encoder, PWMVictorSPX
+from wpilib import Encoder, PWMVictorSPX, RobotBase
+from ctre import CANCoder, ControlMode, ErrorCode, WPI_TalonFX
 from navx import AHRS
 from wpimath.geometry import Rotation2d
 from wpimath.kinematics import (
@@ -11,52 +12,132 @@ from wpimath.kinematics import (
 
 import constants
 
-from util.units import units
-
 
 class SwerveModule:
-    def __init__(
-        self,
-        driveMotor: PWMVictorSPX,
-        steerMotor: PWMVictorSPX,
-        driveEncoder: Encoder,
-        steerEncoder: Encoder,
-    ) -> None:
-        self.driveMotor = driveMotor
-        self.steerMotor = steerMotor
-        self.driveEncoder = driveEncoder
-        self.steerEncoder = steerEncoder
+    def getSwerveAngle(self) -> Rotation2d:
+        raise NotImplementedError("Must be implemented by subclass")
 
-        self.driveEncoder.setDistancePerPulse(
-            constants.kWheelEncoderDistancePerPulse.to(
-                units.meters / units.count
-            ).magnitude
-        )
-        self.steerEncoder.setDistancePerPulse(
-            constants.kSwerveEncoderAnglePerPulse.to(
-                units.radians / units.count
-            ).magnitude
-        )
+    def setSwerveAngleTarget(self, swerveAngleTarget: Rotation2d) -> None:
+        raise NotImplementedError("Must be implemented by subclass")
+
+    def getWheelLinearVelocity(self) -> float:
+        raise NotImplementedError("Must be implemented by subclass")
+
+    def setWheelLinearVelocityTarget(self, wheelLinearVelocityTarget: float) -> None:
+        raise NotImplementedError("Must be implemented by subclass")
 
     def getState(self) -> SwerveModuleState:
         return SwerveModuleState(
-            self.driveEncoder.getRate(),
-            Rotation2d(self.steerEncoder.getDistance()),
+            self.getWheelLinearVelocity(),
+            self.getSwerveAngle(),
         )
 
     def applyState(self, state: SwerveModuleState) -> None:
-        optimizedState = SwerveModuleState.optimize(
-            state, Rotation2d(self.steerEncoder.getDistance())
+        optimizedState = SwerveModuleState.optimize(state, self.getSwerveAngle())
+        self.setWheelLinearVelocityTarget(optimizedState.speed)
+        self.setSwerveAngleTarget(optimizedState.angle)
+
+
+class PWMSwerveModule(SwerveModule):
+    """
+    Implementation of SwerveModule designed for ease of simulation:
+        wheelMotor: 1:1 gearing with wheel
+        swerveMotor: 1:1 gearing with swerve
+        wheelEncoder: wheel distance (meters)
+        swerveEncoder: swerve angle (radians)
+    """
+
+    def __init__(
+        self,
+        wheelMotor: PWMVictorSPX,
+        swerveMotor: PWMVictorSPX,
+        wheelEncoder: Encoder,
+        swerveEncoder: Encoder,
+    ) -> None:
+        self.wheelMotor = wheelMotor
+        self.swerveMotor = swerveMotor
+        self.wheelEncoder = wheelEncoder
+        self.swerveEncoder = swerveEncoder
+
+        self.wheelEncoder.setDistancePerPulse(1 / constants.kWheelEncoderPulsesPerMeter)
+        self.swerveEncoder.setDistancePerPulse(
+            1 / constants.kSwerveEncoderPulsesPerRadian
         )
-        speedFactor = (
-            optimizedState.speed
-            / constants.kMaxWheelSpeed.to(units.meters / units.second).magnitude
-        )
+
+    def getSwerveAngle(self) -> Rotation2d:
+        return Rotation2d(self.swerveEncoder.getDistance())
+
+    def setSwerveAngleTarget(self, swerveAngleTarget: Rotation2d) -> None:
+        swerveError = swerveAngleTarget.radians() - self.swerveEncoder.getDistance()
+        swerveErrorClamped = min(max(swerveError, -1), 1)
+        self.swerveMotor.setSpeed(swerveErrorClamped)
+
+    def getWheelLinearVelocity(self) -> float:
+        return self.wheelEncoder.getRate()
+
+    def setWheelLinearVelocityTarget(self, wheelLinearVelocityTarget: float) -> None:
+        speedFactor = wheelLinearVelocityTarget / constants.kMaxWheelLinearVelocity
         speedFactorClamped = min(max(speedFactor, -1), 1)
-        self.driveMotor.setSpeed(speedFactorClamped)
-        steerError = optimizedState.angle.radians() - self.steerEncoder.getDistance()
-        steerErrorClamped = min(max(steerError, -1), 1)
-        self.steerMotor.setSpeed(steerErrorClamped)
+        self.wheelMotor.setSpeed(speedFactorClamped)
+
+
+class CTRESwerveModule(SwerveModule):
+    """
+    Implementation of SwerveModule for the SDS swerve modules
+    https://www.swervedrivespecialties.com/collections/kits/products/mk4-swerve-module
+        driveMotor: Falcon 500 Motor (with built-in encoder) attached to wheel through gearing
+        steerMotor: Falcon 500 Motor (with built-in encoder) attached to swerve through gearing
+        swerveEncoder: CANCoder
+    """
+
+    def __init__(
+        self,
+        driveMotor: WPI_TalonFX,
+        steerMotor: WPI_TalonFX,
+        swerveEncoder: CANCoder,
+    ) -> None:
+        self.driveMotor = driveMotor
+        self.steerMotor = steerMotor
+        self.swerveEncoder = swerveEncoder
+
+        errorCode = self.driveMotor.config_kP(0, 0.25, 1000)
+        if errorCode != ErrorCode.OK:
+            print(
+                "Drive Motor[{}]:config_kP: {}".format(
+                    self.driveMotor.getDeviceID(), errorCode
+                )
+            )
+
+    def getSwerveAngle(self) -> Rotation2d:
+        steerEncoderPulses = self.steerMotor.getSelectedSensorPosition()
+        swerveAngle = steerEncoderPulses / constants.kSwerveEncoderPulsesPerRadian
+        print("Steer[{}]: {}".format(self.steerMotor.getDeviceID(), swerveAngle))
+        return Rotation2d(swerveAngle)
+
+    def setSwerveAngleTarget(self, swerveAngleTarget: Rotation2d) -> None:
+        steerEncoderPulsesTarget = (
+            swerveAngleTarget.radians() * constants.kSwerveEncoderPulsesPerRadian
+        )
+        self.steerMotor.set(ControlMode.Position, steerEncoderPulsesTarget)
+
+    def getWheelLinearVelocity(self) -> float:
+        driveEncoderPulsesPerSecond = (
+            self.driveMotor.getSelectedSensorVelocity()
+            * constants.k100MillisecondsPerSecond
+        )
+        wheelLinearVelocity = (
+            driveEncoderPulsesPerSecond / constants.kWheelEncoderPulsesPerMeter
+        )
+        return wheelLinearVelocity
+
+    def setWheelLinearVelocityTarget(self, wheelLinearVelocityTarget: float) -> None:
+        driveEncoderPulsesPerSecond = (
+            wheelLinearVelocityTarget * constants.kWheelEncoderPulsesPerMeter
+        )
+        self.driveMotor.set(
+            ControlMode.Velocity,
+            driveEncoderPulsesPerSecond / constants.k100MillisecondsPerSecond,
+        )
 
 
 class DriveSubsystem(SubsystemBase):
@@ -64,30 +145,52 @@ class DriveSubsystem(SubsystemBase):
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
 
-        self.frontLeftModule = SwerveModule(
-            PWMVictorSPX(constants.kFrontLeftDriveMotorPort),
-            PWMVictorSPX(constants.kFrontLeftSteerMotorPort),
-            Encoder(*constants.kFrontLeftDriveEncoderPorts),
-            Encoder(*constants.kFrontLeftSteerEncoderPorts),
-        )
-        self.frontRightModule = SwerveModule(
-            PWMVictorSPX(constants.kFrontRightDriveMotorPort),
-            PWMVictorSPX(constants.kFrontRightSteerMotorPort),
-            Encoder(*constants.kFrontRightDriveEncoderPorts),
-            Encoder(*constants.kFrontRightSteerEncoderPorts),
-        )
-        self.backLeftModule = SwerveModule(
-            PWMVictorSPX(constants.kBackLeftDriveMotorPort),
-            PWMVictorSPX(constants.kBackLeftSteerMotorPort),
-            Encoder(*constants.kBackLeftDriveEncoderPorts),
-            Encoder(*constants.kBackLeftSteerEncoderPorts),
-        )
-        self.backRightModule = SwerveModule(
-            PWMVictorSPX(constants.kBackRightDriveMotorPort),
-            PWMVictorSPX(constants.kBackRightSteerMotorPort),
-            Encoder(*constants.kBackRightDriveEncoderPorts),
-            Encoder(*constants.kBackRightSteerEncoderPorts),
-        )
+        if RobotBase.isReal():
+            self.frontLeftModule = CTRESwerveModule(
+                WPI_TalonFX(constants.kFrontLeftDriveMotorId),
+                WPI_TalonFX(constants.kFrontLeftSteerMotorId),
+                CANCoder(constants.kFrontLeftSteerEncoderId),
+            )
+            self.frontRightModule = CTRESwerveModule(
+                WPI_TalonFX(constants.kFrontRightDriveMotorId),
+                WPI_TalonFX(constants.kFrontRightSteerMotorId),
+                CANCoder(constants.kFrontRightSteerEncoderId),
+            )
+            self.backLeftModule = CTRESwerveModule(
+                WPI_TalonFX(constants.kBackLeftDriveMotorId),
+                WPI_TalonFX(constants.kBackLeftSteerMotorId),
+                CANCoder(constants.kBackLeftSteerEncoderId),
+            )
+            self.backRightModule = CTRESwerveModule(
+                WPI_TalonFX(constants.kBackRightDriveMotorId),
+                WPI_TalonFX(constants.kBackRightSteerMotorId),
+                CANCoder(constants.kBackRightSteerEncoderId),
+            )
+        else:
+            self.frontLeftModule = PWMSwerveModule(
+                PWMVictorSPX(constants.kFrontLeftDriveMotorSimPort),
+                PWMVictorSPX(constants.kFrontLeftSteerMotorSimPort),
+                Encoder(*constants.kFrontLeftDriveEncoderSimPorts),
+                Encoder(*constants.kFrontLeftSteerEncoderSimPorts),
+            )
+            self.frontRightModule = PWMSwerveModule(
+                PWMVictorSPX(constants.kFrontRightDriveMotorSimPort),
+                PWMVictorSPX(constants.kFrontRightSteerMotorSimPort),
+                Encoder(*constants.kFrontRightDriveEncoderSimPorts),
+                Encoder(*constants.kFrontRightSteerEncoderSimPorts),
+            )
+            self.backLeftModule = PWMSwerveModule(
+                PWMVictorSPX(constants.kBackLeftDriveMotorSimPort),
+                PWMVictorSPX(constants.kBackLeftSteerMotorSimPort),
+                Encoder(*constants.kBackLeftDriveEncoderSimPorts),
+                Encoder(*constants.kBackLeftSteerEncoderSimPorts),
+            )
+            self.backRightModule = PWMSwerveModule(
+                PWMVictorSPX(constants.kBackRightDriveMotorSimPort),
+                PWMVictorSPX(constants.kBackRightSteerMotorSimPort),
+                Encoder(*constants.kBackRightDriveEncoderSimPorts),
+                Encoder(*constants.kBackRightSteerEncoderSimPorts),
+            )
 
         self.kinematics = SwerveDrive4Kinematics(
             constants.kFrontLeftWheelPosition,
@@ -182,15 +285,9 @@ class DriveSubsystem(SubsystemBase):
         #     )
         # )
         chassisSpeeds = ChassisSpeeds(
-            (forwardSpeedFactor * constants.kMaxForwardSpeed)
-            .to(units.meters / units.second)
-            .magnitude,
-            (sidewaysSpeedFactor * constants.kMaxSidewaysSpeed)
-            .to(units.meters / units.second)
-            .magnitude,
-            (rotationSpeedFactor * constants.kMaxRotationAngularSpeed)
-            .to(units.radians / units.second)
-            .magnitude,
+            forwardSpeedFactor * constants.kMaxForwardLinearVelocity,
+            sidewaysSpeedFactor * constants.kMaxSidewaysLinearVelocity,
+            rotationSpeedFactor * constants.kMaxRotationAngularVelocity,
         )
 
         self.arcadeDriveWithSpeeds(chassisSpeeds)
@@ -203,8 +300,7 @@ class DriveSubsystem(SubsystemBase):
             backLeftState,
             backRightState,
         ) = SwerveDrive4Kinematics.normalizeWheelSpeeds(
-            moduleStates,
-            constants.kMaxWheelSpeed.to(units.meters / units.second).magnitude,
+            moduleStates, constants.kMaxWheelLinearVelocity
         )
         self.frontLeftModule.applyState(frontLeftState)
         self.frontRightModule.applyState(frontRightState)

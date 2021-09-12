@@ -1,100 +1,219 @@
-#
-# The constants module is a convenience place for teams to hold robot-wide
-# numerical or boolean constants. Don't use this for any other purpose!
-# Physical constants must have their units specified
-#
+"""
+The constants module is a convenience place for teams to hold robot-wide
+numerical or boolean constants. Don't use this for any other purpose!
+
+Physical constants must have their units specified
+Default units:
+    Length: meters
+    Angle: radians
+
+Swerve Module Layout:
+    Drive (input) -> Drive Gearing -> Wheel (output)
+    Steer (input) -> Steer Gearing -> Swerve (output)
+"""
 
 import math
 from wpimath.geometry import Translation2d
 from wpimath.system.plant import DCMotor
-from util.units import units
+
+kCentimetersPerInch = 2.54
+"""centimeters / inch"""
+
+kCentimetersPerMeter = 100
+"""centimeters / meter"""
+
+kMetersPerInch = kCentimetersPerInch / kCentimetersPerMeter
+"""meters / inch"""
+
+kRadiansPerRevolution = 2 * math.pi
+"""radians / revolution"""
+
 
 # Physical parameters
-kSwerveModuleCenterToCenterSideDistance = 21.5 * units.inches
+kSwerveModuleCenterToCenterSideDistance = 21.5 * kMetersPerInch
+"""meters"""
+
 kHalfSwerveModuleCenterToCenterSideDistance = (
     kSwerveModuleCenterToCenterSideDistance / 2
 )
+"""meters"""
+
 kSwerveModuleDistanceFromRobotCenter = pow(
     pow(kHalfSwerveModuleCenterToCenterSideDistance, 2)
     + pow(kHalfSwerveModuleCenterToCenterSideDistance, 2),
     0.5,
-)  # c = (a^2 + b^2) ^ 0.5
+)
+"""meters (c = (a^2 + b^2) ^ 0.5)"""
+
 
 # +x forward, +y right
 kFrontLeftWheelPosition = Translation2d(
-    kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
-    -1 * kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
+    kHalfSwerveModuleCenterToCenterSideDistance,
+    -1 * kHalfSwerveModuleCenterToCenterSideDistance,
 )
 kFrontRightWheelPosition = Translation2d(
-    kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
-    kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
+    kHalfSwerveModuleCenterToCenterSideDistance,
+    kHalfSwerveModuleCenterToCenterSideDistance,
 )
 kBackLeftWheelPosition = Translation2d(
-    -1 * kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
-    -1 * kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
+    -1 * kHalfSwerveModuleCenterToCenterSideDistance,
+    -1 * kHalfSwerveModuleCenterToCenterSideDistance,
 )
 kBackRightWheelPosition = Translation2d(
-    -1 * kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
-    kHalfSwerveModuleCenterToCenterSideDistance.to(units.meters).magnitude,
+    -1 * kHalfSwerveModuleCenterToCenterSideDistance,
+    kHalfSwerveModuleCenterToCenterSideDistance,
 )
 
-kWheelDiameter = 4 * units.inches
+kWheelDiameter = 4 * kMetersPerInch
+"""meters"""
+
 kWheelRadius = kWheelDiameter / 2
-kWheelCircumference = kWheelDiameter * math.pi
-kWheelDistancePerRevolution = kWheelCircumference / units.revolution
+"""meters"""
+
+kWheelCircumference = kWheelRadius * 2 * math.pi
+"""meters"""
+
+kWheelDistancePerRevolution = kWheelCircumference
+"""meters / revolution"""
+
+kWheelDistancePerRadian = kWheelDistancePerRevolution / kRadiansPerRevolution
+"""meters / radian"""
+
 kDriveGearingRatio = (48 / 16) * (16 / 28) * (60 / 15)
+"""dimensionless"""
+
 kSteerGearingRatio = (32 / 15) * (60 / 10)
-kMaxMotorAngularSpeed = DCMotor.falcon500().freeSpeed * (units.radians / units.seconds)
-kMaxWheelAngularSpeed = kMaxMotorAngularSpeed / kDriveGearingRatio
-kMaxWheelSpeed = kWheelDistancePerRevolution * kMaxWheelAngularSpeed
-kMaxSteerAngularSpeed = kMaxMotorAngularSpeed / kSteerGearingRatio
-kMaxForwardSpeed = kMaxWheelSpeed
-kMaxSidewaysSpeed = kMaxWheelSpeed
-kMaxRotationAngularSpeed = (
-    kMaxWheelSpeed / kSwerveModuleDistanceFromRobotCenter
-) * units.radians  # omega = v / r
+"""dimensionless"""
+
+kMaxMotorAngularVelocity = DCMotor.falcon500().freeSpeed
+"""radians / second"""
+
+kMaxWheelAngularVelocity = kMaxMotorAngularVelocity / kDriveGearingRatio
+"""radians / second"""
+
+kMaxWheelLinearVelocity = kWheelDistancePerRadian * kMaxWheelAngularVelocity
+"""meters / second"""
+
+kMaxSteerAngularVelocity = kMaxMotorAngularVelocity / kSteerGearingRatio
+"""radians / second"""
+
+kMaxForwardLinearVelocity = kMaxWheelLinearVelocity
+"""meters / second"""
+
+kMaxSidewaysLinearVelocity = kMaxWheelLinearVelocity
+"""meters / second"""
+
+kMaxRotationAngularVelocity = (
+    kMaxWheelLinearVelocity / kSwerveModuleDistanceFromRobotCenter
+)
+"""radians / second (omega = v / r)"""
+
 
 # Motors
-kFrontLeftDriveMotorPort = 0
-kFrontLeftSteerMotorPort = 1
-kFrontRightDriveMotorPort = 2
-kFrontRightSteerMotorPort = 3
-kBackLeftDriveMotorPort = 4
-kBackLeftSteerMotorPort = 5
-kBackRightDriveMotorPort = 6
-kBackRightSteerMotorPort = 7
+kFrontLeftDriveMotorSimPort = 0
+kFrontLeftSteerMotorSimPort = 1
+kFrontRightDriveMotorSimPort = 2
+kFrontRightSteerMotorSimPort = 3
+kBackLeftDriveMotorSimPort = 4
+kBackLeftSteerMotorSimPort = 5
+kBackRightDriveMotorSimPort = 6
+kBackRightSteerMotorSimPort = 7
+
+kFrontLeftDriveMotorId = 10
+kFrontLeftSteerMotorId = 11
+kFrontRightDriveMotorId = 12
+kFrontRightSteerMotorId = 13
+kBackLeftDriveMotorId = 14
+kBackLeftSteerMotorId = 15
+kBackRightDriveMotorId = 16
+kBackRightSteerMotorId = 17
 
 # Encoders
-kFrontLeftDriveEncoderPorts = (0, 1)
-kFrontLeftSteerEncoderPorts = (2, 3)
-kFrontRightDriveEncoderPorts = (4, 5)
-kFrontRightSteerEncoderPorts = (6, 7)
-kBackLeftDriveEncoderPorts = (8, 9)
-kBackLeftSteerEncoderPorts = (10, 11)
-kBackRightDriveEncoderPorts = (12, 13)
-kBackRightSteerEncoderPorts = (14, 15)
+kFrontLeftDriveEncoderSimPorts = (0, 1)
+kFrontLeftSteerEncoderSimPorts = (2, 3)
+kFrontRightDriveEncoderSimPorts = (4, 5)
+kFrontRightSteerEncoderSimPorts = (6, 7)
+kBackLeftDriveEncoderSimPorts = (8, 9)
+kBackLeftSteerEncoderSimPorts = (10, 11)
+kBackRightDriveEncoderSimPorts = (12, 13)
+kBackRightSteerEncoderSimPorts = (14, 15)
 
-kEncoderPulsesPerRevolution = 4096 * units.count / units.revolution
-# Assumes the encoders are directly mounted on the wheel shafts
-kWheelEncoderDistancePerPulse = (
-    kWheelDistancePerRevolution / kEncoderPulsesPerRevolution
+kFrontLeftSteerEncoderId = 40
+kFrontRightSteerEncoderId = 41
+kBackLeftSteerEncoderId = 42
+kBackRightSteerEncoderId = 43
+
+kCANcoderPulsesPerRevolution = 4096
+"""pulses / revolution"""
+
+kCANcoderPulsesPerRadian = kCANcoderPulsesPerRevolution / kRadiansPerRevolution
+"""pulses / radian"""
+
+kTalonEncoderPulsesPerRevolution = 2048
+"""pulses / revolution"""
+
+kTalonEncoderPulsesPerRadian = kTalonEncoderPulsesPerRevolution / kRadiansPerRevolution
+"""pulses / radian"""
+
+kDriveEncoderPulsesPerRevolution = kTalonEncoderPulsesPerRevolution
+"""pulses / revolution"""
+
+kDriveEncoderPulsesPerRadian = kDriveEncoderPulsesPerRevolution / kRadiansPerRevolution
+"""pulses / radian"""
+
+kDriveEncoderPulsesPerMeter = kDriveEncoderPulsesPerRadian / kWheelDistancePerRadian
+"""pulses / meter"""
+
+kWheelEncoderPulsesPerRevolution = kDriveEncoderPulsesPerRevolution * kDriveGearingRatio
+"""pulses / revolution"""
+
+kWheelEncoderPulsesPerRadian = kWheelEncoderPulsesPerRevolution / kRadiansPerRevolution
+"""pulses / radian"""
+
+kWheelEncoderPulsesPerMeter = kWheelEncoderPulsesPerRadian / kWheelDistancePerRadian
+"""pulses / meter"""
+
+kSteerEncoderPulsesPerRevolution = kTalonEncoderPulsesPerRevolution
+"""pulses / revolution"""
+
+kSteerEncoderPulsesPerRadian = kSteerEncoderPulsesPerRevolution / kRadiansPerRevolution
+"""pulses / radian"""
+
+kSwerveEncoderPulsesPerRevolution = (
+    kSteerEncoderPulsesPerRevolution * kSteerGearingRatio
 )
-kSwerveEncoderAnglePerPulse = 1 / kEncoderPulsesPerRevolution
+"""pulses / revolution"""
+
+kSwerveEncoderPulsesPerRadian = (
+    kSwerveEncoderPulsesPerRevolution / kRadiansPerRevolution
+)
+"""pulses / radian"""
+
+k100MillisecondsPerSecond = 10 / 1  # there are 10 groups of 100 milliseconds per second
+"""100 milliseconds / second"""
 
 # Autonomous
-kAutoDriveDistance = (
-    (3 * units.revolutions)
-    * kEncoderPulsesPerRevolution
-    * kWheelEncoderDistancePerPulse
-)  # three wheel revolutions
-kAutoFrontwaysDistance = 24 * units.inches
-kAutoSidewaysDistance = 24 * units.inches
-kAutoDistanceThreshold = 6 * units.inches
+kAutoDriveDistance = 3 * kWheelCircumference
+"""meters"""
+
+kAutoFrontwaysDistance = 24 * kMetersPerInch
+"""meters"""
+
+kAutoSidewaysDistance = 24 * kMetersPerInch
+"""meters"""
+
+kAutoDistanceThreshold = 6 * kMetersPerInch
+"""meters"""
+
 kAutoDriveSpeedFactor = 0.5
 
 # Operator Interface
 kXboxControllerPort = 0
-kTranslationControllerPort = 0
-kRotationControllerPort = 1
+kTranslationControllerPort = 1
+kRotationControllerPort = 2
+
 kXboxJoystickDeadband = 0.1
+"""dimensionless"""
+
 kKeyboardJoystickDeadband = 0.0
+"""dimensionless"""

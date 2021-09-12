@@ -11,7 +11,6 @@ from commands.defaultdrive import DefaultDrive
 from subsystems.drivesubsystem import DriveSubsystem
 
 from operatorinterface import OperatorInterface
-from util.units import units
 
 
 class RobotContainer:
@@ -34,7 +33,7 @@ class RobotContainer:
 
         # A simple auto routine that drives forward a specified distance, and then stops.
         self.simpleAuto = DriveDistance(
-            constants.kAutoDriveDistance.to(units.meters),
+            constants.kAutoDriveDistance,
             constants.kAutoDriveSpeedFactor,
             DriveDistance.Axis.X,
             self.drive,
