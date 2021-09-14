@@ -51,7 +51,7 @@ class OperatorInterface:
 
         self.coordinateModeControl = (
             self.xboxController,
-            XboxController.Button.kA.value,
+            XboxController.Button.kBumperRight.value,
         )
 
         self.resetSwerveControl = (
