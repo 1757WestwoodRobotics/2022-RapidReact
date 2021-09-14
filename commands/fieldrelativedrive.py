@@ -3,7 +3,7 @@ from commands2 import CommandBase
 from subsystems.drivesubsystem import DriveSubsystem
 
 
-class DefaultDrive(CommandBase):
+class FieldRelativeDrive(CommandBase):
     def __init__(
         self,
         drive: DriveSubsystem,
@@ -27,5 +27,5 @@ class DefaultDrive(CommandBase):
             self.forward(),
             self.sideways(),
             self.rotation(),
-            DriveSubsystem.CoordinateMode.RobotRelative,
+            DriveSubsystem.CoordinateMode.FieldRelative,
         )

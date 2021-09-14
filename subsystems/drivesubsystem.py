@@ -17,7 +17,7 @@ from wpimath.kinematics import (
     SwerveDrive4Kinematics,
     SwerveDrive4Odometry,
 )
-
+from enum import Enum, auto
 import constants
 
 
@@ -38,6 +38,9 @@ class SwerveModule:
         raise NotImplementedError("Must be implemented by subclass")
 
     def setWheelLinearVelocityTarget(self, wheelLinearVelocityTarget: float) -> None:
+        raise NotImplementedError("Must be implemented by subclass")
+
+    def reset(self) -> None:
         raise NotImplementedError("Must be implemented by subclass")
 
     def getState(self) -> SwerveModuleState:
@@ -96,6 +99,9 @@ class PWMSwerveModule(SwerveModule):
         speedFactor = wheelLinearVelocityTarget / constants.kMaxWheelLinearVelocity
         speedFactorClamped = min(max(speedFactor, -1), 1)
         self.wheelMotor.setSpeed(speedFactorClamped)
+
+    def reset(self) -> None:
+        pass
 
 
 class CTRESwerveModule(SwerveModule):
@@ -311,8 +317,18 @@ class CTRESwerveModule(SwerveModule):
             driveEncoderPulsesPerSecond / constants.k100MillisecondsPerSecond,
         )
 
+    def reset(self) -> None:
+        swerveEncoderAngle = (
+            self.swerveEncoder.getAbsolutePosition() * constants.kRadiansPerDegree
+        )
+        self.setSwerveAngle(Rotation2d(swerveEncoderAngle))
+
 
 class DriveSubsystem(SubsystemBase):
+    class CoordinateMode(Enum):
+        RobotRelative = auto()
+        FieldRelative = auto()
+
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
@@ -411,10 +427,7 @@ class DriveSubsystem(SubsystemBase):
 
     def resetSwerveModules(self):
         for module in self.modules:
-            swerveEncoderAngle = (
-                module.swerveEncoder.getAbsolutePosition() * constants.kRadiansPerDegree
-            )
-            module.setSwerveAngle(Rotation2d(swerveEncoderAngle))
+            module.reset()
         self.odometry.resetPosition(Pose2d(), self.gyro.getRotation2d())
 
     def periodic(self):
@@ -466,6 +479,7 @@ class DriveSubsystem(SubsystemBase):
         forwardSpeedFactor: float,
         sidewaysSpeedFactor: float,
         rotationSpeedFactor: float,
+        coordinateMode: CoordinateMode,
     ) -> None:
         """
         Drives the robot using arcade controls.
@@ -485,10 +499,23 @@ class DriveSubsystem(SubsystemBase):
             rotationSpeedFactor * constants.kMaxRotationAngularVelocity,
         )
 
-        self.arcadeDriveWithSpeeds(chassisSpeeds)
+        self.arcadeDriveWithSpeeds(chassisSpeeds, coordinateMode)
 
-    def arcadeDriveWithSpeeds(self, chassisSpeeds: ChassisSpeeds) -> None:
-        moduleStates = self.kinematics.toSwerveModuleStates(chassisSpeeds)
+    def arcadeDriveWithSpeeds(
+        self, chassisSpeeds: ChassisSpeeds, coordinateMode: CoordinateMode
+    ) -> None:
+
+        robotChassisSpeeds = None
+        if coordinateMode is DriveSubsystem.CoordinateMode.RobotRelative:
+            robotChassisSpeeds = chassisSpeeds
+        elif coordinateMode is DriveSubsystem.CoordinateMode.FieldRelative:
+            robotChassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+                chassisSpeeds.vx,
+                chassisSpeeds.vy,
+                chassisSpeeds.omega,
+                self.odometry.getPose().rotation(),
+            )
+        moduleStates = self.kinematics.toSwerveModuleStates(robotChassisSpeeds)
         (
             frontLeftState,
             frontRightState,

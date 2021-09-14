@@ -36,12 +36,18 @@ class DriveDistance(CommandBase):
     def execute(self) -> None:
         self.updateDistanceToTarget()
         if self.axis is DriveDistance.Axis.X:
-            self.drive.arcadeDriveWithFactors(self.speedFactor, 0, 0)
+            self.drive.arcadeDriveWithFactors(
+                self.speedFactor, 0, 0, DriveSubsystem.CoordinateMode.RobotRelative
+            )
         elif self.axis is DriveDistance.Axis.Y:
-            self.drive.arcadeDriveWithFactors(0, self.speedFactor, 0)
+            self.drive.arcadeDriveWithFactors(
+                0, self.speedFactor, 0, DriveSubsystem.CoordinateMode.RobotRelative
+            )
 
     def end(self, interrupted: bool) -> None:
-        self.drive.arcadeDriveWithFactors(0, 0, 0)
+        self.drive.arcadeDriveWithFactors(
+            0, 0, 0, DriveSubsystem.CoordinateMode.RobotRelative
+        )
 
     def isFinished(self) -> bool:
         return self.distanceToTarget < constants.kAutoDistanceThreshold

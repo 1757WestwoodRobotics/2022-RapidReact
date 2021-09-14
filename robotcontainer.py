@@ -8,6 +8,7 @@ import constants
 from commands.complexauto import ComplexAuto
 from commands.drivedistance import DriveDistance
 from commands.defaultdrive import DefaultDrive
+from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.resetdrive import ResetDrive
 
 from subsystems.drivesubsystem import DriveSubsystem
@@ -71,6 +72,17 @@ class RobotContainer:
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
         and then passing it to a JoystickButton.
         """
+        commands2.button.JoystickButton(
+            *self.operatorInterface.coordinateModeControl
+        ).whileHeld(
+            FieldRelativeDrive(
+                self.drive,
+                self.operatorInterface.chassisControls.forwardsBackwards,
+                self.operatorInterface.chassisControls.sideToSide,
+                self.operatorInterface.chassisControls.rotation,
+            )
+        )
+
         commands2.button.JoystickButton(
             *self.operatorInterface.resetSwerveControl
         ).whenPressed(ResetDrive(self.drive))
