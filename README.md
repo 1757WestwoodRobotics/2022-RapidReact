@@ -109,12 +109,13 @@ py -3 -m venv ./.venv
    python -m robotpy_installer install robotpy
    ```
    (examples: `robotpy`, `robotpy[ctre,navx]`, `robotpy[all]`) (see: [robotpy on pypi](https://pypi.org/project/robotpy/))
-
-
-# Build Notes
-## Electronics
-1. Benchtop 12V power supply (battery replacement)
-1. 3D printed enclosures for electronics to protect devices / prevent shorts / easier mounting
-### Radio
-1. Make sure the radio is not buried inside the bot (wireless signal issues)
-1. Make sure the radio is able to be removed easily from the bot (needs to be programed at the kiosk during competion)
+1. **Deploy robotpy program**
+   * To robot
+     (must be connected to roboRIO)
+     ```bash
+     python robot.py deploy
+     ```
+   * To simulator
+     ```bash
+     python robot.py sim
+     ```
