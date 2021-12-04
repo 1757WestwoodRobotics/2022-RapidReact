@@ -1,5 +1,5 @@
 from commands2 import SubsystemBase
-from wpilib import Encoder, PWMVictorSPX, RobotBase, Timer
+from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
 from ctre import (
     AbsoluteSensorRange,
     CANCoder,
@@ -9,8 +9,7 @@ from ctre import (
     WPI_TalonFX,
 )
 from navx import AHRS
-from wpimath.geometry import Rotation2d
-from wpimath.geometry._geometry import Pose2d
+from wpimath.geometry import Pose2d, Rotation2d
 from wpimath.kinematics import (
     ChassisSpeeds,
     SwerveModuleState,
@@ -332,6 +331,7 @@ class DriveSubsystem(SubsystemBase):
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
+        SmartDashboard.putBoolean(constants.kRobotPoseArrayKeys.validKey, False)
 
         if RobotBase.isReal():
             self.frontLeftModule = CTRESwerveModule(
@@ -373,31 +373,31 @@ class DriveSubsystem(SubsystemBase):
         else:
             self.frontLeftModule = PWMSwerveModule(
                 constants.kFrontLeftModuleName,
-                PWMVictorSPX(constants.kFrontLeftDriveMotorSimPort),
-                PWMVictorSPX(constants.kFrontLeftSteerMotorSimPort),
-                Encoder(*constants.kFrontLeftDriveEncoderSimPorts),
-                Encoder(*constants.kFrontLeftSteerEncoderSimPorts),
+                PWMVictorSPX(constants.kSimFrontLeftDriveMotorPort),
+                PWMVictorSPX(constants.kSimFrontLeftSteerMotorPort),
+                Encoder(*constants.kSimFrontLeftDriveEncoderPorts),
+                Encoder(*constants.kSimFrontLeftSteerEncoderPorts),
             )
             self.frontRightModule = PWMSwerveModule(
                 constants.kFrontRightModuleName,
-                PWMVictorSPX(constants.kFrontRightDriveMotorSimPort),
-                PWMVictorSPX(constants.kFrontRightSteerMotorSimPort),
-                Encoder(*constants.kFrontRightDriveEncoderSimPorts),
-                Encoder(*constants.kFrontRightSteerEncoderSimPorts),
+                PWMVictorSPX(constants.kSimFrontRightDriveMotorPort),
+                PWMVictorSPX(constants.kSimFrontRightSteerMotorPort),
+                Encoder(*constants.kSimFrontRightDriveEncoderPorts),
+                Encoder(*constants.kSimFrontRightSteerEncoderPorts),
             )
             self.backLeftModule = PWMSwerveModule(
                 constants.kBackLeftModuleName,
-                PWMVictorSPX(constants.kBackLeftDriveMotorSimPort),
-                PWMVictorSPX(constants.kBackLeftSteerMotorSimPort),
-                Encoder(*constants.kBackLeftDriveEncoderSimPorts),
-                Encoder(*constants.kBackLeftSteerEncoderSimPorts),
+                PWMVictorSPX(constants.kSimBackLeftDriveMotorPort),
+                PWMVictorSPX(constants.kSimBackLeftSteerMotorPort),
+                Encoder(*constants.kSimBackLeftDriveEncoderPorts),
+                Encoder(*constants.kSimBackLeftSteerEncoderPorts),
             )
             self.backRightModule = PWMSwerveModule(
                 constants.kBackRightModuleName,
-                PWMVictorSPX(constants.kBackRightDriveMotorSimPort),
-                PWMVictorSPX(constants.kBackRightSteerMotorSimPort),
-                Encoder(*constants.kBackRightDriveEncoderSimPorts),
-                Encoder(*constants.kBackRightSteerEncoderSimPorts),
+                PWMVictorSPX(constants.kSimBackRightDriveMotorPort),
+                PWMVictorSPX(constants.kSimBackRightSteerMotorPort),
+                Encoder(*constants.kSimBackRightDriveEncoderPorts),
+                Encoder(*constants.kSimBackRightSteerEncoderPorts),
             )
 
         self.modules = (
@@ -442,35 +442,25 @@ class DriveSubsystem(SubsystemBase):
             self.backLeftModule.getState(),
             self.backRightModule.getState(),
         )
+        robotPose = self.odometry.getPose()
+
+        SmartDashboard.putNumberArray(constants.kRobotPoseArrayKeys.valueKey, [robotPose.X(), robotPose.Y(), robotPose.rotation().radians()])
+        SmartDashboard.putBoolean(constants.kRobotPoseArrayKeys.validKey, True)
 
         if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
-            rX = self.odometry.getPose().translation().X()
-            rY = self.odometry.getPose().translation().Y()
-            rAngle = int(self.odometry.getPose().rotation().degrees())
-
-            flAngle = int(self.frontLeftModule.getSwerveAngle().degrees())
-            frAngle = int(self.frontRightModule.getSwerveAngle().degrees())
-            blAngle = int(self.backLeftModule.getSwerveAngle().degrees())
-            brAngle = int(self.backRightModule.getSwerveAngle().degrees())
-
-            flSpeed = self.frontLeftModule.getWheelLinearVelocity()
-            frSpeed = self.frontRightModule.getWheelLinearVelocity()
-            blSpeed = self.backLeftModule.getWheelLinearVelocity()
-            brSpeed = self.backRightModule.getWheelLinearVelocity()
-
             print(
-                "r: {:.1f}, {:.1f}, {}* fl: {}* {:.1f} fr: {}* {:.1f} bl: {}* {:.1f} br: {}* {:.1f}".format(
-                    rX,
-                    rY,
-                    rAngle,
-                    flAngle,
-                    flSpeed,
-                    frAngle,
-                    frSpeed,
-                    blAngle,
-                    blSpeed,
-                    brAngle,
-                    brSpeed,
+                "r: {:.1f}, {:.1f}, {:.0f}* fl: {:.0f}* {:.1f} fr: {:.0f}* {:.1f} bl: {:.0f}* {:.1f} br: {:.0f}* {:.1f}".format(
+                    robotPose.X(),
+                    robotPose.Y(),
+                    robotPose.rotation().degrees(),
+                    self.frontLeftModule.getSwerveAngle().degrees(),
+                    self.frontLeftModule.getWheelLinearVelocity(),
+                    self.frontRightModule.getSwerveAngle().degrees(),
+                    self.frontRightModule.getWheelLinearVelocity(),
+                    self.backLeftModule.getSwerveAngle().degrees(),
+                    self.backLeftModule.getWheelLinearVelocity(),
+                    self.backRightModule.getSwerveAngle().degrees(),
+                    self.backRightModule.getWheelLinearVelocity(),
                 )
             )
 

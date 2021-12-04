@@ -12,6 +12,7 @@ from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.resetdrive import ResetDrive
 
 from subsystems.drivesubsystem import DriveSubsystem
+from subsystems.visionsubsystem import VisionSubsystem
 
 from operatorinterface import OperatorInterface
 
@@ -31,6 +32,7 @@ class RobotContainer:
 
         # The robot's subsystems
         self.drive = DriveSubsystem()
+        self.vision = VisionSubsystem()
 
         # Autonomous routines
 
