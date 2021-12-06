@@ -22,27 +22,48 @@ class TrackingModule:
     def update(self) -> None:
         targetAngle = self.getTargetAngle()
         if targetAngle is not None:
-            SmartDashboard.putNumber(constants.kTargetAngleRelativeToRobotKeys.valueKey, targetAngle.radians())
-            SmartDashboard.putBoolean(constants.kTargetAngleRelativeToRobotKeys.validKey, True)
+            SmartDashboard.putNumber(
+                constants.kTargetAngleRelativeToRobotKeys.valueKey,
+                targetAngle.radians(),
+            )
+            SmartDashboard.putBoolean(
+                constants.kTargetAngleRelativeToRobotKeys.validKey, True
+            )
         else:
-            SmartDashboard.putBoolean(constants.kTargetAngleRelativeToRobotKeys.validKey, False)
+            SmartDashboard.putBoolean(
+                constants.kTargetAngleRelativeToRobotKeys.validKey, False
+            )
 
         targetDistance = self.getTargetDistance()
         if targetDistance is not None:
-            SmartDashboard.putNumber(constants.kTargetDistanceRelativeToRobotKeys.valueKey, targetDistance)
-            SmartDashboard.putBoolean(constants.kTargetDistanceRelativeToRobotKeys.validKey, True)
+            SmartDashboard.putNumber(
+                constants.kTargetDistanceRelativeToRobotKeys.valueKey, targetDistance
+            )
+            SmartDashboard.putBoolean(
+                constants.kTargetDistanceRelativeToRobotKeys.validKey, True
+            )
         else:
-            SmartDashboard.putBoolean(constants.kTargetDistanceRelativeToRobotKeys.validKey, False)
+            SmartDashboard.putBoolean(
+                constants.kTargetDistanceRelativeToRobotKeys.validKey, False
+            )
 
         targetFacingAngle = self.getTargetFacingAngle()
         if targetFacingAngle is not None:
-            SmartDashboard.putNumber(constants.kTargetFacingAngleRelativeToRobotKeys.valueKey, targetFacingAngle.radians())
-            SmartDashboard.putBoolean(constants.kTargetFacingAngleRelativeToRobotKeys.validKey, True)
+            SmartDashboard.putNumber(
+                constants.kTargetFacingAngleRelativeToRobotKeys.valueKey,
+                targetFacingAngle.radians(),
+            )
+            SmartDashboard.putBoolean(
+                constants.kTargetFacingAngleRelativeToRobotKeys.validKey, True
+            )
         else:
-            SmartDashboard.putBoolean(constants.kTargetFacingAngleRelativeToRobotKeys.validKey, False)
+            SmartDashboard.putBoolean(
+                constants.kTargetFacingAngleRelativeToRobotKeys.validKey, False
+            )
 
     def reset(self) -> None:
         raise NotImplementedError("Must be implemented by subclass")
+
 
 class SimTrackingModule(TrackingModule):
     """
@@ -71,10 +92,14 @@ class SimTrackingModule(TrackingModule):
         return self.targetFacingAngle
 
     def update(self) -> None:
-        targetPoseX, targetPoseY, targetAngle = SmartDashboard.getNumberArray(constants.kSimTargetPoseArrayKey, [0, 0, 0])
+        targetPoseX, targetPoseY, targetAngle = SmartDashboard.getNumberArray(
+            constants.kSimTargetPoseArrayKey, [0, 0, 0]
+        )
         targetPose = Pose2d(targetPoseX, targetPoseY, targetAngle)
 
-        robotPoseX, robotPoseY, robotPoseAngle = SmartDashboard.getNumberArray(constants.kSimRobotPoseArrayKey, [0, 0, 0])
+        robotPoseX, robotPoseY, robotPoseAngle = SmartDashboard.getNumberArray(
+            constants.kSimRobotPoseArrayKey, [0, 0, 0]
+        )
         robotPose = Pose2d(robotPoseX, robotPoseY, robotPoseAngle)
 
         robotToTarget = Transform2d(robotPose, targetPose)
@@ -87,12 +112,13 @@ class SimTrackingModule(TrackingModule):
     def reset(self) -> None:
         pass
 
+
 class VisionSubsystem(SubsystemBase):
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
 
-        if False: #RobotBase.isReal():
+        if False:  # RobotBase.isReal():
             pass
         else:
             self.trackingModule = SimTrackingModule(
@@ -118,19 +144,29 @@ class VisionSubsystem(SubsystemBase):
         else:
             targetDistance = self.trackingModule.getTargetDistance()
             if targetDistance is None:
-                targetDistance = float('inf')
+                targetDistance = float("inf")
 
             targetFacingAngle = self.trackingModule.getTargetFacingAngle()
             if targetFacingAngle is None:
                 targetFacingAngle = Rotation2d()
 
-            robotPoseX, robotPoseY, robotPoseAngle = SmartDashboard.getNumberArray(constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0])
+            robotPoseX, robotPoseY, robotPoseAngle = SmartDashboard.getNumberArray(
+                constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0]
+            )
             robotPose = Pose2d(robotPoseX, robotPoseY, robotPoseAngle)
-            robotToTarget = Transform2d(Translation2d(targetDistance * targetAngle.cos(), targetDistance * targetAngle.sin()), targetFacingAngle)
+            robotToTarget = Transform2d(
+                Translation2d(
+                    targetDistance * targetAngle.cos(),
+                    targetDistance * targetAngle.sin(),
+                ),
+                targetFacingAngle,
+            )
             targetPose = robotPose + robotToTarget
-            SmartDashboard.putNumberArray(constants.kTargetPoseArrayKeys.valueKey, [targetPose.X(), targetPose.Y(), targetPose.rotation().radians()])
+            SmartDashboard.putNumberArray(
+                constants.kTargetPoseArrayKeys.valueKey,
+                [targetPose.X(), targetPose.Y(), targetPose.rotation().radians()],
+            )
             SmartDashboard.putBoolean(constants.kTargetPoseArrayKeys.validKey, True)
-
 
         if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
             print(

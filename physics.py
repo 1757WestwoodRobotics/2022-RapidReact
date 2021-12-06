@@ -178,7 +178,9 @@ class PhysicsEngine:
         self.gyroSim = SimDeviceSim("navX-Sensor[4]")
         self.gyroYaw = self.gyroSim.getDouble("Yaw")
 
-        simTargetObject = self.physics_controller.field.getObject(constants.kSimTargetName)
+        simTargetObject = self.physics_controller.field.getObject(
+            constants.kSimTargetName
+        )
         simTargetObject.setPose(constants.kSimDefaultTargetLocation)
 
     def update_sim(self, now: float, tm_diff: float) -> None:
@@ -200,14 +202,26 @@ class PhysicsEngine:
 
         simRobotPose = self.driveSim.getPose()
         self.physics_controller.field.setRobotPose(simRobotPose)
-        SmartDashboard.putNumberArray(constants.kSimRobotPoseArrayKey, [simRobotPose.X(), simRobotPose.Y(), simRobotPose.rotation().radians()])
+        SmartDashboard.putNumberArray(
+            constants.kSimRobotPoseArrayKey,
+            [simRobotPose.X(), simRobotPose.Y(), simRobotPose.rotation().radians()],
+        )
 
-        simTargetObject = self.physics_controller.field.getObject(constants.kSimTargetName)
+        simTargetObject = self.physics_controller.field.getObject(
+            constants.kSimTargetName
+        )
         simTargetPose = simTargetObject.getPose()
-        SmartDashboard.putNumberArray(constants.kSimTargetPoseArrayKey, [simTargetPose.X(), simTargetPose.Y(), simTargetPose.rotation().radians()])
+        SmartDashboard.putNumberArray(
+            constants.kSimTargetPoseArrayKey,
+            [simTargetPose.X(), simTargetPose.Y(), simTargetPose.rotation().radians()],
+        )
 
-        if (SmartDashboard.getBoolean(constants.kTargetPoseArrayKeys.validKey, False)):
-            targetPoseX, targetPoseY, targetAngle = SmartDashboard.getNumberArray(constants.kTargetPoseArrayKeys.valueKey, [0, 0, 0])
+        if SmartDashboard.getBoolean(constants.kTargetPoseArrayKeys.validKey, False):
+            targetPoseX, targetPoseY, targetAngle = SmartDashboard.getNumberArray(
+                constants.kTargetPoseArrayKeys.valueKey, [0, 0, 0]
+            )
             targetPose = Pose2d(targetPoseX, targetPoseY, targetAngle)
-            targetObject = self.physics_controller.field.getObject(constants.kTargetName)
+            targetObject = self.physics_controller.field.getObject(
+                constants.kTargetName
+            )
             targetObject.setPose(targetPose)

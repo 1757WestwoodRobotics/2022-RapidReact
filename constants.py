@@ -282,7 +282,9 @@ kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
 # Vision parameters
 kTargetAngleRelativeToRobotKeys = OptionalValueKeys("TargetAngleRelativeToRobot")
 kTargetDistanceRelativeToRobotKeys = OptionalValueKeys("TargetDistanceRelativeToRobot")
-kTargetFacingAngleRelativeToRobotKeys = OptionalValueKeys("TargetFacingAngleRelativeToRobot")
+kTargetFacingAngleRelativeToRobotKeys = OptionalValueKeys(
+    "TargetFacingAngleRelativeToRobot"
+)
 kTargetPoseArrayKeys = OptionalValueKeys("TargetPoseArray")
 
 kTargetName = "Target"
@@ -316,7 +318,7 @@ kKeyboardJoystickDeadband = 0.0
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
-kSimDefaultTargetLocation = Pose2d(kFieldLength * 3/4, kFieldWidth / 2, 0)
+kSimDefaultTargetLocation = Pose2d(kFieldLength * 3 / 4, kFieldWidth / 2, 0)
 """[meters, meters, radians]"""
 
 kSimRobotPoseArrayKey = "SimRobotPoseArray"

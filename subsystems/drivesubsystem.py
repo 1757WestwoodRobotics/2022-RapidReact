@@ -9,7 +9,7 @@ from ctre import (
     WPI_TalonFX,
 )
 from navx import AHRS
-from wpimath.geometry import Pose2d, Rotation2d
+from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.kinematics import (
     ChassisSpeeds,
     SwerveModuleState,
@@ -327,6 +327,7 @@ class DriveSubsystem(SubsystemBase):
     class CoordinateMode(Enum):
         RobotRelative = auto()
         FieldRelative = auto()
+        TargetRelative = auto()
 
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
@@ -444,7 +445,10 @@ class DriveSubsystem(SubsystemBase):
         )
         robotPose = self.odometry.getPose()
 
-        SmartDashboard.putNumberArray(constants.kRobotPoseArrayKeys.valueKey, [robotPose.X(), robotPose.Y(), robotPose.rotation().radians()])
+        SmartDashboard.putNumberArray(
+            constants.kRobotPoseArrayKeys.valueKey,
+            [robotPose.X(), robotPose.Y(), robotPose.rotation().radians()],
+        )
         SmartDashboard.putBoolean(constants.kRobotPoseArrayKeys.validKey, True)
 
         if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
@@ -505,6 +509,25 @@ class DriveSubsystem(SubsystemBase):
                 chassisSpeeds.omega,
                 self.odometry.getPose().rotation(),
             )
+        elif coordinateMode is DriveSubsystem.CoordinateMode.TargetRelative:
+            if SmartDashboard.getBoolean(
+                constants.kTargetAngleRelativeToRobotKeys.validKey, False
+            ):
+                targetAngle = Rotation2d(
+                    SmartDashboard.getNumber(
+                        constants.kTargetAngleRelativeToRobotKeys.valueKey, 0
+                    )
+                )
+                robotSpeeds = Translation2d(chassisSpeeds.vx, chassisSpeeds.vy)
+                targetAlignedSpeeds = robotSpeeds.rotateBy(targetAngle)
+                robotChassisSpeeds = ChassisSpeeds(
+                    targetAlignedSpeeds.X(),
+                    targetAlignedSpeeds.Y(),
+                    chassisSpeeds.omega,
+                )
+            else:
+                robotChassisSpeeds = ChassisSpeeds()
+
         moduleStates = self.kinematics.toSwerveModuleStates(robotChassisSpeeds)
         (
             frontLeftState,

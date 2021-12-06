@@ -9,6 +9,7 @@ from commands.complexauto import ComplexAuto
 from commands.drivedistance import DriveDistance
 from commands.defaultdrive import DefaultDrive
 from commands.fieldrelativedrive import FieldRelativeDrive
+from commands.targetrelativedrive import TargetRelativeDrive
 from commands.resetdrive import ResetDrive
 
 from subsystems.drivesubsystem import DriveSubsystem
@@ -75,9 +76,20 @@ class RobotContainer:
         and then passing it to a JoystickButton.
         """
         commands2.button.JoystickButton(
-            *self.operatorInterface.coordinateModeControl
+            *self.operatorInterface.fieldRelativeCoordinateModeControl
         ).whileHeld(
             FieldRelativeDrive(
+                self.drive,
+                self.operatorInterface.chassisControls.forwardsBackwards,
+                self.operatorInterface.chassisControls.sideToSide,
+                self.operatorInterface.chassisControls.rotation,
+            )
+        )
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.targetRelativeCoordinateModeControl
+        ).whileHeld(
+            TargetRelativeDrive(
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,

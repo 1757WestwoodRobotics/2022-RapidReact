@@ -49,9 +49,14 @@ class OperatorInterface:
         self.translationController = Joystick(constants.kTranslationControllerPort)
         self.rotationController = Joystick(constants.kRotationControllerPort)
 
-        self.coordinateModeControl = (
+        self.fieldRelativeCoordinateModeControl = (
             self.xboxController,
             XboxController.Button.kBumperRight.value,
+        )
+
+        self.targetRelativeCoordinateModeControl = (
+            self.xboxController,
+            XboxController.Button.kBumperLeft.value,
         )
 
         self.resetSwerveControl = (
