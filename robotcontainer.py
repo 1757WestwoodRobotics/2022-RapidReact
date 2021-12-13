@@ -108,7 +108,7 @@ class RobotContainer:
 
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl
-        ).toggleWhenPressed(self.driveToTarget.perpetually())
+        ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()
