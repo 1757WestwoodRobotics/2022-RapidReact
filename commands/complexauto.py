@@ -1,18 +1,21 @@
-from commands2 import SequentialCommandGroup
+from commands2 import SequentialCommandGroup, WaitCommand
 
 import constants
 
-from .drivedistance import DriveDistance
+from commands.drivetotarget import DriveToTarget
+from commands.drivedistance import DriveDistance
 from subsystems.drivesubsystem import DriveSubsystem
 
 
 class ComplexAuto(SequentialCommandGroup):
     """
-    A complex auto command that drives forward, right, backwards, left.
+    A complex auto command that drives to the target, moves forward, then back
     """
 
     def __init__(self, drive: DriveSubsystem):
         super().__init__(
+            # Drive to the target
+            DriveToTarget(drive, constants.kAutoTargetOffset),
             # Drive forward the specified distance
             DriveDistance(
                 constants.kAutoFrontwaysDistance,
@@ -20,24 +23,13 @@ class ComplexAuto(SequentialCommandGroup):
                 DriveDistance.Axis.X,
                 drive,
             ),
+            # Wait a bit
+            WaitCommand(constants.kAutoWaitDuration),
             # Drive backward the specified distance
-            DriveDistance(
-                -1 * constants.kAutoSidewaysDistance,
-                constants.kAutoDriveSpeedFactor,
-                DriveDistance.Axis.Y,
-                drive,
-            ),
             DriveDistance(
                 -1 * constants.kAutoFrontwaysDistance,
                 constants.kAutoDriveSpeedFactor,
                 DriveDistance.Axis.X,
-                drive,
-            ),
-            # Drive backward the specified distance
-            DriveDistance(
-                constants.kAutoSidewaysDistance,
-                constants.kAutoDriveSpeedFactor,
-                DriveDistance.Axis.Y,
                 drive,
             ),
         )

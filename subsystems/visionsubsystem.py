@@ -4,6 +4,7 @@ from commands2 import SubsystemBase
 from wpilib import SmartDashboard, Timer
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
 import constants
+import util.convenientmath as convenientmath
 
 
 class TrackingModule:
@@ -24,7 +25,7 @@ class TrackingModule:
         if targetAngle is not None:
             SmartDashboard.putNumber(
                 constants.kTargetAngleRelativeToRobotKeys.valueKey,
-                targetAngle.radians(),
+                convenientmath.normalizeRotation(targetAngle).radians(),
             )
             SmartDashboard.putBoolean(
                 constants.kTargetAngleRelativeToRobotKeys.validKey, True
@@ -51,7 +52,7 @@ class TrackingModule:
         if targetFacingAngle is not None:
             SmartDashboard.putNumber(
                 constants.kTargetFacingAngleRelativeToRobotKeys.valueKey,
-                targetFacingAngle.radians(),
+                convenientmath.normalizeRotation(targetFacingAngle).radians(),
             )
             SmartDashboard.putBoolean(
                 constants.kTargetFacingAngleRelativeToRobotKeys.validKey, True
@@ -155,9 +156,8 @@ class VisionSubsystem(SubsystemBase):
             )
             robotPose = Pose2d(robotPoseX, robotPoseY, robotPoseAngle)
             robotToTarget = Transform2d(
-                Translation2d(
-                    targetDistance * targetAngle.cos(),
-                    targetDistance * targetAngle.sin(),
+                convenientmath.translationFromDistanceAndRotation(
+                    targetDistance, targetAngle
                 ),
                 targetFacingAngle,
             )

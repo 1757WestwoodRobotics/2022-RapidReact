@@ -155,6 +155,18 @@ kMaxRotationAngularVelocity = (
 )
 """radians / second (omega = v / r)"""
 
+kMaxWheelLinearAcceleration = kMaxWheelLinearVelocity / 1
+"""meters / second^2"""
+
+kMaxForwardLinearAcceleration = kMaxWheelLinearAcceleration
+"""meters / second^2"""
+
+kMaxSidewaysLinearAcceleration = kMaxWheelLinearAcceleration
+"""meters / second^2"""
+
+kMaxRotationAngularAcceleration = kMaxRotationAngularVelocity / 0.5
+"""radians / second^2"""
+
 kFrontLeftModuleName = "front_left"
 kFrontRightModuleName = "front_right"
 kBackLeftModuleName = "back_left"
@@ -305,6 +317,33 @@ kAutoDistanceThreshold = 6 * kMetersPerInch
 kAutoDriveSpeedFactor = 0.5
 """dimensionless"""
 
+kAutoWaitDuration = 1
+"""seconds"""
+
+kAutoTargetOffset = Translation2d(2, 0)
+"""[meters, meters]"""
+
+# Drive to Target
+kDriveToTargetDistancePGain = 0.5
+kDriveToTargetDistanceIGain = 0
+kDriveToTargetDistanceDGain = 0
+
+kDriveToTargetAnglePGain = 0.5
+kDriveToTargetAngleIGain = 0
+kDriveToTargetAngleDGain = 0
+
+kDriveToTargetDistanceTolerance = 10 / kCentimetersPerMeter
+"""meters"""
+
+kDriveToTargetLinearVelocityTolerance = 1 / kCentimetersPerMeter / 1
+"""meters / second"""
+
+kDriveToTargetAngleTolerance = 5 * kRadiansPerDegree
+"""radians"""
+
+kDriveToTargetAngularVelocityTolerance = 5 * kRadiansPerDegree / 1
+"""radians / second"""
+
 # Operator Interface
 kXboxControllerPort = 0
 kTranslationControllerPort = 1
@@ -318,7 +357,9 @@ kKeyboardJoystickDeadband = 0.0
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
-kSimDefaultTargetLocation = Pose2d(kFieldLength * 3 / 4, kFieldWidth / 2, 0)
+kSimDefaultTargetLocation = Pose2d(
+    kFieldLength * 3 / 4, kFieldWidth / 2, 180 * kRadiansPerDegree
+)
 """[meters, meters, radians]"""
 
 kSimRobotPoseArrayKey = "SimRobotPoseArray"

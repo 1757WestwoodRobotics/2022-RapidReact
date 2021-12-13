@@ -18,6 +18,7 @@ from wpimath.kinematics import (
 )
 from enum import Enum, auto
 import constants
+import util.convenientmath as convenientmath
 
 
 class SwerveModule:
@@ -487,6 +488,20 @@ class DriveSubsystem(SubsystemBase):
         #         forwardSpeedFactor, sidewaysSpeedFactor, rotationSpeedFactor
         #     )
         # )
+
+        forwardSpeedFactor = convenientmath.clamp(forwardSpeedFactor, -1, 1)
+        sidewaysSpeedFactor = convenientmath.clamp(sidewaysSpeedFactor, -1, 1)
+        rotationSpeedFactor = convenientmath.clamp(rotationSpeedFactor, -1, 1)
+
+        combinedLinearFactor = Translation2d(
+            forwardSpeedFactor, sidewaysSpeedFactor
+        ).norm()
+
+        # prevent combined forward & sideways inputs from exceeding the max linear velocity
+        if combinedLinearFactor > 1.0:
+            forwardSpeedFactor = forwardSpeedFactor / combinedLinearFactor
+            sidewaysSpeedFactor = sidewaysSpeedFactor / combinedLinearFactor
+
         chassisSpeeds = ChassisSpeeds(
             forwardSpeedFactor * constants.kMaxForwardLinearVelocity,
             sidewaysSpeedFactor * constants.kMaxSidewaysLinearVelocity,

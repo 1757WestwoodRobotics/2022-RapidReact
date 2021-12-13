@@ -64,6 +64,11 @@ class OperatorInterface:
             XboxController.Button.kX.value,
         )
 
+        self.driveToTargetControl = (
+            self.xboxController,
+            XboxController.Button.kY.value,
+        )
+
         # self.chassisControls = HolonomicInput(
         #     Invert(
         #         Deadband(
