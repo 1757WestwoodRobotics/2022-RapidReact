@@ -2,7 +2,7 @@ from commands2 import SequentialCommandGroup
 
 import constants
 
-from .drivedistance import DriveDistance
+from commands.drivedistance import DriveDistance
 from subsystems.drivesubsystem import DriveSubsystem
 
 
