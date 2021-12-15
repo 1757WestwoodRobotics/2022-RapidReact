@@ -9,8 +9,7 @@ from ctre import (
     WPI_TalonFX,
 )
 from navx import AHRS
-from wpimath.geometry import Rotation2d
-from wpimath.geometry._geometry import Pose2d
+from wpimath.geometry import Rotation2d, Pose2d
 from wpimath.kinematics import (
     ChassisSpeeds,
     SwerveModuleState,

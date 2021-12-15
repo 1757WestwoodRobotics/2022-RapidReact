@@ -1,0 +1,4 @@
+# Eventually these should probably be version pinned
+robotpy[all]
+pyyaml
+pylint
