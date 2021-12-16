@@ -1,5 +1,5 @@
-# mentorbot
-Code for the FRC 1757 teaching platform robot
+# 2022-RapidReact
+Code for the FRC 1757 2022 Competition Bot
 
 ## Installation
 
