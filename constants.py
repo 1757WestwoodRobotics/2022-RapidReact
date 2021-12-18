@@ -24,7 +24,7 @@ Swerve Module Layout:
 """
 
 import math
-from wpimath.geometry import Pose2d, Translation2d
+from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.system.plant import DCMotor
 
 from util.keyorganization import OptionalValueKeys
@@ -72,6 +72,12 @@ kFieldWidth = 27 * kMetersPerFoot
 """meters"""
 
 # Robot Physical parameters
+kRobotWidth = 28 * kMetersPerInch
+"""meters"""
+
+kRobotLength = 28 * kMetersPerInch
+"""meters"""
+
 kSwerveModuleCenterToCenterSideDistance = 21.5 * kMetersPerInch
 """meters"""
 
@@ -171,6 +177,21 @@ kFrontLeftModuleName = "front_left"
 kFrontRightModuleName = "front_right"
 kBackLeftModuleName = "back_left"
 kBackRightModuleName = "back_right"
+
+kLimelightMountingOffset = Translation2d(
+    (kRobotLength / 2) - (4.125 * kMetersPerInch), 0.0
+)
+kTrackerPanAngleKey = "tracker/pan_angle"
+kLimelightTrackerModuleName = "limelight_target_tracker"
+
+# Limelight
+kLimelightTargetInvalidValue = 0.0
+kLimelightTargetValidValue = 1.0
+kLimelightMinHorizontalFoV = Rotation2d.fromDegrees(-27)
+kLimelightMaxHorizontalFoV = Rotation2d.fromDegrees(27)
+kLimelightNetworkTableName = "limelight"
+kLimelightTargetValidKey = "tv"
+kLimelightTargetHorizontalAngleKey = "tx"
 
 # Motors
 kFrontLeftDriveMotorId = 10
@@ -323,6 +344,11 @@ kAutoWaitDuration = 1
 kAutoTargetOffset = Translation2d(2, 0)
 """[meters, meters]"""
 
+# Target relative drive
+kTargetRelativeDriveAnglePGain = 1
+kTargetRelativeDriveAngleIGain = 0
+kTargetRelativeDriveAngleDGain = 0
+
 # Drive to Target
 kDriveToTargetDistancePGain = 0.5
 kDriveToTargetDistanceIGain = 0
@@ -362,8 +388,12 @@ kSimDefaultTargetLocation = Pose2d(
 )
 """[meters, meters, radians]"""
 
+kSimDefaultTargetHeight = 10
+"""meters"""
+
 kSimRobotPoseArrayKey = "SimRobotPoseArray"
 kSimTargetPoseArrayKey = "SimTargetPoseArray"
+kSimTargetHeightKey = "SimTargetHeight"
 kSimTargetTrackingModuleName = "sim_target_tracker"
 
 kSimFrontLeftDriveMotorPort = 0

@@ -1,6 +1,11 @@
 import typing
 from commands2 import CommandBase
 from subsystems.drivesubsystem import DriveSubsystem
+from wpilib import SmartDashboard
+from wpilib.controller import PIDController
+from wpimath.geometry import Rotation2d
+
+import constants
 
 
 class TargetRelativeDrive(CommandBase):
@@ -19,13 +24,35 @@ class TargetRelativeDrive(CommandBase):
         self.sideways = sideways
         self.rotation = rotation
 
+        self.angleController = PIDController(
+            constants.kTargetRelativeDriveAnglePGain,
+            constants.kTargetRelativeDriveAngleIGain,
+            constants.kTargetRelativeDriveAngleDGain,
+        )
+
         self.addRequirements([self.drive])
         self.setName(__class__.__name__)
 
     def execute(self) -> None:
+        angleControllerOutput = 0
+        if SmartDashboard.getBoolean(
+            constants.kTargetAngleRelativeToRobotKeys.validKey, False
+        ):
+            targetAngle = Rotation2d(
+                SmartDashboard.getNumber(
+                    constants.kTargetAngleRelativeToRobotKeys.valueKey, 0
+                )
+            )
+
+            angleControllerOutput = self.angleController.calculate(
+                -1 * targetAngle.radians(), 0
+            )
+        else:
+            self.angleController.reset()
+
         self.drive.arcadeDriveWithFactors(
             self.forward(),
             self.sideways(),
-            self.rotation(),
+            angleControllerOutput,
             DriveSubsystem.CoordinateMode.TargetRelative,
         )

@@ -14,10 +14,12 @@ from wpilib import RobotController, SmartDashboard
 from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim
 import wpimath.kinematics
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
+from networktables import NetworkTables
 
 from wpimath.system.plant import DCMotor
 
 import constants
+import util.convenientmath as convenientmath
 
 from pyfrc.physics.core import PhysicsInterface
 
@@ -112,6 +114,35 @@ class SwerveDriveSim:
         self.pose = newPose
 
 
+class LimelightSim:
+    def __init__(self) -> None:
+        NetworkTables.initialize()
+        self.limelightNetworkTable = NetworkTables.getTable(
+            constants.kLimelightNetworkTableName
+        )
+
+    def update(self, limelightPose: Pose2d, targetPose: Pose2d) -> None:
+        targetInLimelight = Transform2d(limelightPose, targetPose)
+        targetAngle = convenientmath.rotationFromTranslation(
+            targetInLimelight.translation()
+        )
+        targetValid = constants.kLimelightTargetInvalidValue
+        if (
+            constants.kLimelightMinHorizontalFoV.radians()
+            < targetAngle.radians()
+            < constants.kLimelightMaxHorizontalFoV.radians()
+        ):
+            targetValid = constants.kLimelightTargetValidValue
+            self.limelightNetworkTable.putNumber(
+                constants.kLimelightTargetHorizontalAngleKey,
+                -1 * targetAngle.degrees(),  # limelight uses reversed direction along x
+            )
+
+        self.limelightNetworkTable.putNumber(
+            constants.kLimelightTargetValidKey, targetValid
+        )
+
+
 class PhysicsEngine:
     """
     Simulates a drivetrain
@@ -183,6 +214,8 @@ class PhysicsEngine:
         )
         simTargetObject.setPose(constants.kSimDefaultTargetLocation)
 
+        self.limelightSim = LimelightSim()
+
     def update_sim(self, now: float, tm_diff: float) -> None:
         """
         Called when the simulation parameters for the program need to be
@@ -202,11 +235,14 @@ class PhysicsEngine:
 
         simRobotPose = self.driveSim.getPose()
         self.physics_controller.field.setRobotPose(simRobotPose)
+
+        # publish the simulated robot pose to nt
         SmartDashboard.putNumberArray(
             constants.kSimRobotPoseArrayKey,
             [simRobotPose.X(), simRobotPose.Y(), simRobotPose.rotation().radians()],
         )
 
+        # publish the simulated target pose to nt
         simTargetObject = self.physics_controller.field.getObject(
             constants.kSimTargetName
         )
@@ -216,6 +252,15 @@ class PhysicsEngine:
             [simTargetPose.X(), simTargetPose.Y(), simTargetPose.rotation().radians()],
         )
 
+        # publish the simulated limelight nt entries
+        limelightPanAngle = SmartDashboard.getNumber(constants.kTrackerPanAngleKey, 0)
+        robotToLimelightTransform = Transform2d(
+            constants.kLimelightMountingOffset, Rotation2d(limelightPanAngle)
+        )
+        simLimelightPose = simRobotPose + robotToLimelightTransform
+        self.limelightSim.update(simLimelightPose, simTargetPose)
+
+        # show the robot's estimation of where the target is on the simulated field
         if SmartDashboard.getBoolean(constants.kTargetPoseArrayKeys.validKey, False):
             targetPoseX, targetPoseY, targetAngle = SmartDashboard.getNumberArray(
                 constants.kTargetPoseArrayKeys.valueKey, [0, 0, 0]
