@@ -18,7 +18,9 @@ from wpimath.kinematics import (
     SwerveDrive4Kinematics,
     SwerveDrive4Odometry,
 )
-
+from functools import reduce
+from typing import Tuple
+from enum import Enum, auto
 import constants
 from util import convenientmath
 
@@ -140,136 +142,157 @@ class CTRESwerveModule(SwerveModule):
                 return False
             return True
 
+        def configCtre(x: Tuple[str, ErrorCode]) -> bool:
+            return not ctreCheckError(x[0], x[1])
+
+        foldl = lambda func, acc, xs: reduce(func, xs, acc)
+
+        orFunc = lambda x, y: x or y
+
         print(f"Initializing swerve module: {self.name}")
         print(
             f"   Configuring swerve encoder: CAN ID: {self.swerveEncoder.getDeviceNumber()}"
         )
 
-        if not ctreCheckError(
-            "configFactoryDefault",
-            self.swerveEncoder.configFactoryDefault(
-                constants.kConfigurationTimeoutLimit
+        if foldl(  # go through every mapped value
+            orFunc,
+            False,
+            map(
+                configCtre,
+                [
+                    (
+                        "configFactoryDefault",
+                        self.swerveEncoder.configFactoryDefault(
+                            constants.kConfigurationTimeoutLimit
+                        ),
+                    ),
+                    (
+                        "configSensorInitializationStrategy",
+                        self.swerveEncoder.configSensorInitializationStrategy(
+                            SensorInitializationStrategy.BootToAbsolutePosition,
+                            constants.kConfigurationTimeoutLimit,
+                        ),
+                    ),
+                    (
+                        "configMagnetOffset",
+                        self.swerveEncoder.configMagnetOffset(
+                            -1
+                            * self.swerveEncoderOffset,  # invert the offset to zero the encoder
+                            constants.kConfigurationTimeoutLimit,
+                        ),
+                    ),
+                    (
+                        "configAbsoluteSensorRange",
+                        self.swerveEncoder.configAbsoluteSensorRange(
+                            AbsoluteSensorRange.Signed_PlusMinus180,
+                            constants.kConfigurationTimeoutLimit,
+                        ),
+                    ),
+                    (
+                        "setPositionToAbsolute",
+                        self.swerveEncoder.setPositionToAbsolute(
+                            constants.kConfigurationTimeoutLimit,
+                        ),
+                    ),
+                ],
             ),
         ):
             return
-        if not ctreCheckError(
-            "configSensorInitializationStrategy",
-            self.swerveEncoder.configSensorInitializationStrategy(
-                SensorInitializationStrategy.BootToAbsolutePosition,
-                constants.kConfigurationTimeoutLimit,
-            ),
-        ):
-            return
-        if not ctreCheckError(
-            "configMagnetOffset",
-            self.swerveEncoder.configMagnetOffset(
-                -1 * self.swerveEncoderOffset,  # invert the offset to zero the encoder
-                constants.kConfigurationTimeoutLimit,
-            ),
-        ):
-            return
-        if not ctreCheckError(
-            "configAbsoluteSensorRange",
-            self.swerveEncoder.configAbsoluteSensorRange(
-                AbsoluteSensorRange.Signed_PlusMinus180,
-                constants.kConfigurationTimeoutLimit,
-            ),
-        ):
-            return
-        if not ctreCheckError(
-            "setPositionToAbsolute",
-            self.swerveEncoder.setPositionToAbsolute(
-                constants.kConfigurationTimeoutLimit,
-            ),
-        ):
-            return
+
         print("   ... Done")
         print(f"   Configuring drive motor: CAN ID: {self.driveMotor.getDeviceID()}")
-        if not ctreCheckError(
-            "configFactoryDefault",
-            self.driveMotor.configFactoryDefault(constants.kConfigurationTimeoutLimit),
+
+        if foldl(  # go through every mapped value
+            orFunc,
+            False,
+            map(
+                configCtre,
+                [
+                    (
+                        "configFactoryDefault",
+                        self.driveMotor.configFactoryDefault(
+                            constants.kConfigurationTimeoutLimit
+                        ),
+                    ),
+                    (
+                        "config_kP",
+                        self.driveMotor.config_kP(
+                            constants.kDrivePIDSlot,
+                            constants.kDrivePGain,
+                            constants.kConfigurationTimeoutLimit,
+                        ),
+                    ),
+                    (
+                        "config_kI",
+                        self.driveMotor.config_kI(
+                            constants.kDrivePIDSlot,
+                            constants.kDriveIGain,
+                            constants.kConfigurationTimeoutLimit,
+                        ),
+                    ),
+                    (
+                        "config_kD",
+                        self.driveMotor.config_kD(
+                            constants.kDrivePIDSlot,
+                            constants.kDriveDGain,
+                            constants.kConfigurationTimeoutLimit,
+                        ),
+                    ),
+                ],
+            ),
         ):
             return
-        # config = TalonFXConfiguration()
-        # if not ctreCheckError(
-        #     "getAllConfigs",
-        #     self.driveMotor.getAllConfigs(config, constants.kConfigurationTimeoutLimit),
-        # ):
-        #     return
-        # else:
-        #     print("   Config:\n{}".format(config.toString()))
+
         self.driveMotor.setInverted(self.driveMotorInverted)
-        if not ctreCheckError(
-            "config_kP",
-            self.driveMotor.config_kP(
-                constants.kDrivePIDSlot,
-                constants.kDrivePGain,
-                constants.kConfigurationTimeoutLimit,
-            ),
-        ):
-            return
-        if not ctreCheckError(
-            "config_kI",
-            self.driveMotor.config_kI(
-                constants.kDrivePIDSlot,
-                constants.kDriveIGain,
-                constants.kConfigurationTimeoutLimit,
-            ),
-        ):
-            return
-        if not ctreCheckError(
-            "config_kD",
-            self.driveMotor.config_kD(
-                constants.kDrivePIDSlot,
-                constants.kDriveDGain,
-                constants.kConfigurationTimeoutLimit,
-            ),
-        ):
-            return
+
         print("   ... Done")
 
         print(f"   Configuring steer motor: CAN ID: {self.steerMotor.getDeviceID()}")
-        if not ctreCheckError(
-            "configFactoryDefault",
-            self.steerMotor.configFactoryDefault(constants.kConfigurationTimeoutLimit),
+        # ---------------------------------------------------
+
+        if foldl(  # go through every mapped value
+            orFunc,
+            False,
+            map(
+                configCtre,
+                [
+                    (
+                        "configFactoryDefault",
+                        self.steerMotor.configFactoryDefault(
+                            constants.kConfigurationTimeoutLimit
+                        ),
+                    ),
+                    (
+                        "config_kP",
+                        self.steerMotor.config_kP(
+                            constants.kSteerPIDSlot,
+                            constants.kSteerPGain,
+                            constants.kConfigurationTimeoutLimit,
+                        ),
+                    ),
+                    (
+                        "config_kI",
+                        self.steerMotor.config_kI(
+                            constants.kSteerPIDSlot,
+                            constants.kSteerIGain,
+                            constants.kConfigurationTimeoutLimit,
+                        ),
+                    ),
+                    (
+                        "config_kD",
+                        self.steerMotor.config_kD(
+                            constants.kSteerPIDSlot,
+                            constants.kSteerDGain,
+                            constants.kConfigurationTimeoutLimit,
+                        ),
+                    ),
+                ],
+            ),
         ):
             return
-        # config = TalonFXConfiguration()
-        # if not ctreCheckError(
-        #     "getAllConfigs",
-        #     self.driveMotor.getAllConfigs(config, constants.kConfigurationTimeoutLimit),
-        # ):
-        #     return
-        # else:
-        #     print("   Config:\n{}".format(config.toString()))
+
         self.steerMotor.setInverted(self.steerMotorInverted)
-        if not ctreCheckError(
-            "config_kP",
-            self.steerMotor.config_kP(
-                constants.kSteerPIDSlot,
-                constants.kSteerPGain,
-                constants.kConfigurationTimeoutLimit,
-            ),
-        ):
-            return
-        if not ctreCheckError(
-            "config_kI",
-            self.steerMotor.config_kI(
-                constants.kSteerPIDSlot,
-                constants.kSteerIGain,
-                constants.kConfigurationTimeoutLimit,
-            ),
-        ):
-            return
-        if not ctreCheckError(
-            "config_kD",
-            self.steerMotor.config_kD(
-                constants.kSteerPIDSlot,
-                constants.kSteerDGain,
-                constants.kConfigurationTimeoutLimit,
-            ),
-        ):
-            return
+
         print("   ... Done")
 
         print("... Done")
