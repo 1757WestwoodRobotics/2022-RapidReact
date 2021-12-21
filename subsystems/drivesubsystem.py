@@ -144,10 +144,13 @@ class CTRESwerveModule(SwerveModule):
 
         def configCtre(x: Tuple[str, ErrorCode]) -> bool:
             return not ctreCheckError(x[0], x[1])
+        # passes a tuple of two items into check error, returns true if error 
 
         foldl = lambda func, acc, xs: reduce(func, xs, acc)
+        # haskell-like foldl function, for reducing all the errors to a single possible error true value
 
         orFunc = lambda x, y: x or y
+        # python or but as a function with 2 arguments
 
         print(f"Initializing swerve module: {self.name}")
         print(
