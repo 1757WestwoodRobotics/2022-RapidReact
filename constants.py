@@ -427,4 +427,4 @@ kPWMCameraLeftRightInverted = True
 kPWMCameraUpDownInverted = False
 
 kPWMCameraServoMaxAngle = 60
-kPWMCameraServoPGain = 0.19
+kCameraServoRotationNumberKey = "CameraServoRotation"

@@ -159,10 +159,7 @@ class LimelightTrackingModule(TrackingModule):
         )
 
     def setServoAngle(self, angle: Rotation2d) -> None:
-        self.rotationServo.set(
-            angle.degrees()
-            * constants.kPWMCameraServoMaxAngle
-        )
+        self.rotationServo.set(angle.degrees() / constants.kPWMCameraServoMaxAngle)
 
     def update(self) -> None:
         targetValid = self.limelightNetworkTable.getNumber(
@@ -240,6 +237,11 @@ class VisionSubsystem(SubsystemBase):
                 [targetPose.X(), targetPose.Y(), targetPose.rotation().radians()],
             )
             SmartDashboard.putBoolean(constants.kTargetPoseArrayKeys.validKey, True)
+
+            SmartDashboard.putNumber(
+                constants.kCameraServoRotationNumberKey,
+                self.trackingModule.getServoAngle().degrees(),
+            )
 
         if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
             print(

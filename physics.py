@@ -258,7 +258,18 @@ class PhysicsEngine:
             constants.kLimelightMountingOffset, Rotation2d(limelightPanAngle)
         )
         simLimelightPose = simRobotPose + robotToLimelightTransform
-        self.limelightSim.update(simLimelightPose, simTargetPose)
+        self.limelightSim.update(
+            Pose2d(
+                simLimelightPose.translation(),
+                simLimelightPose.rotation()
+                + Rotation2d.fromDegrees(
+                    SmartDashboard.getNumber(
+                        constants.kCameraServoRotationNumberKey, 0.0
+                    )
+                ),
+            ),
+            simTargetPose,
+        )
 
         # show the robot's estimation of where the target is on the simulated field
         if SmartDashboard.getBoolean(constants.kTargetPoseArrayKeys.validKey, False):
