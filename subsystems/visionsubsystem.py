@@ -197,15 +197,9 @@ class VisionSubsystem(SubsystemBase):
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
 
-        if RobotBase.isReal():
-            self.trackingModule = SimTrackingModule(
-                constants.kSimTargetTrackingModuleName,
-                constants.kSimTargetPoseArrayKey,
-            )
-        else:
-            self.trackingModule = LimelightTrackingModule(
-                constants.kLimelightTrackerModuleName
-            )
+        self.trackingModule = LimelightTrackingModule(
+            constants.kLimelightTrackerModuleName
+        )
 
         self.printTimer = Timer()
 
