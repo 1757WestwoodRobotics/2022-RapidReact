@@ -2,7 +2,8 @@ import typing
 
 from commands2 import SubsystemBase
 from networktables import NetworkTables
-from wpilib import SmartDashboard, Timer, RobotBase, PWMSpeedController
+from wpilib import SmartDashboard, Timer, RobotBase, PWM
+from wpilib.simulation import PWMSim
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
 import constants
 import util.convenientmath as convenientmath
@@ -134,13 +135,11 @@ class LimelightTrackingModule(TrackingModule):
             constants.kLimelightNetworkTableName
         )
 
-        self.rotationServo = PWMSpeedController(
-            constants.kCameraPanServoPWMChannel
+        self.rotationServo = (
+            PWM(constants.kCameraPanServoPWMChannel)
             if RobotBase.isReal()
-            else constants.kCameraSimPanServoPWMChannel
+            else PWMSim(constants.kCameraSimPanServoPWMChannel)
         )
-
-        self.rotationServo.setInverted(constants.kCameraPanInverted)
 
         self.lastReadAngle = None
 
@@ -155,11 +154,11 @@ class LimelightTrackingModule(TrackingModule):
 
     def getServoAngle(self) -> Rotation2d:
         return Rotation2d.fromDegrees(
-            self.rotationServo.get() * constants.kCameraServoMaxAngle
+            self.rotationServo.getSpeed() * constants.kCameraServoMaxAngle
         )
 
     def setServoAngle(self, angle: Rotation2d) -> None:
-        self.rotationServo.set(angle.degrees() / constants.kCameraServoMaxAngle)
+        self.rotationServo.setSpeed(angle.degrees() / constants.kCameraServoMaxAngle)
 
     def update(self) -> None:
         targetValid = self.limelightNetworkTable.getNumber(

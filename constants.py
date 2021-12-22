@@ -417,7 +417,7 @@ kSimBackRightSteerEncoderPorts = (14, 15)
 # vision system / camera parameters
 kCameraPanServoPWMChannel = 0
 """direct port number on the RoboRIO itself"""
-kCameraSimPanServoPWHChannel = 9
+kCameraSimPanServoPWMChannel = 9
 
 kCameraTiltServoPWMChannel = 1
 """direct port number on the RoboRIO itself"""
