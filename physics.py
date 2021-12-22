@@ -257,19 +257,22 @@ class PhysicsEngine:
         robotToLimelightTransform = Transform2d(
             constants.kLimelightMountingOffset, Rotation2d(limelightPanAngle)
         )
+
         simLimelightPose = simRobotPose + robotToLimelightTransform
-        self.limelightSim.update(
-            Pose2d(
-                simLimelightPose.translation(),
-                simLimelightPose.rotation()
-                + Rotation2d.fromDegrees(
-                    SmartDashboard.getNumber(
-                        constants.kCameraServoRotationNumberKey, 0.0
-                    )
-                ),
+
+        servoPose = Pose2d(
+            simLimelightPose.translation(),
+            simLimelightPose.rotation()
+            + Rotation2d.fromDegrees(
+                SmartDashboard.getNumber(constants.kCameraServoRotationNumberKey, 0.0)
             ),
-            simTargetPose,
         )
+        self.limelightSim.update(servoPose, simTargetPose)
+
+        servoObject = self.physics_controller.field.getObject(
+            constants.kCameraSimServoObjectName
+        )
+        servoObject.setPose(servoPose)
 
         # show the robot's estimation of where the target is on the simulated field
         if SmartDashboard.getBoolean(constants.kTargetPoseArrayKeys.validKey, False):

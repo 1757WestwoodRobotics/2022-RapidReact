@@ -430,3 +430,5 @@ kCameraServoMaxAngle = 60 * kRadiansPerDegree
 """radians"""
 
 kCameraServoRotationNumberKey = "CameraServoRotation"
+
+kCameraSimServoObjectName = "Camera Servo"
