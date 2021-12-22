@@ -2,7 +2,7 @@ import typing
 
 from commands2 import SubsystemBase
 from networktables import NetworkTables
-from wpilib import SmartDashboard, Timer
+from wpilib import SmartDashboard, Timer, RobotBase, PWMSpeedController
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
 import constants
 import util.convenientmath as convenientmath
@@ -134,6 +134,16 @@ class LimelightTrackingModule(TrackingModule):
             constants.kLimelightNetworkTableName
         )
 
+        self.rotationServo = PWMSpeedController(
+            constants.kPWMCameraSwerveLeftRight
+            if RobotBase.isReal()
+            else constants.kPWMCameraSimSwerveLeftRight
+        )
+
+        self.rotationServo.setInverted(constants.kPWMCameraLeftRightInverted)
+
+        self.lastReadAngle = None
+
     def getTargetAngle(self) -> typing.Optional[Rotation2d]:
         return self.targetAngle
 
@@ -143,19 +153,39 @@ class LimelightTrackingModule(TrackingModule):
     def getTargetFacingAngle(self) -> typing.Optional[Rotation2d]:
         return self.targetFacingAngle
 
+    def getServoAngle(self) -> Rotation2d:
+        return Rotation2d.fromDegrees(
+            self.rotationServo.get() * constants.kPWMCameraServoMaxAngle
+        )
+
+    def setServoAngle(self, angle: Rotation2d) -> None:
+        self.rotationServo.set(
+            angle.degrees()
+            * constants.kPWMCameraServoMaxAngle
+        )
+
     def update(self) -> None:
         targetValid = self.limelightNetworkTable.getNumber(
             constants.kLimelightTargetValidKey, constants.kLimelightTargetInvalidValue
         )
         if targetValid:
-            self.targetAngle = Rotation2d.fromDegrees(
+            self.limelightAngle = Rotation2d.fromDegrees(
                 -1
                 * self.limelightNetworkTable.getNumber(
                     constants.kLimelightTargetHorizontalAngleKey, 0.0
                 )
             )
+
+            self.targetAngle = self.limelightAngle + self.getServoAngle()
+
+            if not self.limelightAngle == self.lastReadAngle:
+                self.setServoAngle(self.targetAngle)
+
+                self.lastReadAngle = self.limelightAngle
         else:
             self.targetAngle = None
+            # TODO: sweeping motion of the camera, "search for target"
+
         TrackingModule.update(self)
 
     def reset(self) -> None:
@@ -167,19 +197,17 @@ class VisionSubsystem(SubsystemBase):
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
 
-        if False:  # RobotBase.isReal():
-            pass
+        if RobotBase.isReal():
+            self.trackingModule = SimTrackingModule(
+                constants.kSimTargetTrackingModuleName,
+                constants.kSimTargetPoseArrayKey,
+            )
         else:
-            # self.trackingModule = SimTrackingModule(
-            #     constants.kSimTargetTrackingModuleName,
-            #     constants.kSimTargetPoseArrayKey,
-            # )
             self.trackingModule = LimelightTrackingModule(
                 constants.kLimelightTrackerModuleName
             )
 
         self.printTimer = Timer()
-        # self.printTimer.start()
 
     def resetTrackingModule(self):
         self.trackingModule.reset()
