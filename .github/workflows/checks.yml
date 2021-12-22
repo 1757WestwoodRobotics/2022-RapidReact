@@ -1,6 +1,6 @@
-name: Pylint
+name: Checks
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   build:
@@ -10,6 +10,9 @@ jobs:
         python-version: ["3.9"]
     steps:
       - uses: actions/checkout@v2
+      - uses: psf/black@stable
+        with:
+          options: "--check"
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
