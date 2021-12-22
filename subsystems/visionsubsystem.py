@@ -153,12 +153,12 @@ class LimelightTrackingModule(TrackingModule):
         return self.targetFacingAngle
 
     def getServoAngle(self) -> Rotation2d:
-        return Rotation2d.fromDegrees(
-            self.rotationServo.getSpeed() * constants.kCameraServoMaxAngle
+        return Rotation2d(
+            value=self.rotationServo.getSpeed() * constants.kCameraServoMaxAngle
         )
 
     def setServoAngle(self, angle: Rotation2d) -> None:
-        self.rotationServo.setSpeed(angle.degrees() / constants.kCameraServoMaxAngle)
+        self.rotationServo.setSpeed(angle.radians() / constants.kCameraServoMaxAngle)
 
     def update(self) -> None:
         targetValid = self.limelightNetworkTable.getNumber(

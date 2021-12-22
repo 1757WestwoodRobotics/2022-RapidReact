@@ -426,5 +426,7 @@ kCameraSimTiltServoPWMChannel = 8
 kCameraPanInverted = True
 kCameraTiltInverted = False
 
-kCameraServoMaxAngle = 60
+kCameraServoMaxAngle = 60 * kRadiansPerDegree
+"""radians"""
+
 kCameraServoRotationNumberKey = "CameraServoRotation"
