@@ -415,16 +415,16 @@ kSimBackRightDriveEncoderPorts = (12, 13)
 kSimBackRightSteerEncoderPorts = (14, 15)
 
 # vision system / camera parameters
-kPWMCameraSwerveLeftRight = 0
+kCameraPanServoPWMChannel = 0
 """direct port number on the RoboRIO itself"""
-kPWMCameraSimSwerveLeftRight = 9
+kCameraSimPanServoPWHChannel = 9
 
-kPWMCameraSwerveUpDown = 1
+kCameraTiltServoPWMChannel = 1
 """direct port number on the RoboRIO itself"""
-kPWMCameraSimSwerveUpDown = 8
+kCameraSimTiltServoPWMChannel = 8
 
-kPWMCameraLeftRightInverted = True
-kPWMCameraUpDownInverted = False
+kCameraPanInverted = True
+kCameraTiltInverted = False
 
-kPWMCameraServoMaxAngle = 60
+kCameraServoMaxAngle = 60
 kCameraServoRotationNumberKey = "CameraServoRotation"

@@ -135,12 +135,12 @@ class LimelightTrackingModule(TrackingModule):
         )
 
         self.rotationServo = PWMSpeedController(
-            constants.kPWMCameraSwerveLeftRight
+            constants.kCameraPanServoPWMChannel
             if RobotBase.isReal()
-            else constants.kPWMCameraSimSwerveLeftRight
+            else constants.kCameraSimPanServoPWMChannel
         )
 
-        self.rotationServo.setInverted(constants.kPWMCameraLeftRightInverted)
+        self.rotationServo.setInverted(constants.kCameraPanInverted)
 
         self.lastReadAngle = None
 
@@ -155,11 +155,11 @@ class LimelightTrackingModule(TrackingModule):
 
     def getServoAngle(self) -> Rotation2d:
         return Rotation2d.fromDegrees(
-            self.rotationServo.get() * constants.kPWMCameraServoMaxAngle
+            self.rotationServo.get() * constants.kCameraServoMaxAngle
         )
 
     def setServoAngle(self, angle: Rotation2d) -> None:
-        self.rotationServo.set(angle.degrees() / constants.kPWMCameraServoMaxAngle)
+        self.rotationServo.set(angle.degrees() / constants.kCameraServoMaxAngle)
 
     def update(self) -> None:
         targetValid = self.limelightNetworkTable.getNumber(
