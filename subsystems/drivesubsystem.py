@@ -55,7 +55,10 @@ class SwerveModule:
         optimizedState = SwerveModuleState.optimize(state, self.getSwerveAngle())
         # optimizedState = state
         self.setWheelLinearVelocityTarget(optimizedState.speed)
-        self.setSwerveAngleTarget(optimizedState.angle)
+        if (
+            abs(optimizedState.speed) >= constants.kMinWheelLinearVelocity
+        ):  # prevent unneccisary movement for what would otherwise not move the robot
+            self.setSwerveAngleTarget(optimizedState.angle)
 
 
 # pylint: disable=abstract-method
