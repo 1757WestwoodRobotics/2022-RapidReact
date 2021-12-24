@@ -18,7 +18,8 @@ from wpimath.kinematics import (
     SwerveDrive4Kinematics,
     SwerveDrive4Odometry,
 )
-
+from enum import Enum, auto
+from math import tau, floor
 import constants
 from util import convenientmath
 
@@ -53,7 +54,7 @@ class SwerveModule:
 
     def applyState(self, state: SwerveModuleState) -> None:
         optimizedState = SwerveModuleState.optimize(state, self.getSwerveAngle())
-        # optimizedState = state
+
         self.setWheelLinearVelocityTarget(optimizedState.speed)
         if (
             abs(optimizedState.speed) >= constants.kMinWheelLinearVelocity
@@ -94,7 +95,31 @@ class PWMSwerveModule(SwerveModule):
         return Rotation2d(self.swerveEncoder.getDistance())
 
     def setSwerveAngleTarget(self, swerveAngleTarget: Rotation2d) -> None:
-        swerveError = swerveAngleTarget.radians() - self.swerveEncoder.getDistance()
+        closestFullRotation = (
+            floor(abs(self.swerveEncoder.getDistance() / tau))
+            * (-1 if self.swerveEncoder.getDistance() < 0 else 1)
+            * tau
+        )
+
+        currentOptimalAngle = (
+            swerveAngleTarget.radians()
+            + closestFullRotation
+            - self.swerveEncoder.getDistance()
+        )
+
+        potentialNewAngles = [
+            currentOptimalAngle,
+            currentOptimalAngle + tau,
+            currentOptimalAngle - tau,
+        ]
+
+        swerveError = tau  # maximum possible error
+        for potentialAngle in potentialNewAngles:
+            if abs(swerveError) > abs(
+                potentialAngle
+            ):  # check for more optimal magnitude
+                swerveError = potentialAngle
+
         swerveErrorClamped = min(max(swerveError, -1), 1)
         self.swerveMotor.set(swerveErrorClamped)
 
@@ -284,9 +309,28 @@ class CTRESwerveModule(SwerveModule):
         return Rotation2d(swerveAngle)
 
     def setSwerveAngle(self, swerveAngle: Rotation2d) -> None:
-        steerEncoderPulses = (
-            swerveAngle.radians() * constants.kSwerveEncoderPulsesPerRadian
+        currentAngle = self.getSwerveAngle().radians()
+
+        closestFullRotation = (
+            floor(abs(currentAngle / tau)) * (-1 if currentAngle < 0 else 1) * tau
         )
+
+        currentOptimalAngle = swerveAngle.radians() + closestFullRotation - currentAngle
+
+        potentialNewAngles = [
+            currentOptimalAngle,
+            currentOptimalAngle - tau,
+            currentOptimalAngle + tau,
+        ]  # closest other options
+
+        swerveError = tau  # max possible error, a full rotation!
+        for potentialAngle in potentialNewAngles:
+            if abs(swerveError) > abs(potentialAngle):
+                swerveError = potentialAngle
+
+        steerEncoderPulses = (
+            currentAngle + swerveError
+        ) * constants.kSwerveEncoderPulsesPerRadian
         self.steerMotor.setSelectedSensorPosition(steerEncoderPulses)
 
     def setSwerveAngleTarget(self, swerveAngleTarget: Rotation2d) -> None:
