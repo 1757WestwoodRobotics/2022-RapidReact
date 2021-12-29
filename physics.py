@@ -23,8 +23,6 @@ from pyfrc.physics.core import PhysicsInterface
 import constants
 from util import convenientmath
 
-from pyfrc.physics.core import PhysicsInterface
-
 
 class SwerveModuleSim:
     def __init__(
@@ -50,7 +48,7 @@ class SwerveModuleSim:
         self.swerveEncoderSim = swerveEncoderSim
 
     def __str__(self) -> str:
-        return "pos: x={:.2f} y={:.2f}".format(self.position.X(), self.position.Y())
+        return f"pos: x={self.position.X():.2f} y={self.position.Y():.2f}"
 
 
 class SwerveDriveSim:
@@ -218,6 +216,7 @@ class PhysicsEngine:
 
         self.limelightSim = LimelightSim()
 
+    # pylint: disable=unused-argument
     def update_sim(self, now: float, tm_diff: float) -> None:
         """
         Called when the simulation parameters for the program need to be
