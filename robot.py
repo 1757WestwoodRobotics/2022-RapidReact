@@ -17,6 +17,10 @@ class MentorBot(commands2.TimedCommandRobot):
 
     autonomousCommand: typing.Optional[commands2.Command] = None
 
+    def __init__(self):
+        super().__init__()
+        self.container = None
+
     def robotInit(self) -> None:
         """
         This function is run when the robot is first started up and should be used for any
@@ -54,6 +58,7 @@ class MentorBot(commands2.TimedCommandRobot):
     def teleopPeriodic(self) -> None:
         """This function is called periodically during operator control"""
 
+    # pylint: disable=no-self-use
     def testInit(self) -> None:
         # Cancels all running commands at the start of test mode
         commands2.CommandScheduler.getInstance().cancelAll()

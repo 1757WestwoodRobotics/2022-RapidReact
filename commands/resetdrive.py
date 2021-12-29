@@ -11,11 +11,12 @@ class ResetDrive(CommandBase):
         self.addRequirements(drive)
 
     def initialize(self) -> None:
-        print("Command: {}".format(self.getName()))
+        print(f"Command: {self.getName()}")
 
     def execute(self) -> None:
         self.drive.resetSwerveModules()
 
+    # pylint: disable=unused-argument,no-self-use
     def end(self, interrupted: bool) -> None:
         print("... DONE")
 

@@ -1,3 +1,5 @@
+from enum import Enum, auto
+
 from commands2 import SubsystemBase
 from wpilib import Encoder, PWMVictorSPX, RobotBase, Timer
 from ctre import (
@@ -16,7 +18,7 @@ from wpimath.kinematics import (
     SwerveDrive4Kinematics,
     SwerveDrive4Odometry,
 )
-from enum import Enum, auto
+
 import constants
 
 
@@ -55,6 +57,7 @@ class SwerveModule:
         self.setSwerveAngleTarget(optimizedState.angle)
 
 
+# pylint: disable=abstract-method
 class PWMSwerveModule(SwerveModule):
     """
     Implementation of SwerveModule designed for ease of simulation:
@@ -132,16 +135,15 @@ class CTRESwerveModule(SwerveModule):
 
         def ctreCheckError(name: str, errorCode: ErrorCode) -> bool:
             if (errorCode is not None) and (errorCode != ErrorCode.OK):
-                print("ERROR: {}: {}".format(name, errorCode))
+                print(f"ERROR: {name}: {errorCode}")
                 return False
             return True
 
-        print("Initializing swerve module: {}".format(self.name))
+        print(f"Initializing swerve module: {self.name}")
         print(
-            "   Configuring swerve encoder: CAN ID: {}".format(
-                self.swerveEncoder.getDeviceNumber()
-            )
+            f"   Configuring swerve encoder: CAN ID: {self.swerveEncoder.getDeviceNumber()}"
         )
+
         if not ctreCheckError(
             "configFactoryDefault",
             self.swerveEncoder.configFactoryDefault(
@@ -181,11 +183,7 @@ class CTRESwerveModule(SwerveModule):
         ):
             return
         print("   ... Done")
-        print(
-            "   Configuring drive motor: CAN ID: {}".format(
-                self.driveMotor.getDeviceID()
-            )
-        )
+        print(f"   Configuring drive motor: CAN ID: {self.driveMotor.getDeviceID()}")
         if not ctreCheckError(
             "configFactoryDefault",
             self.driveMotor.configFactoryDefault(constants.kConfigurationTimeoutLimit),
@@ -229,11 +227,7 @@ class CTRESwerveModule(SwerveModule):
             return
         print("   ... Done")
 
-        print(
-            "   Configuring steer motor: CAN ID: {}".format(
-                self.steerMotor.getDeviceID()
-            )
-        )
+        print(f"   Configuring steer motor: CAN ID: {self.steerMotor.getDeviceID()}")
         if not ctreCheckError(
             "configFactoryDefault",
             self.steerMotor.configFactoryDefault(constants.kConfigurationTimeoutLimit),
@@ -458,19 +452,7 @@ class DriveSubsystem(SubsystemBase):
             brSpeed = self.backRightModule.getWheelLinearVelocity()
 
             print(
-                "r: {:.1f}, {:.1f}, {}* fl: {}* {:.1f} fr: {}* {:.1f} bl: {}* {:.1f} br: {}* {:.1f}".format(
-                    rX,
-                    rY,
-                    rAngle,
-                    flAngle,
-                    flSpeed,
-                    frAngle,
-                    frSpeed,
-                    blAngle,
-                    blSpeed,
-                    brAngle,
-                    brSpeed,
-                )
+                f"r: {rX:.1f}, {rY:.1f}, {rAngle}* fl: {flAngle}* {flSpeed:.1f} fr: {frAngle}* {frSpeed:.1f} bl: {blAngle}* {blSpeed:.1f} br: {brAngle}* {brSpeed:.1f}"
             )
 
     def arcadeDriveWithFactors(

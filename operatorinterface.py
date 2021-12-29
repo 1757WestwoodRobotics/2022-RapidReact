@@ -1,7 +1,7 @@
+import typing
+
 from wpilib import Joystick, XboxController
 from wpilib.interfaces import GenericHID
-
-import typing
 
 import constants
 
@@ -9,9 +9,9 @@ import constants
 AnalogInput = typing.Callable[[], float]
 
 
-def Deadband(input: AnalogInput, deadband: float) -> AnalogInput:
+def Deadband(inputFn: AnalogInput, deadband: float) -> AnalogInput:
     def withDeadband() -> float:
-        value = input()
+        value = inputFn()
         if abs(value) <= deadband:
             return 0
         else:
@@ -20,9 +20,9 @@ def Deadband(input: AnalogInput, deadband: float) -> AnalogInput:
     return withDeadband
 
 
-def Invert(input: AnalogInput) -> AnalogInput:
+def Invert(inputFn: AnalogInput) -> AnalogInput:
     def invert() -> float:
-        return -1 * input()
+        return -1 * inputFn()
 
     return invert
 

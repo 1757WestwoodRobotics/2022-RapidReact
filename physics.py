@@ -14,12 +14,10 @@ import wpilib
 from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim
 import wpimath.kinematics
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
-
 from wpimath.system.plant import DCMotor
+from pyfrc.physics.core import PhysicsInterface
 
 import constants
-
-from pyfrc.physics.core import PhysicsInterface
 
 
 class SwerveModuleSim:
@@ -46,7 +44,7 @@ class SwerveModuleSim:
         self.swerveEncoderSim = swerveEncoderSim
 
     def __str__(self) -> str:
-        return "pos: x={:.2f} y={:.2f}".format(self.position.X(), self.position.Y())
+        return f"pos: x={self.position.X():.2f} y={self.position.Y():.2f}"
 
 
 class SwerveDriveSim:
@@ -178,6 +176,7 @@ class PhysicsEngine:
         self.gyroSim = SimDeviceSim("navX-Sensor[4]")
         self.gyroYaw = self.gyroSim.getDouble("Yaw")
 
+    # pylint: disable=unused-argument
     def update_sim(self, now: float, tm_diff: float) -> None:
         """
         Called when the simulation parameters for the program need to be

@@ -1,8 +1,8 @@
-from commands2 import CommandBase
-from wpimath.geometry import Transform2d
-
 import math
 from enum import Enum, auto
+
+from commands2 import CommandBase
+from wpimath.geometry import Transform2d
 
 import constants
 from subsystems.drivesubsystem import DriveSubsystem
@@ -24,6 +24,8 @@ class DriveDistance(CommandBase):
         self.axis = axis
         self.drive = drive
         self.addRequirements(drive)
+        self.targetPose = None
+        self.distanceToTarget = None
 
     def initialize(self) -> None:
         currentPose = self.drive.odometry.getPose()
@@ -44,6 +46,7 @@ class DriveDistance(CommandBase):
                 0, self.speedFactor, 0, DriveSubsystem.CoordinateMode.RobotRelative
             )
 
+    # pylint: disable=unused-argument
     def end(self, interrupted: bool) -> None:
         self.drive.arcadeDriveWithFactors(
             0, 0, 0, DriveSubsystem.CoordinateMode.RobotRelative
