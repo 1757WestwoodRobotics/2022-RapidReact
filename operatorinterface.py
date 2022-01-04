@@ -1,10 +1,8 @@
 import typing
 import json
 
-from wpilib import Joystick, XboxController
-from wpilib.interfaces import GenericHID
 from os import path
-from types import LambdaType
+from wpilib import Joystick
 
 import constants
 
@@ -49,7 +47,9 @@ class OperatorInterface:
 
     def __init__(self) -> None:
         with open(
-            path.join(path.dirname(path.realpath(__file__)), "ControlScheme.json"), "r"
+            path.join(path.dirname(path.realpath(__file__)), "ControlScheme.json"),
+            "r",
+            encoding="utf-8",
         ) as file:
             controlScheme = json.load(file)
 
