@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+from math import tau, floor
 from commands2 import SubsystemBase
 from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
 from ctre import (
@@ -17,8 +18,8 @@ from wpimath.kinematics import (
     SwerveDrive4Kinematics,
     SwerveDrive4Odometry,
 )
-from enum import Enum, auto
-from math import tau, floor
+
+
 import constants
 from util import convenientmath
 from util.ctrecheck import ctreCheckError
