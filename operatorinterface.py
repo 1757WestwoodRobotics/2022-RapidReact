@@ -1,7 +1,10 @@
 import typing
+import json
 
 from wpilib import Joystick, XboxController
 from wpilib.interfaces import GenericHID
+from os import path
+from types import LambdaType
 
 import constants
 
@@ -45,29 +48,33 @@ class OperatorInterface:
     """
 
     def __init__(self) -> None:
-        self.xboxController = XboxController(constants.kXboxControllerPort)
-        self.translationController = Joystick(constants.kTranslationControllerPort)
-        self.rotationController = Joystick(constants.kRotationControllerPort)
+        with open(
+            path.join(path.dirname(path.realpath(__file__)), "ControlScheme.json"), "r"
+        ) as file:
+            controlScheme = json.load(file)
 
-        self.fieldRelativeCoordinateModeControl = (
-            self.xboxController,
-            XboxController.Button.kBumperRight.value,
-        )
+        controllerNumbers = set(
+            i[0] for i in controlScheme.values()
+        )  # set ensures no duplicates
 
-        self.targetRelativeCoordinateModeControl = (
-            self.xboxController,
-            XboxController.Button.kBumperLeft.value,
-        )
+        controllers = {}
 
-        self.resetSwerveControl = (
-            self.xboxController,
-            XboxController.Button.kX.value,
-        )
+        for num in controllerNumbers:
+            controllers[num] = Joystick(num)
 
-        self.driveToTargetControl = (
-            self.xboxController,
-            XboxController.Button.kY.value,
-        )
+        def getButtonBindingOfName(name: str) -> typing.Tuple[Joystick, int]:
+            binding = controlScheme[name]
+            return (controllers[binding[0]], binding[1]["Button"])
+
+        def getAxisBindingOfName(name: str) -> AnalogInput:
+            binding = controlScheme[name]
+            return lambda: controllers[binding[0]].getRawAxis(binding[1]["Axis"])
+
+        self.coordinateModeControl = getButtonBindingOfName("coordinateModeControl")
+        self.resetSwerveControl = getButtonBindingOfName("resetSwerveControl")
+        self.targetRelativeCoordinateModeControl = getButtonBindingOfName("targetRelativeCoordinateModeControl")
+
+        self.driveToTargetControl = getButtonBindingOfName("driveToTargetControl")
 
         # self.chassisControls = HolonomicInput(
         #     Invert(
@@ -93,19 +100,19 @@ class OperatorInterface:
         self.chassisControls = HolonomicInput(
             Invert(
                 Deadband(
-                    lambda: self.xboxController.getY(GenericHID.Hand.kLeftHand),
+                    getAxisBindingOfName("forwardsBackwards"),
                     constants.kXboxJoystickDeadband,
                 )
             ),
             Invert(
                 Deadband(
-                    lambda: self.xboxController.getX(GenericHID.Hand.kLeftHand),
+                    getAxisBindingOfName("sideToSide"),
                     constants.kXboxJoystickDeadband,
                 )
             ),
             Invert(
                 Deadband(
-                    lambda: self.xboxController.getX(GenericHID.Hand.kRightHand),
+                    getAxisBindingOfName("rotation"),
                     constants.kXboxJoystickDeadband,
                 )
             ),

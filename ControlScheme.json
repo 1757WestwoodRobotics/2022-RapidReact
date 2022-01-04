@@ -1,0 +1,9 @@
+{
+  "coordinateModeControl": [0, { "Button": 6 }],
+  "rotation": [0, { "Axis": 3 }],
+  "resetSwerveControl": [0, { "Button": 3 }],
+  "forwardsBackwards": [0, { "Axis": 1 }],
+  "sideToSide": [0, { "Axis": 0 }],
+  "driveToTargetControl": [0, { "Button": 4 }],
+  "targetRelativeCoordinateModeControl": [0, { "Button": 5 }]
+}
