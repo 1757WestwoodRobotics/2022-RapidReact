@@ -5,6 +5,7 @@ from networktables import NetworkTables
 from wpilib import SmartDashboard, Timer, RobotBase, PWM
 from wpilib.simulation import PWMSim
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
+from wpilib.controller import PIDController
 import constants
 import util.convenientmath as convenientmath
 
@@ -130,6 +131,12 @@ class LimelightTrackingModule(TrackingModule):
         self.targetDistance = None
         self.targetFacingAngle = None
 
+        self.servoController = PIDController(
+            constants.kCameraServoPGain,
+            constants.kCameraServoIGain,
+            constants.kCameraServoDGain,
+        )
+
         NetworkTables.initialize()
         self.limelightNetworkTable = NetworkTables.getTable(
             constants.kLimelightNetworkTableName
@@ -158,7 +165,12 @@ class LimelightTrackingModule(TrackingModule):
         )
 
     def setServoAngle(self, angle: Rotation2d) -> None:
-        self.rotationServo.setSpeed(angle.radians() / constants.kCameraServoMaxAngle)
+        offset = self.servoController.calculate(
+            (self.getServoAngle() - angle).radians()
+        )
+        self.rotationServo.setSpeed(
+            (self.getServoAngle().radians() + offset) / constants.kCameraServoMaxAngle
+        )
 
     def update(self) -> None:
         targetValid = self.limelightNetworkTable.getNumber(
