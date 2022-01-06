@@ -1,5 +1,8 @@
 import math
+import typing
 from wpilib.geometry import Rotation2d, Translation2d
+
+number = typing.Union[float, int]
 
 
 def clamp(inputValue: float, minimum: float, maximum: float) -> float:
@@ -24,3 +27,7 @@ def translationFromDistanceAndRotation(
 
 def rotationFromTranslation(translation: Translation2d) -> Rotation2d:
     return Rotation2d(math.atan2(translation.Y(), translation.X()))
+
+
+def map_range(value: number, imin: number, imax: number, omin: number, omax: number):
+    return (value - imin) * (omax - omin) / (imax - imin) + omin
