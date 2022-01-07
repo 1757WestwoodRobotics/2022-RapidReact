@@ -6,7 +6,6 @@ from wpilib import Joystick
 
 import constants
 
-
 AnalogInput = typing.Callable[[], float]
 
 
@@ -70,49 +69,35 @@ class OperatorInterface:
             binding = controlScheme[name]
             return lambda: controllers[binding[0]].getRawAxis(binding[1]["Axis"])
 
-        self.coordinateModeControl = getButtonBindingOfName("coordinateModeControl")
-        self.resetSwerveControl = getButtonBindingOfName("resetSwerveControl")
-        self.targetRelativeCoordinateModeControl = getButtonBindingOfName("targetRelativeCoordinateModeControl")
-
-        self.driveToTargetControl = getButtonBindingOfName("driveToTargetControl")
-
-        # self.chassisControls = HolonomicInput(
-        #     Invert(
-        #         Deadband(
-        #             lambda: self.translationController.getY(GenericHID.Hand.kLeftHand),
-        #             constants.kKeyboardJoystickDeadband,
-        #         )
-        #     ),
-        #     Invert(
-        #         Deadband(
-        #             lambda: self.translationController.getX(GenericHID.Hand.kLeftHand),
-        #             constants.kKeyboardJoystickDeadband,
-        #         )
-        #     ),
-        #     Invert(
-        #         Deadband(
-        #             lambda: self.rotationController.getX(GenericHID.Hand.kRightHand),
-        #             constants.kKeyboardJoystickDeadband,
-        #         )
-        #     ),
-        # )
+        self.coordinateModeControl = getButtonBindingOfName(
+            constants.kCoordinateModeControlButtonName
+        )
+        self.resetSwerveControl = getButtonBindingOfName(
+            constants.kResetSwerveControlButtonName
+        )
+        self.targetRelativeCoordinateModeControl = getButtonBindingOfName(
+            constants.kTargetRelativeCoordinateModeControlButtonName
+        )
+        self.driveToTargetControl = getButtonBindingOfName(
+            constants.kDriveToTargetControlButtonName
+        )
 
         self.chassisControls = HolonomicInput(
             Invert(
                 Deadband(
-                    getAxisBindingOfName("forwardsBackwards"),
+                    getAxisBindingOfName(constants.kForwardsBackwardsAxisName),
                     constants.kXboxJoystickDeadband,
                 )
             ),
             Invert(
                 Deadband(
-                    getAxisBindingOfName("sideToSide"),
+                    getAxisBindingOfName(constants.kHorizontalAxisName),
                     constants.kXboxJoystickDeadband,
                 )
             ),
             Invert(
                 Deadband(
-                    getAxisBindingOfName("rotation"),
+                    getAxisBindingOfName(constants.kChassisRotationAxisName),
                     constants.kXboxJoystickDeadband,
                 )
             ),
