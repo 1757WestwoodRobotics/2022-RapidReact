@@ -69,8 +69,8 @@ class OperatorInterface:
             binding = controlScheme[name]
             return lambda: controllers[binding[0]].getRawAxis(binding[1]["Axis"])
 
-        self.coordinateModeControl = getButtonBindingOfName(
-            constants.kCoordinateModeControlButtonName
+        self.fieldRelativeCoordinateModeControl = getButtonBindingOfName(
+            constants.kFieldRelativeCoordinateModeControlButtonName
         )
         self.resetSwerveControl = getButtonBindingOfName(
             constants.kResetSwerveControlButtonName
