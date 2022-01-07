@@ -1,4 +1,5 @@
 from enum import Enum, auto
+from typing import Tuple
 
 from commands2 import SubsystemBase
 from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
@@ -18,9 +19,6 @@ from wpimath.kinematics import (
     SwerveDrive4Kinematics,
     SwerveDrive4Odometry,
 )
-from functools import reduce
-from typing import Tuple
-from enum import Enum, auto
 import constants
 from util import convenientmath
 
@@ -146,12 +144,6 @@ class CTRESwerveModule(SwerveModule):
             return not ctreCheckError(x[0], x[1])
 
         # passes a tuple of two items into check error, returns true if error
-
-        foldl = lambda func, acc, xs: reduce(func, xs, acc)
-        # haskell-like foldl function, for reducing all the errors to a single possible error true value
-
-        orFunc = lambda x, y: x or y
-        # python or but as a function with 2 arguments
 
         print(f"Initializing swerve module: {self.name}")
         print(
