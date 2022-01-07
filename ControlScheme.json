@@ -1,9 +1,23 @@
 {
-  "coordinateModeControl": [0, { "Button": 6 }],
-  "chassisRotation": [0, { "Axis": 3 }],
-  "resetSwerveControl": [0, { "Button": 3 }],
-  "forwardsBackwards": [0, { "Axis": 1 }],
-  "sideToSide": [0, { "Axis": 0 }],
-  "driveToTargetControl": [0, { "Button": 4 }],
-  "targetRelativeCoordinateModeControl": [0, { "Button": 5 }]
+    "coordinateModeControl": [0, {
+        "Button": 6
+    }, "Right Bumper (Xbox)"],
+    "forwardsBackwards": [0, {
+        "Axis": 1
+    }, "Left Stick Y (Xbox)"],
+    "chassisRotation": [0, {
+        "Axis": 3
+    }, "Right Stick X (Xbox)"],
+    "sideToSide": [0, {
+        "Axis": 0
+    }, "Left Stick X (Xbox)"],
+    "resetSwerveControl": [0, {
+        "Button": 3
+    }, "X (Xbox)"],
+    "targetRelativeCoordinateModeControl": [0, {
+        "Button": 5
+    }, "Left Bumper (Xbox)"],
+    "driveToTargetControl": [0, {
+        "Button": 4
+    }, "Y (Xbox)"]
 }
