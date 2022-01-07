@@ -1,7 +1,7 @@
 from enum import Enum, auto
 
 from commands2 import SubsystemBase
-from wpilib import Encoder, PWMVictorSPX, RobotBase, Timer
+from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
 from ctre import (
     AbsoluteSensorRange,
     CANCoder,
@@ -11,7 +11,7 @@ from ctre import (
     WPI_TalonFX,
 )
 from navx import AHRS
-from wpimath.geometry import Rotation2d, Pose2d
+from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.kinematics import (
     ChassisSpeeds,
     SwerveModuleState,
@@ -20,6 +20,7 @@ from wpimath.kinematics import (
 )
 
 import constants
+from util import convenientmath
 
 
 class SwerveModule:
@@ -321,10 +322,12 @@ class DriveSubsystem(SubsystemBase):
     class CoordinateMode(Enum):
         RobotRelative = auto()
         FieldRelative = auto()
+        TargetRelative = auto()
 
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
+        SmartDashboard.putBoolean(constants.kRobotPoseArrayKeys.validKey, False)
 
         if RobotBase.isReal():
             self.frontLeftModule = CTRESwerveModule(
@@ -366,31 +369,31 @@ class DriveSubsystem(SubsystemBase):
         else:
             self.frontLeftModule = PWMSwerveModule(
                 constants.kFrontLeftModuleName,
-                PWMVictorSPX(constants.kFrontLeftDriveMotorSimPort),
-                PWMVictorSPX(constants.kFrontLeftSteerMotorSimPort),
-                Encoder(*constants.kFrontLeftDriveEncoderSimPorts),
-                Encoder(*constants.kFrontLeftSteerEncoderSimPorts),
+                PWMVictorSPX(constants.kSimFrontLeftDriveMotorPort),
+                PWMVictorSPX(constants.kSimFrontLeftSteerMotorPort),
+                Encoder(*constants.kSimFrontLeftDriveEncoderPorts),
+                Encoder(*constants.kSimFrontLeftSteerEncoderPorts),
             )
             self.frontRightModule = PWMSwerveModule(
                 constants.kFrontRightModuleName,
-                PWMVictorSPX(constants.kFrontRightDriveMotorSimPort),
-                PWMVictorSPX(constants.kFrontRightSteerMotorSimPort),
-                Encoder(*constants.kFrontRightDriveEncoderSimPorts),
-                Encoder(*constants.kFrontRightSteerEncoderSimPorts),
+                PWMVictorSPX(constants.kSimFrontRightDriveMotorPort),
+                PWMVictorSPX(constants.kSimFrontRightSteerMotorPort),
+                Encoder(*constants.kSimFrontRightDriveEncoderPorts),
+                Encoder(*constants.kSimFrontRightSteerEncoderPorts),
             )
             self.backLeftModule = PWMSwerveModule(
                 constants.kBackLeftModuleName,
-                PWMVictorSPX(constants.kBackLeftDriveMotorSimPort),
-                PWMVictorSPX(constants.kBackLeftSteerMotorSimPort),
-                Encoder(*constants.kBackLeftDriveEncoderSimPorts),
-                Encoder(*constants.kBackLeftSteerEncoderSimPorts),
+                PWMVictorSPX(constants.kSimBackLeftDriveMotorPort),
+                PWMVictorSPX(constants.kSimBackLeftSteerMotorPort),
+                Encoder(*constants.kSimBackLeftDriveEncoderPorts),
+                Encoder(*constants.kSimBackLeftSteerEncoderPorts),
             )
             self.backRightModule = PWMSwerveModule(
                 constants.kBackRightModuleName,
-                PWMVictorSPX(constants.kBackRightDriveMotorSimPort),
-                PWMVictorSPX(constants.kBackRightSteerMotorSimPort),
-                Encoder(*constants.kBackRightDriveEncoderSimPorts),
-                Encoder(*constants.kBackRightSteerEncoderSimPorts),
+                PWMVictorSPX(constants.kSimBackRightDriveMotorPort),
+                PWMVictorSPX(constants.kSimBackRightSteerMotorPort),
+                Encoder(*constants.kSimBackRightDriveEncoderPorts),
+                Encoder(*constants.kSimBackRightSteerEncoderPorts),
             )
 
         self.modules = (
@@ -435,24 +438,30 @@ class DriveSubsystem(SubsystemBase):
             self.backLeftModule.getState(),
             self.backRightModule.getState(),
         )
+        robotPose = self.odometry.getPose()
+
+        SmartDashboard.putNumberArray(
+            constants.kRobotPoseArrayKeys.valueKey,
+            [robotPose.X(), robotPose.Y(), robotPose.rotation().radians()],
+        )
+        SmartDashboard.putBoolean(constants.kRobotPoseArrayKeys.validKey, True)
 
         if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
-            rX = self.odometry.getPose().translation().X()
-            rY = self.odometry.getPose().translation().Y()
-            rAngle = int(self.odometry.getPose().rotation().degrees())
-
-            flAngle = int(self.frontLeftModule.getSwerveAngle().degrees())
-            frAngle = int(self.frontRightModule.getSwerveAngle().degrees())
-            blAngle = int(self.backLeftModule.getSwerveAngle().degrees())
-            brAngle = int(self.backRightModule.getSwerveAngle().degrees())
-
-            flSpeed = self.frontLeftModule.getWheelLinearVelocity()
-            frSpeed = self.frontRightModule.getWheelLinearVelocity()
-            blSpeed = self.backLeftModule.getWheelLinearVelocity()
-            brSpeed = self.backRightModule.getWheelLinearVelocity()
-
+            # pylint:disable=consider-using-f-string
             print(
-                f"r: {rX:.1f}, {rY:.1f}, {rAngle}* fl: {flAngle}* {flSpeed:.1f} fr: {frAngle}* {frSpeed:.1f} bl: {blAngle}* {blSpeed:.1f} br: {brAngle}* {brSpeed:.1f}"
+                "r: {:.1f}, {:.1f}, {:.0f}* fl: {:.0f}* {:.1f} fr: {:.0f}* {:.1f} bl: {:.0f}* {:.1f} br: {:.0f}* {:.1f}".format(
+                    robotPose.X(),
+                    robotPose.Y(),
+                    robotPose.rotation().degrees(),
+                    self.frontLeftModule.getSwerveAngle().degrees(),
+                    self.frontLeftModule.getWheelLinearVelocity(),
+                    self.frontRightModule.getSwerveAngle().degrees(),
+                    self.frontRightModule.getWheelLinearVelocity(),
+                    self.backLeftModule.getSwerveAngle().degrees(),
+                    self.backLeftModule.getWheelLinearVelocity(),
+                    self.backRightModule.getSwerveAngle().degrees(),
+                    self.backRightModule.getWheelLinearVelocity(),
+                )
             )
 
     def arcadeDriveWithFactors(
@@ -474,6 +483,20 @@ class DriveSubsystem(SubsystemBase):
         #         forwardSpeedFactor, sidewaysSpeedFactor, rotationSpeedFactor
         #     )
         # )
+
+        forwardSpeedFactor = convenientmath.clamp(forwardSpeedFactor, -1, 1)
+        sidewaysSpeedFactor = convenientmath.clamp(sidewaysSpeedFactor, -1, 1)
+        rotationSpeedFactor = convenientmath.clamp(rotationSpeedFactor, -1, 1)
+
+        combinedLinearFactor = Translation2d(
+            forwardSpeedFactor, sidewaysSpeedFactor
+        ).norm()
+
+        # prevent combined forward & sideways inputs from exceeding the max linear velocity
+        if combinedLinearFactor > 1.0:
+            forwardSpeedFactor = forwardSpeedFactor / combinedLinearFactor
+            sidewaysSpeedFactor = sidewaysSpeedFactor / combinedLinearFactor
+
         chassisSpeeds = ChassisSpeeds(
             forwardSpeedFactor * constants.kMaxForwardLinearVelocity,
             sidewaysSpeedFactor * constants.kMaxSidewaysLinearVelocity,
@@ -496,6 +519,25 @@ class DriveSubsystem(SubsystemBase):
                 chassisSpeeds.omega,
                 self.odometry.getPose().rotation(),
             )
+        elif coordinateMode is DriveSubsystem.CoordinateMode.TargetRelative:
+            if SmartDashboard.getBoolean(
+                constants.kTargetAngleRelativeToRobotKeys.validKey, False
+            ):
+                targetAngle = Rotation2d(
+                    SmartDashboard.getNumber(
+                        constants.kTargetAngleRelativeToRobotKeys.valueKey, 0
+                    )
+                )
+                robotSpeeds = Translation2d(chassisSpeeds.vx, chassisSpeeds.vy)
+                targetAlignedSpeeds = robotSpeeds.rotateBy(targetAngle)
+                robotChassisSpeeds = ChassisSpeeds(
+                    targetAlignedSpeeds.X(),
+                    targetAlignedSpeeds.Y(),
+                    chassisSpeeds.omega,
+                )
+            else:
+                robotChassisSpeeds = ChassisSpeeds()
+
         moduleStates = self.kinematics.toSwerveModuleStates(robotChassisSpeeds)
         (
             frontLeftState,
