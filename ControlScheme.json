@@ -1,5 +1,5 @@
 {
-    "coordinateModeControl": [0, {
+    "fieldRelativeCoordinateModeControl": [0, {
         "Button": 6
     }, "Right Bumper (Xbox)"],
     "chassisForwardsBackwards": [0, {

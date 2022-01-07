@@ -381,7 +381,7 @@ kChassisRotationAxisName = "chassisRotation"
 kForwardsBackwardsAxisName = "chassisForwardsBackwards"
 kHorizontalAxisName = "chassisSideToSide"
 
-kCoordinateModeControlButtonName = "coordinateModeControl"
+kFieldRelativeCoordinateModeControlButtonName = "fieldRelativeCoordinateModeControl"
 kResetSwerveControlButtonName = "resetSwerveControl"
 kTargetRelativeCoordinateModeControlButtonName = "targetRelativeCoordinateModeControl"
 kDriveToTargetControlButtonName = "driveToTargetControl"
