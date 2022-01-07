@@ -371,15 +371,20 @@ kDriveToTargetAngularVelocityTolerance = 5 * kRadiansPerDegree / 1
 """radians / second"""
 
 # Operator Interface
-kXboxControllerPort = 0
-kTranslationControllerPort = 1
-kRotationControllerPort = 2
-
 kXboxJoystickDeadband = 0.1
 """dimensionless"""
 
 kKeyboardJoystickDeadband = 0.0
 """dimensionless"""
+
+kChassisRotationAxisName = "chassisRotation"
+kForwardsBackwardsAxisName = "forwardsBackwards"
+kHorizontalAxisName = "sideToSide"
+
+kCoordinateModeControlButtonName = "coordinateModeControl"
+kResetSwerveControlButtonName = "resetSwerveControl"
+kTargetRelativeCoordinateModeControlButtonName = "targetRelativeCoordinateModeControl"
+kDriveToTargetControlButtonName = "driveToTargetControl"
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
