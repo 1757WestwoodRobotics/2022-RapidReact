@@ -17,7 +17,6 @@ from wpimath.system.plant import DCMotor
 import wpimath.kinematics
 from networktables import NetworkTables
 
-from wpimath.system.plant import DCMotor
 from pyfrc.physics.core import PhysicsInterface
 
 import constants
