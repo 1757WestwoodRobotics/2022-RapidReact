@@ -436,3 +436,5 @@ kCameraSimServoObjectName = "Camera Servo"
 kCameraServoPGain = 0.15
 kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
+
+kCameraSearchModeSpeed = 5.0

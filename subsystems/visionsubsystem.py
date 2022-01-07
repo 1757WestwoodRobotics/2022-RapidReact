@@ -1,4 +1,5 @@
 import typing
+from math import sin
 
 from commands2 import SubsystemBase
 from networktables import NetworkTables
@@ -194,6 +195,14 @@ class LimelightTrackingModule(TrackingModule):
         else:
             self.targetAngle = None
 
+            guessRotationAmount = sin(
+                Timer.getMatchTime() * constants.kCameraSearchModeSpeed
+            )
+
+            self.setServoAngle(
+                Rotation2d(guessRotationAmount * constants.kCameraServoMaxAngle)
+            )
+
         TrackingModule.update(self)
 
     def reset(self) -> None:
@@ -249,10 +258,10 @@ class VisionSubsystem(SubsystemBase):
             )
             SmartDashboard.putBoolean(constants.kTargetPoseArrayKeys.validKey, True)
 
-            SmartDashboard.putNumber(
-                constants.kCameraServoRotationNumberKey,
-                self.trackingModule.getServoAngle().degrees(),
-            )
+        SmartDashboard.putNumber(
+            constants.kCameraServoRotationNumberKey,
+            self.trackingModule.getServoAngle().degrees(),
+        )
 
         if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
             print(
