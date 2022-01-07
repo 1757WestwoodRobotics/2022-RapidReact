@@ -2,13 +2,13 @@
     "coordinateModeControl": [0, {
         "Button": 6
     }, "Right Bumper (Xbox)"],
-    "forwardsBackwards": [0, {
+    "chassisForwardsBackwards": [0, {
         "Axis": 1
     }, "Left Stick Y (Xbox)"],
     "chassisRotation": [0, {
         "Axis": 3
     }, "Right Stick X (Xbox)"],
-    "sideToSide": [0, {
+    "chassisSideToSide": [0, {
         "Axis": 0
     }, "Left Stick X (Xbox)"],
     "resetSwerveControl": [0, {

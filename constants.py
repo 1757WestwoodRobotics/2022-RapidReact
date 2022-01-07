@@ -378,8 +378,8 @@ kKeyboardJoystickDeadband = 0.0
 """dimensionless"""
 
 kChassisRotationAxisName = "chassisRotation"
-kForwardsBackwardsAxisName = "forwardsBackwards"
-kHorizontalAxisName = "sideToSide"
+kForwardsBackwardsAxisName = "chassisForwardsBackwards"
+kHorizontalAxisName = "chassisSideToSide"
 
 kCoordinateModeControlButtonName = "coordinateModeControl"
 kResetSwerveControlButtonName = "resetSwerveControl"
