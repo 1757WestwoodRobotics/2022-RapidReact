@@ -7,16 +7,32 @@ Default units:
     Length: meters
     Angle: radians
 
+Axes Convention (right hand rule):
+    Translation:
+        +X: forward
+        +Y: left
+        +Z: up
+
+    Rotation:
+        +rotate around X: counterclockwise looking from the front, 0 aligned with +Y
+        +rotate around Y: counterclockwise looking from the left, 0 aligned with +Z
+        +rotate around Z: counterclockwise looking from the top, 0 aligned with +X
+
 Swerve Module Layout:
     Drive (input) -> Drive Gearing -> Wheel (output)
     Steer (input) -> Steer Gearing -> Swerve (output)
 """
 
 import math
-from wpimath.geometry import Translation2d
+from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.system.plant import DCMotor
 
+from util.keyorganization import OptionalValueKeys
+
 # Basic units
+kInchesPerFoot = 12
+"""inches / foot"""
+
 kCentimetersPerInch = 2.54
 """centimeters / inch"""
 
@@ -25,6 +41,9 @@ kCentimetersPerMeter = 100
 
 kMetersPerInch = kCentimetersPerInch / kCentimetersPerMeter
 """meters / inch"""
+
+kMetersPerFoot = kMetersPerInch * kInchesPerFoot
+"""meters / foot"""
 
 kRadiansPerRevolution = 2 * math.pi
 """radians / revolution"""
@@ -43,8 +62,22 @@ kPrintFrequency = 2
 """ 1 / second"""
 
 kPrintPeriod = 1 / kPrintFrequency
+"""seconds"""
 
-# Physical parameters
+# Field Physical parameters
+kFieldLength = 52.5 * kMetersPerFoot
+"""meters"""
+
+kFieldWidth = 27 * kMetersPerFoot
+"""meters"""
+
+# Robot Physical parameters
+kRobotWidth = 28 * kMetersPerInch
+"""meters"""
+
+kRobotLength = 28 * kMetersPerInch
+"""meters"""
+
 kSwerveModuleCenterToCenterSideDistance = 21.5 * kMetersPerInch
 """meters"""
 
@@ -60,24 +93,29 @@ kSwerveModuleDistanceFromRobotCenter = pow(
 )
 """meters (c = (a^2 + b^2) ^ 0.5)"""
 
-
-# +x forward, +y right
 kFrontLeftWheelPosition = Translation2d(
     kHalfSwerveModuleCenterToCenterSideDistance,
     kHalfSwerveModuleCenterToCenterSideDistance,
 )
+"""[meters, meters]"""
+
 kFrontRightWheelPosition = Translation2d(
     kHalfSwerveModuleCenterToCenterSideDistance,
     -1 * kHalfSwerveModuleCenterToCenterSideDistance,
 )
+"""[meters, meters]"""
+
 kBackLeftWheelPosition = Translation2d(
     -1 * kHalfSwerveModuleCenterToCenterSideDistance,
     kHalfSwerveModuleCenterToCenterSideDistance,
 )
+"""[meters, meters]"""
+
 kBackRightWheelPosition = Translation2d(
     -1 * kHalfSwerveModuleCenterToCenterSideDistance,
     -1 * kHalfSwerveModuleCenterToCenterSideDistance,
 )
+"""[meters, meters]"""
 
 kWheelDiameter = 4 * kMetersPerInch
 """meters"""
@@ -123,21 +161,39 @@ kMaxRotationAngularVelocity = (
 )
 """radians / second (omega = v / r)"""
 
+kMaxWheelLinearAcceleration = kMaxWheelLinearVelocity / 1
+"""meters / second^2"""
+
+kMaxForwardLinearAcceleration = kMaxWheelLinearAcceleration
+"""meters / second^2"""
+
+kMaxSidewaysLinearAcceleration = kMaxWheelLinearAcceleration
+"""meters / second^2"""
+
+kMaxRotationAngularAcceleration = kMaxRotationAngularVelocity / 0.5
+"""radians / second^2"""
+
 kFrontLeftModuleName = "front_left"
 kFrontRightModuleName = "front_right"
 kBackLeftModuleName = "back_left"
 kBackRightModuleName = "back_right"
 
-# Motors
-kFrontLeftDriveMotorSimPort = 0
-kFrontLeftSteerMotorSimPort = 1
-kFrontRightDriveMotorSimPort = 2
-kFrontRightSteerMotorSimPort = 3
-kBackLeftDriveMotorSimPort = 4
-kBackLeftSteerMotorSimPort = 5
-kBackRightDriveMotorSimPort = 6
-kBackRightSteerMotorSimPort = 7
+kLimelightMountingOffset = Translation2d(
+    (kRobotLength / 2) - (4.125 * kMetersPerInch), 0.0
+)
+kTrackerPanAngleKey = "tracker/pan_angle"
+kLimelightTrackerModuleName = "limelight_target_tracker"
 
+# Limelight
+kLimelightTargetInvalidValue = 0.0
+kLimelightTargetValidValue = 1.0
+kLimelightMinHorizontalFoV = Rotation2d.fromDegrees(-27)
+kLimelightMaxHorizontalFoV = Rotation2d.fromDegrees(27)
+kLimelightNetworkTableName = "limelight"
+kLimelightTargetValidKey = "tv"
+kLimelightTargetHorizontalAngleKey = "tx"
+
+# Motors
 kFrontLeftDriveMotorId = 10
 kFrontLeftSteerMotorId = 11
 kFrontRightDriveMotorId = 12
@@ -148,15 +204,6 @@ kBackRightDriveMotorId = 16
 kBackRightSteerMotorId = 17
 
 # Encoders
-kFrontLeftDriveEncoderSimPorts = (0, 1)
-kFrontLeftSteerEncoderSimPorts = (2, 3)
-kFrontRightDriveEncoderSimPorts = (4, 5)
-kFrontRightSteerEncoderSimPorts = (6, 7)
-kBackLeftDriveEncoderSimPorts = (8, 9)
-kBackLeftSteerEncoderSimPorts = (10, 11)
-kBackRightDriveEncoderSimPorts = (12, 13)
-kBackRightSteerEncoderSimPorts = (14, 15)
-
 kFrontLeftSteerEncoderId = 40
 kFrontRightSteerEncoderId = 41
 kBackLeftSteerEncoderId = 42
@@ -263,6 +310,18 @@ kBackLeftAbsoluteEncoderOffset = 19.424
 kBackRightAbsoluteEncoderOffset = 142.998
 """degrees"""
 
+kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
+
+# Vision parameters
+kTargetAngleRelativeToRobotKeys = OptionalValueKeys("TargetAngleRelativeToRobot")
+kTargetDistanceRelativeToRobotKeys = OptionalValueKeys("TargetDistanceRelativeToRobot")
+kTargetFacingAngleRelativeToRobotKeys = OptionalValueKeys(
+    "TargetFacingAngleRelativeToRobot"
+)
+kTargetPoseArrayKeys = OptionalValueKeys("TargetPoseArray")
+
+kTargetName = "Target"
+
 # Autonomous
 kAutoDriveDistance = 3 * kWheelCircumference
 """meters"""
@@ -277,6 +336,39 @@ kAutoDistanceThreshold = 6 * kMetersPerInch
 """meters"""
 
 kAutoDriveSpeedFactor = 0.5
+"""dimensionless"""
+
+kAutoWaitDuration = 1
+"""seconds"""
+
+kAutoTargetOffset = Translation2d(2, 0)
+"""[meters, meters]"""
+
+# Target relative drive
+kTargetRelativeDriveAnglePGain = 1
+kTargetRelativeDriveAngleIGain = 0
+kTargetRelativeDriveAngleDGain = 0
+
+# Drive to Target
+kDriveToTargetDistancePGain = 0.5
+kDriveToTargetDistanceIGain = 0
+kDriveToTargetDistanceDGain = 0
+
+kDriveToTargetAnglePGain = 0.5
+kDriveToTargetAngleIGain = 0
+kDriveToTargetAngleDGain = 0
+
+kDriveToTargetDistanceTolerance = 10 / kCentimetersPerMeter
+"""meters"""
+
+kDriveToTargetLinearVelocityTolerance = 1 / kCentimetersPerMeter / 1
+"""meters / second"""
+
+kDriveToTargetAngleTolerance = 5 * kRadiansPerDegree
+"""radians"""
+
+kDriveToTargetAngularVelocityTolerance = 5 * kRadiansPerDegree / 1
+"""radians / second"""
 
 # Operator Interface
 kXboxControllerPort = 0
@@ -288,3 +380,59 @@ kXboxJoystickDeadband = 0.1
 
 kKeyboardJoystickDeadband = 0.0
 """dimensionless"""
+
+# Simulation Parameters
+kSimTargetName = "SimTarget"
+kSimDefaultTargetLocation = Pose2d(
+    kFieldLength * 3 / 4, kFieldWidth / 2, 180 * kRadiansPerDegree
+)
+"""[meters, meters, radians]"""
+
+kSimDefaultTargetHeight = 10
+"""meters"""
+
+kSimRobotPoseArrayKey = "SimRobotPoseArray"
+kSimTargetPoseArrayKey = "SimTargetPoseArray"
+kSimTargetHeightKey = "SimTargetHeight"
+kSimTargetTrackingModuleName = "sim_target_tracker"
+
+kSimFrontLeftDriveMotorPort = 0
+kSimFrontLeftSteerMotorPort = 1
+kSimFrontRightDriveMotorPort = 2
+kSimFrontRightSteerMotorPort = 3
+kSimBackLeftDriveMotorPort = 4
+kSimBackLeftSteerMotorPort = 5
+kSimBackRightDriveMotorPort = 6
+kSimBackRightSteerMotorPort = 7
+
+kSimFrontLeftDriveEncoderPorts = (0, 1)
+kSimFrontLeftSteerEncoderPorts = (2, 3)
+kSimFrontRightDriveEncoderPorts = (4, 5)
+kSimFrontRightSteerEncoderPorts = (6, 7)
+kSimBackLeftDriveEncoderPorts = (8, 9)
+kSimBackLeftSteerEncoderPorts = (10, 11)
+kSimBackRightDriveEncoderPorts = (12, 13)
+kSimBackRightSteerEncoderPorts = (14, 15)
+
+# vision system / camera parameters
+kCameraPanServoPWMChannel = 0
+"""direct port number on the RoboRIO itself"""
+kCameraSimPanServoPWMChannel = 9
+
+kCameraTiltServoPWMChannel = 1
+"""direct port number on the RoboRIO itself"""
+kCameraSimTiltServoPWMChannel = 8
+
+kCameraPanInverted = True
+kCameraTiltInverted = False
+
+kCameraServoMaxAngle = 60 * kRadiansPerDegree
+"""radians"""
+
+kCameraServoRotationNumberKey = "CameraServoRotation"
+
+kCameraSimServoObjectName = "Camera Servo"
+
+kCameraServoPGain = 0.15
+kCameraServoIGain = 0.0
+kCameraServoDGain = 0.0

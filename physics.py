@@ -10,14 +10,16 @@
 #
 
 import typing
-import wpilib
+from wpilib import RobotController, SmartDashboard
 from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim
-import wpimath.kinematics
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
 from wpimath.system.plant import DCMotor
+import wpimath.kinematics
+from networktables import NetworkTables
 from pyfrc.physics.core import PhysicsInterface
 
 import constants
+from util import convenientmath
 
 
 class SwerveModuleSim:
@@ -110,6 +112,35 @@ class SwerveDriveSim:
         self.pose = newPose
 
 
+class LimelightSim:
+    def __init__(self) -> None:
+        NetworkTables.initialize()
+        self.limelightNetworkTable = NetworkTables.getTable(
+            constants.kLimelightNetworkTableName
+        )
+
+    def update(self, limelightPose: Pose2d, targetPose: Pose2d) -> None:
+        targetInLimelight = Transform2d(limelightPose, targetPose)
+        targetAngle = convenientmath.rotationFromTranslation(
+            targetInLimelight.translation()
+        )
+        targetValid = constants.kLimelightTargetInvalidValue
+        if (
+            constants.kLimelightMinHorizontalFoV.radians()
+            < targetAngle.radians()
+            < constants.kLimelightMaxHorizontalFoV.radians()
+        ):
+            targetValid = constants.kLimelightTargetValidValue
+            self.limelightNetworkTable.putNumber(
+                constants.kLimelightTargetHorizontalAngleKey,
+                -1 * targetAngle.degrees(),  # limelight uses reversed direction along x
+            )
+
+        self.limelightNetworkTable.putNumber(
+            constants.kLimelightTargetValidKey, targetValid
+        )
+
+
 class PhysicsEngine:
     """
     Simulates a drivetrain
@@ -121,60 +152,67 @@ class PhysicsEngine:
 
         self.frontLeftModuleSim = SwerveModuleSim(
             constants.kFrontLeftWheelPosition,
-            PWMSim(constants.kFrontLeftDriveMotorSimPort),
+            PWMSim(constants.kSimFrontLeftDriveMotorPort),
             DCMotor.falcon500(),
             constants.kDriveGearingRatio,
-            PWMSim(constants.kFrontLeftSteerMotorSimPort),
+            PWMSim(constants.kSimFrontLeftSteerMotorPort),
             DCMotor.falcon500(),
             constants.kSteerGearingRatio,
-            EncoderSim.createForChannel(constants.kFrontLeftDriveEncoderSimPorts[0]),
-            EncoderSim.createForChannel(constants.kFrontLeftSteerEncoderSimPorts[0]),
+            EncoderSim.createForChannel(constants.kSimFrontLeftDriveEncoderPorts[0]),
+            EncoderSim.createForChannel(constants.kSimFrontLeftSteerEncoderPorts[0]),
         )
         self.frontRightModuleSim = SwerveModuleSim(
             constants.kFrontRightWheelPosition,
-            PWMSim(constants.kFrontRightDriveMotorSimPort),
+            PWMSim(constants.kSimFrontRightDriveMotorPort),
             DCMotor.falcon500(),
             constants.kDriveGearingRatio,
-            PWMSim(constants.kFrontRightSteerMotorSimPort),
+            PWMSim(constants.kSimFrontRightSteerMotorPort),
             DCMotor.falcon500(),
             constants.kSteerGearingRatio,
-            EncoderSim.createForChannel(constants.kFrontRightDriveEncoderSimPorts[0]),
-            EncoderSim.createForChannel(constants.kFrontRightSteerEncoderSimPorts[0]),
+            EncoderSim.createForChannel(constants.kSimFrontRightDriveEncoderPorts[0]),
+            EncoderSim.createForChannel(constants.kSimFrontRightSteerEncoderPorts[0]),
         )
-        self.backLeftModuleSim = SwerveModuleSim(
+        self.backSimLeftModule = SwerveModuleSim(
             constants.kBackLeftWheelPosition,
-            PWMSim(constants.kBackLeftDriveMotorSimPort),
+            PWMSim(constants.kSimBackLeftDriveMotorPort),
             DCMotor.falcon500(),
             constants.kDriveGearingRatio,
-            PWMSim(constants.kBackLeftSteerMotorSimPort),
+            PWMSim(constants.kSimBackLeftSteerMotorPort),
             DCMotor.falcon500(),
             constants.kSteerGearingRatio,
-            EncoderSim.createForChannel(constants.kBackLeftDriveEncoderSimPorts[0]),
-            EncoderSim.createForChannel(constants.kBackLeftSteerEncoderSimPorts[0]),
+            EncoderSim.createForChannel(constants.kSimBackLeftDriveEncoderPorts[0]),
+            EncoderSim.createForChannel(constants.kSimBackLeftSteerEncoderPorts[0]),
         )
-        self.backRightModuleSim = SwerveModuleSim(
+        self.backSimRightModule = SwerveModuleSim(
             constants.kBackRightWheelPosition,
-            PWMSim(constants.kBackRightDriveMotorSimPort),
+            PWMSim(constants.kSimBackRightDriveMotorPort),
             DCMotor.falcon500(),
             constants.kDriveGearingRatio,
-            PWMSim(constants.kBackRightSteerMotorSimPort),
+            PWMSim(constants.kSimBackRightSteerMotorPort),
             DCMotor.falcon500(),
             constants.kSteerGearingRatio,
-            EncoderSim.createForChannel(constants.kBackRightDriveEncoderSimPorts[0]),
-            EncoderSim.createForChannel(constants.kBackRightSteerEncoderSimPorts[0]),
+            EncoderSim.createForChannel(constants.kSimBackRightDriveEncoderPorts[0]),
+            EncoderSim.createForChannel(constants.kSimBackRightSteerEncoderPorts[0]),
         )
 
         self.swerveModuleSims = [
             self.frontLeftModuleSim,
             self.frontRightModuleSim,
-            self.backLeftModuleSim,
-            self.backRightModuleSim,
+            self.backSimLeftModule,
+            self.backSimRightModule,
         ]
 
         self.driveSim = SwerveDriveSim(tuple(self.swerveModuleSims))
 
         self.gyroSim = SimDeviceSim("navX-Sensor[4]")
         self.gyroYaw = self.gyroSim.getDouble("Yaw")
+
+        simTargetObject = self.physics_controller.field.getObject(
+            constants.kSimTargetName
+        )
+        simTargetObject.setPose(constants.kSimDefaultTargetLocation)
+
+        self.limelightSim = LimelightSim()
 
     # pylint: disable=unused-argument
     def update_sim(self, now: float, tm_diff: float) -> None:
@@ -190,8 +228,58 @@ class PhysicsEngine:
         self.gyroYaw.set(-self.driveSim.getHeading().degrees())
 
         # Simulate the drivetrain
-        voltage = wpilib.RobotController.getInputVoltage()
+        voltage = RobotController.getInputVoltage()
 
         self.driveSim.update(tm_diff, voltage)
 
-        self.physics_controller.field.setRobotPose(self.driveSim.getPose())
+        simRobotPose = self.driveSim.getPose()
+        self.physics_controller.field.setRobotPose(simRobotPose)
+
+        # publish the simulated robot pose to nt
+        SmartDashboard.putNumberArray(
+            constants.kSimRobotPoseArrayKey,
+            [simRobotPose.X(), simRobotPose.Y(), simRobotPose.rotation().radians()],
+        )
+
+        # publish the simulated target pose to nt
+        simTargetObject = self.physics_controller.field.getObject(
+            constants.kSimTargetName
+        )
+        simTargetPose = simTargetObject.getPose()
+        SmartDashboard.putNumberArray(
+            constants.kSimTargetPoseArrayKey,
+            [simTargetPose.X(), simTargetPose.Y(), simTargetPose.rotation().radians()],
+        )
+
+        # publish the simulated limelight nt entries
+        limelightPanAngle = SmartDashboard.getNumber(constants.kTrackerPanAngleKey, 0)
+        robotToLimelightTransform = Transform2d(
+            constants.kLimelightMountingOffset, Rotation2d(limelightPanAngle)
+        )
+
+        simLimelightPose = simRobotPose + robotToLimelightTransform
+
+        servoPose = Pose2d(
+            simLimelightPose.translation(),
+            simLimelightPose.rotation()
+            + Rotation2d.fromDegrees(
+                SmartDashboard.getNumber(constants.kCameraServoRotationNumberKey, 0.0)
+            ),
+        )
+        self.limelightSim.update(servoPose, simTargetPose)
+
+        servoObject = self.physics_controller.field.getObject(
+            constants.kCameraSimServoObjectName
+        )
+        servoObject.setPose(servoPose)
+
+        # show the robot's estimation of where the target is on the simulated field
+        if SmartDashboard.getBoolean(constants.kTargetPoseArrayKeys.validKey, False):
+            targetPoseX, targetPoseY, targetAngle = SmartDashboard.getNumberArray(
+                constants.kTargetPoseArrayKeys.valueKey, [0, 0, 0]
+            )
+            targetPose = Pose2d(targetPoseX, targetPoseY, targetAngle)
+            targetObject = self.physics_controller.field.getObject(
+                constants.kTargetName
+            )
+            targetObject.setPose(targetPose)
