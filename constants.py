@@ -377,9 +377,11 @@ kXboxJoystickDeadband = 0.1
 kKeyboardJoystickDeadband = 0.0
 """dimensionless"""
 
+kControllerMappingFilename = "ControlScheme.json"
+
 kChassisRotationAxisName = "chassisRotation"
-kForwardsBackwardsAxisName = "chassisForwardsBackwards"
-kHorizontalAxisName = "chassisSideToSide"
+kChassisForwardsBackwardsAxisName = "chassisForwardsBackwards"
+kChassisSideToSideAxisName = "chassisSideToSide"
 
 kFieldRelativeCoordinateModeControlButtonName = "fieldRelativeCoordinateModeControl"
 kResetSwerveControlButtonName = "resetSwerveControl"

@@ -46,7 +46,10 @@ class OperatorInterface:
 
     def __init__(self) -> None:
         with open(
-            path.join(path.dirname(path.realpath(__file__)), "ControlScheme.json"),
+            path.join(
+                path.dirname(path.realpath(__file__)),
+                constants.kControllerMappingFilename,
+            ),
             "r",
             encoding="utf-8",
         ) as file:
@@ -85,13 +88,13 @@ class OperatorInterface:
         self.chassisControls = HolonomicInput(
             Invert(
                 Deadband(
-                    getAxisBindingOfName(constants.kForwardsBackwardsAxisName),
+                    getAxisBindingOfName(constants.kChassisForwardsBackwardsAxisName),
                     constants.kXboxJoystickDeadband,
                 )
             ),
             Invert(
                 Deadband(
-                    getAxisBindingOfName(constants.kHorizontalAxisName),
+                    getAxisBindingOfName(constants.kChassisSideToSideAxisName),
                     constants.kXboxJoystickDeadband,
                 )
             ),
