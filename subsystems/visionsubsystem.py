@@ -4,10 +4,10 @@ from commands2 import SubsystemBase
 from networktables import NetworkTables
 from wpilib import SmartDashboard, Timer, RobotBase, PWM
 from wpilib.simulation import PWMSim
-from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
 from wpilib.controller import PIDController
+from wpimath.geometry import Pose2d, Rotation2d, Transform2d
 import constants
-import util.convenientmath as convenientmath
+from util import convenientmath
 
 
 class TrackingModule:
@@ -149,6 +149,7 @@ class LimelightTrackingModule(TrackingModule):
         )
 
         self.lastReadAngle = None
+        self.limelightAngle = 0
 
     def getTargetAngle(self) -> typing.Optional[Rotation2d]:
         return self.targetAngle
@@ -186,13 +187,12 @@ class LimelightTrackingModule(TrackingModule):
 
             self.targetAngle = self.limelightAngle + self.getServoAngle()
 
-            if not self.limelightAngle == self.lastReadAngle:
+            if self.limelightAngle != self.lastReadAngle:
                 self.setServoAngle(self.targetAngle)
 
                 self.lastReadAngle = self.limelightAngle
         else:
             self.targetAngle = None
-            # TODO: sweeping motion of the camera, "search for target"
 
         TrackingModule.update(self)
 
@@ -256,9 +256,5 @@ class VisionSubsystem(SubsystemBase):
 
         if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
             print(
-                "ta: {:.0f}* td: {:.1f} tfa: {:.0f}*".format(
-                    self.trackingModule.getTargetAngle().degrees(),
-                    self.trackingModule.getTargetDistance(),
-                    self.trackingModule.getTargetFacingAngle().degrees(),
-                )
+                f"ta: {self.trackingModule.getTargetAngle().degrees():.0f}* td: {self.trackingModule.getTargetDistance():.1f} tfa: {self.trackingModule.getTargetFacingAngle().degrees():.0f}*"
             )

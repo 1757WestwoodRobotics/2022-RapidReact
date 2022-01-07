@@ -18,7 +18,7 @@ from wpimath.kinematics import (
 )
 from enum import Enum, auto
 import constants
-import util.convenientmath as convenientmath
+from util import convenientmath
 
 
 class SwerveModule:
@@ -453,6 +453,19 @@ class DriveSubsystem(SubsystemBase):
         SmartDashboard.putBoolean(constants.kRobotPoseArrayKeys.validKey, True)
 
         if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
+            rX = self.odometry.getPose().translation().X()
+            rY = self.odometry.getPose().translation().Y()
+            rAngle = int(self.odometry.getPose().rotation().degrees())
+
+            flAngle = int(self.frontLeftModule.getSwerveAngle().degrees())
+            frAngle = int(self.frontRightModule.getSwerveAngle().degrees())
+            blAngle = int(self.backLeftModule.getSwerveAngle().degrees())
+            brAngle = int(self.backRightModule.getSwerveAngle().degrees())
+
+            flSpeed = self.frontLeftModule.getWheelLinearVelocity()
+            frSpeed = self.frontRightModule.getWheelLinearVelocity()
+            blSpeed = self.backLeftModule.getWheelLinearVelocity()
+            brSpeed = self.backRightModule.getWheelLinearVelocity()
             print(
                 "r: {:.1f}, {:.1f}, {:.0f}* fl: {:.0f}* {:.1f} fr: {:.0f}* {:.1f} bl: {:.0f}* {:.1f} br: {:.0f}* {:.1f}".format(
                     robotPose.X(),

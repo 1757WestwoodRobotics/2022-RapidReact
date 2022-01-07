@@ -12,14 +12,16 @@
 import typing
 from wpilib import RobotController, SmartDashboard
 from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim
-import wpimath.kinematics
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
+from wpimath.system.plant import DCMotor
+import wpimath.kinematics
 from networktables import NetworkTables
 
 from wpimath.system.plant import DCMotor
+from pyfrc.physics.core import PhysicsInterface
 
 import constants
-import util.convenientmath as convenientmath
+from util import convenientmath
 
 from pyfrc.physics.core import PhysicsInterface
 

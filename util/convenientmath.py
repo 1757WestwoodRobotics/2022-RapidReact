@@ -2,15 +2,15 @@ import math
 from wpilib.geometry import Rotation2d, Translation2d
 
 
-def clamp(input: float, minimum: float, maximum: float) -> float:
-    return max(min(input, maximum), minimum)
+def clamp(inputValue: float, minimum: float, maximum: float) -> float:
+    return max(min(inputValue, maximum), minimum)
 
 
-def normalizeRotation(input: Rotation2d) -> Rotation2d:
+def normalizeRotation(inputRotation: Rotation2d) -> Rotation2d:
     """
     Normalize the given rotation to the range [-pi, pi)
     """
-    inputAngle = input.radians()
+    inputAngle = inputRotation.radians()
     return Rotation2d(
         inputAngle - 2 * math.pi * math.floor((inputAngle + math.pi) / (2 * math.pi))
     )
