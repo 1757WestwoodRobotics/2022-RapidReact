@@ -17,6 +17,9 @@ class TrackingModule:
     def getTargetAngle(self) -> Rotation2d:
         raise NotImplementedError("Must be implemented by subclass")
 
+    def isOnTarget(self) -> bool:
+        raise NotImplementedError("Must be implemented by subclass")
+
     def getTargetDistance(self) -> float:
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -171,6 +174,12 @@ class LimelightTrackingModule(TrackingModule):
         )
         self.rotationServo.setSpeed(
             (self.getServoAngle().radians() + offset) / constants.kCameraServoMaxAngle
+        )
+
+    def isOnTarget(self) -> bool:
+        return (
+            abs(self.limelightAngle - self.getTargetAngle).radians()
+            <= constants.kTrackingOnTargetTolerence
         )
 
     def update(self) -> None:
