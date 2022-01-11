@@ -85,6 +85,9 @@ class OperatorInterface:
             constants.kDriveToTargetControlButtonName
         )
 
+        self.launchCargo = getButtonBindingOfName(constants.kLaunchCargoButtonName)
+        self.toggleIntake = getButtonBindingOfName(constants.kToggleIntakeButtonName)
+
         self.chassisControls = HolonomicInput(
             Invert(
                 Deadband(

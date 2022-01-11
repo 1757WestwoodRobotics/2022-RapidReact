@@ -19,5 +19,11 @@
     }, "Left Bumper (Xbox)"],
     "driveToTargetControl": [0, {
         "Button": 4
-    }, "Y (Xbox)"]
+    }, "Y (Xbox)"],
+    "launchCargo": [0, {
+        "Button": 3
+    }, "X (Xbox)"],
+    "toggleIntake": [0, {
+        "Button": 1
+    }, "A (Xbox)"]
 }

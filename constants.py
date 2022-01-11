@@ -387,6 +387,8 @@ kFieldRelativeCoordinateModeControlButtonName = "fieldRelativeCoordinateModeCont
 kResetSwerveControlButtonName = "resetSwerveControl"
 kTargetRelativeCoordinateModeControlButtonName = "targetRelativeCoordinateModeControl"
 kDriveToTargetControlButtonName = "driveToTargetControl"
+kLaunchCargoButtonName = "launchCargo"
+kToggleIntakeButtonName = "toggleIntake"
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
