@@ -116,6 +116,9 @@ class SimTrackingModule(TrackingModule):
 
         TrackingModule.update(self)
 
+    def isOnTarget(self) -> bool:
+        return True  # sim is always on target
+
     def reset(self) -> None:
         pass
 
@@ -178,7 +181,7 @@ class LimelightTrackingModule(TrackingModule):
 
     def isOnTarget(self) -> bool:
         return (
-            abs(self.limelightAngle - self.getTargetAngle).radians()
+            abs(self.getServoAngle() - self.getTargetAngle()).radians()
             <= constants.kTrackingOnTargetTolerence
         )
 
