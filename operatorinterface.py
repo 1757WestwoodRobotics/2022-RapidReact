@@ -5,6 +5,7 @@ from os import path
 from wpilib import Joystick
 
 import constants
+from util.convenientmath import map_range, number
 
 AnalogInput = typing.Callable[[], float]
 
@@ -25,6 +26,20 @@ def Invert(inputFn: AnalogInput) -> AnalogInput:
         return -1 * inputFn()
 
     return invert
+
+
+def MapRange(
+    inputFn: AnalogInput,
+    inputMin: number,
+    inputMax: number,
+    outputMin: number,
+    outputMax: number,
+) -> AnalogInput:
+    return lambda: map_range(inputFn(), inputMin, inputMax, outputMin, outputMax)
+
+
+def Multiply(a: AnalogInput, b: AnalogInput) -> AnalogInput:
+    return lambda: a() * b()
 
 
 class HolonomicInput:
@@ -96,24 +111,36 @@ class OperatorInterface:
         )
 
         self.shootBall = getButtonBindingOfName(constants.kShootBallButtonName)
+        self.scaler = MapRange(getAxisBindingOfName("scaler"), 1, -1, 0, 1)
 
         self.chassisControls = HolonomicInput(
             Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisForwardsBackwardsAxisName),
-                    constants.kXboxJoystickDeadband,
+                Multiply(
+                    Deadband(
+                        getAxisBindingOfName(
+                            constants.kChassisForwardsBackwardsAxisName
+                        ),
+                        constants.kXboxJoystickDeadband,
+                    ),
+                    self.scaler,
                 )
             ),
             Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisSideToSideAxisName),
-                    constants.kXboxJoystickDeadband,
+                Multiply(
+                    Deadband(
+                        getAxisBindingOfName(constants.kChassisSideToSideAxisName),
+                        constants.kXboxJoystickDeadband,
+                    ),
+                    self.scaler,
                 )
             ),
             Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisRotationAxisName),
-                    constants.kXboxJoystickDeadband,
+                Multiply(
+                    Deadband(
+                        getAxisBindingOfName(constants.kChassisRotationAxisName),
+                        constants.kXboxJoystickDeadband,
+                    ),
+                    self.scaler,
                 )
             ),
         )

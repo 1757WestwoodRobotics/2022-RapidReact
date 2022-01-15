@@ -1,12 +1,4 @@
 {
-  "fieldRelativeCoordinateModeControl": [
-    0,
-    { "Button": 6 },
-    "Right Bumper (Xbox)"
-  ],
-  "chassisForwardsBackwards": [0, { "Axis": 1 }, "Left Stick Y (Xbox)"],
-  "chassisRotation": [0, { "Axis": 3 }, "Right Stick X (Xbox)"],
-  "chassisSideToSide": [0, { "Axis": 0 }, "Left Stick X (Xbox)"],
   "resetSwerveControl": [
     0,
     {
@@ -20,13 +12,6 @@
       "Button": 5
     },
     "Left Bumper (Xbox)"
-  ],
-  "driveToTargetControl": [
-    0,
-    {
-      "Button": 4
-    },
-    "Y (Xbox)"
   ],
   "launchCargo": [
     0,
@@ -69,5 +54,61 @@
       "Button": 10
     },
     "Right Thumb Button (Xbox)"
+  ],
+  "chassisSideToSide": [
+    0,
+    {
+      "Axis": 0
+    },
+    "Stick X Axis (ThrustmasterT16000M)"
+  ],
+  "resetSwerveControl": [
+    0,
+    {
+      "Button": 13
+    },
+    "left button set, right top (ThrustmasterT16000M)"
+  ],
+  "fieldRelativeCoordinateModeControl": [
+    0,
+    {
+      "Button": 3
+    },
+    "left button on top of joystick (ThrustmasterT16000M)"
+  ],
+  "driveToTargetControl": [
+    0,
+    {
+      "Button": 11
+    },
+    "left button set, left top (ThrustmasterT16000M)"
+  ],
+  "targetRelativeCoordinateModeControl": [
+    0,
+    {
+      "Button": 4
+    },
+    "right button on top of joystick (ThrustmasterT16000M)"
+  ],
+  "scaler": [
+    1,
+    {
+      "Axis": 2
+    },
+    "Throttle Slide (ThrustmasterTWCSThrottle)"
+  ],
+  "chassisRotation": [
+    0,
+    {
+      "Axis": 2
+    },
+    "Stick rotation (ThrustmasterT16000M)"
+  ],
+  "chassisForwardsBackwards": [
+    0,
+    {
+      "Axis": 1
+    },
+    "Stick Y Axis (ThrustmasterT16000M)"
   ]
 }
