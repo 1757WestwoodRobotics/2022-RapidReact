@@ -1,4 +1,5 @@
-# Eventually these should probably be version pinned
+# Non RobotPy packages, some are required by RobotPy because for simplicity we don't pin them,
+# just explicitly list that they are required
 attrs
 astroid
 bcrypt
@@ -26,6 +27,8 @@ toml
 typing-extensions
 wheel
 wrapt
+# RobotPy packages.  We explicitly list the version number on all these packages so that when RobotPy
+# updates we don't break the world until we have a chance to test/update.
 pyfrc==2021.1.2
 pynetconsole==2.0.2
 pynetworktables==2021.0.0.0
