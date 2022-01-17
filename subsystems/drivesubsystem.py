@@ -93,7 +93,7 @@ class PWMSwerveModule(SwerveModule):
     def setSwerveAngleTarget(self, swerveAngleTarget: Rotation2d) -> None:
         swerveError = swerveAngleTarget.radians() - self.swerveEncoder.getDistance()
         swerveErrorClamped = min(max(swerveError, -1), 1)
-        self.swerveMotor.setSpeed(swerveErrorClamped)
+        self.swerveMotor.set(swerveErrorClamped)
 
     def getWheelLinearVelocity(self) -> float:
         return self.wheelEncoder.getRate()
@@ -101,7 +101,7 @@ class PWMSwerveModule(SwerveModule):
     def setWheelLinearVelocityTarget(self, wheelLinearVelocityTarget: float) -> None:
         speedFactor = wheelLinearVelocityTarget / constants.kMaxWheelLinearVelocity
         speedFactorClamped = min(max(speedFactor, -1), 1)
-        self.wheelMotor.setSpeed(speedFactorClamped)
+        self.wheelMotor.set(speedFactorClamped)
 
     def reset(self) -> None:
         pass
@@ -544,7 +544,7 @@ class DriveSubsystem(SubsystemBase):
             frontRightState,
             backLeftState,
             backRightState,
-        ) = SwerveDrive4Kinematics.normalizeWheelSpeeds(
+        ) = SwerveDrive4Kinematics.desaturateWheelSpeeds(
             moduleStates, constants.kMaxWheelLinearVelocity
         )
         self.frontLeftModule.applyState(frontLeftState)

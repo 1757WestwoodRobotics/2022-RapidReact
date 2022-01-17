@@ -1,6 +1,6 @@
 from commands2 import CommandBase
 from wpilib import SmartDashboard
-from wpilib.controller import ProfiledPIDController, ProfiledPIDControllerRadians
+from wpimath.controller import ProfiledPIDController, ProfiledPIDControllerRadians
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
 from wpimath.trajectory import TrapezoidProfile, TrapezoidProfileRadians
 from subsystems.drivesubsystem import DriveSubsystem
