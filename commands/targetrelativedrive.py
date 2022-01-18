@@ -1,7 +1,7 @@
 import typing
 
 from wpilib import SmartDashboard
-from wpilib.controller import PIDController
+from wpimath.controller import PIDController
 from wpimath.geometry import Rotation2d
 
 from commands2 import CommandBase

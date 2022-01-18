@@ -1,6 +1,6 @@
 import math
 import typing
-from wpilib.geometry import Rotation2d, Translation2d
+from wpimath.geometry import Rotation2d, Translation2d
 
 number = typing.Union[float, int]
 

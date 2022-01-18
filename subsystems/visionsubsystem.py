@@ -4,7 +4,7 @@ from commands2 import SubsystemBase
 from networktables import NetworkTables
 from wpilib import SmartDashboard, Timer, RobotBase, PWM
 from wpilib.simulation import PWMSim
-from wpilib.controller import PIDController
+from wpimath.controller import PIDController
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d
 import constants
 from util import convenientmath
