@@ -47,6 +47,28 @@ class SwerveModule:
     def reset(self) -> None:
         raise NotImplementedError("Must be implemented by subclass")
 
+    def optimizedAngle(self, targetAngle: Rotation2d) -> Rotation2d:
+        currentAngle = self.getSwerveAngle().radians()
+
+        closestFullRotation = (
+            floor(abs(currentAngle / tau)) * (-1 if currentAngle < 0 else 1) * tau
+        )
+
+        currentOptimalAngle = targetAngle.radians() + closestFullRotation - currentAngle
+
+        potentialNewAngles = [
+            currentOptimalAngle,
+            currentOptimalAngle - tau,
+            currentOptimalAngle + tau,
+        ]  # closest other options
+
+        deltaAngle = tau  # max possible error, a full rotation!
+        for potentialAngle in potentialNewAngles:
+            if abs(deltaAngle) > abs(potentialAngle):
+                deltaAngle = potentialAngle
+
+        return Rotation2d(deltaAngle + currentAngle)
+
     def getState(self) -> SwerveModuleState:
         return SwerveModuleState(
             self.getWheelLinearVelocity(),
@@ -60,7 +82,8 @@ class SwerveModule:
         if (
             abs(optimizedState.speed) >= constants.kMinWheelLinearVelocity
         ):  # prevent unneccisary movement for what would otherwise not move the robot
-            self.setSwerveAngleTarget(optimizedState.angle)
+            optimizedAngle = self.optimizedAngle(optimizedState.angle)
+            self.setSwerveAngleTarget(optimizedAngle)
 
 
 # pylint: disable=abstract-method
@@ -96,31 +119,7 @@ class PWMSwerveModule(SwerveModule):
         return Rotation2d(self.swerveEncoder.getDistance())
 
     def setSwerveAngleTarget(self, swerveAngleTarget: Rotation2d) -> None:
-        closestFullRotation = (
-            floor(abs(self.swerveEncoder.getDistance() / tau))
-            * (-1 if self.swerveEncoder.getDistance() < 0 else 1)
-            * tau
-        )
-
-        currentOptimalAngle = (
-            swerveAngleTarget.radians()
-            + closestFullRotation
-            - self.swerveEncoder.getDistance()
-        )
-
-        potentialNewAngles = [
-            currentOptimalAngle,
-            currentOptimalAngle + tau,
-            currentOptimalAngle - tau,
-        ]
-
-        swerveError = tau  # maximum possible error
-        for potentialAngle in potentialNewAngles:
-            if abs(swerveError) > abs(
-                potentialAngle
-            ):  # check for more optimal magnitude
-                swerveError = potentialAngle
-
+        swerveError = swerveAngleTarget.radians() - self.swerveEncoder.getDistance()
         swerveErrorClamped = min(max(swerveError, -1), 1)
         self.swerveMotor.set(swerveErrorClamped)
 
@@ -310,27 +309,8 @@ class CTRESwerveModule(SwerveModule):
         return Rotation2d(swerveAngle)
 
     def setSwerveAngle(self, swerveAngle: Rotation2d) -> None:
-        currentAngle = self.getSwerveAngle().radians()
-
-        closestFullRotation = (
-            floor(abs(currentAngle / tau)) * (-1 if currentAngle < 0 else 1) * tau
-        )
-
-        currentOptimalAngle = swerveAngle.radians() + closestFullRotation - currentAngle
-
-        potentialNewAngles = [
-            currentOptimalAngle,
-            currentOptimalAngle - tau,
-            currentOptimalAngle + tau,
-        ]  # closest other options
-
-        swerveError = tau  # max possible error, a full rotation!
-        for potentialAngle in potentialNewAngles:
-            if abs(swerveError) > abs(potentialAngle):
-                swerveError = potentialAngle
-
         steerEncoderPulses = (
-            currentAngle + swerveError
+            swerveAngle.radians()
         ) * constants.kSwerveEncoderPulsesPerRadian
         self.steerMotor.setSelectedSensorPosition(steerEncoderPulses)
 
