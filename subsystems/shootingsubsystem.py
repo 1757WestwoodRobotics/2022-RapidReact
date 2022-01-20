@@ -9,6 +9,7 @@ class ShootingSubsystem(SubsystemBase):
         self.hoodAngle = Rotation2d()
         self.wheelSpeed = 0
         self.readyToFire = False
+        self.turretRotation = Rotation2d()
 
     def setReadyToFire(self, ready: bool) -> None:
         self.readyToFire = ready
@@ -29,3 +30,7 @@ class ShootingSubsystem(SubsystemBase):
         absolute with 0 being straight and 90 degrees being direct to the sky"""
         print(f"hood angle set to {angle}")
         self.hoodAngle = angle
+
+    def rotateTurret(self, angle: Rotation2d) -> None:
+        print(f"Turret rotated to {angle}")
+        self.turretRotation = angle
