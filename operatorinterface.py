@@ -87,6 +87,9 @@ class OperatorInterface:
 
         self.launchCargo = getButtonBindingOfName(constants.kLaunchCargoButtonName)
         self.toggleIntake = getButtonBindingOfName(constants.kToggleIntakeButtonName)
+        self.toggleClimberBreak = getButtonBindingOfName(
+            constants.kToggleClimberBreakButtonName
+        )
 
         self.chassisControls = HolonomicInput(
             Invert(

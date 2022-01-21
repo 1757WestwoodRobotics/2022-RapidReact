@@ -25,5 +25,8 @@
     }, "X (Xbox)"],
     "toggleIntake": [0, {
         "Button": 1
-    }, "A (Xbox)"]
+    }, "A (Xbox)"],
+    "toggleClimber": [0, {
+        "Button": 2
+    }, "B (Xbox)"]
 }

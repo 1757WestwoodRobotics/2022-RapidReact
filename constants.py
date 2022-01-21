@@ -389,6 +389,7 @@ kTargetRelativeCoordinateModeControlButtonName = "targetRelativeCoordinateModeCo
 kDriveToTargetControlButtonName = "driveToTargetControl"
 kLaunchCargoButtonName = "launchCargo"
 kToggleIntakeButtonName = "toggleIntake"
+kToggleClimberBreakButtonName = "toggleClimber"
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
