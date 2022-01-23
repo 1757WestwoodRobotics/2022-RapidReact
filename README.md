@@ -142,25 +142,16 @@ py -3 -m venv ./.venv
      ```bash
      python robot.py sim
      ```
-     python -m robotpy_installer install-python
-
-   ```
-
-   ```
-
-1. **Upload robotpy modules to roboRIO**
-   (must be connected to roboRIO)
-   ```bash
-   python -m robotpy_installer install robotpy
-   ```
-   (examples: `robotpy`, `robotpy[ctre,navx]`, `robotpy[all]`) (see: [robotpy on pypi](https://pypi.org/project/robotpy/))
-1. **Deploy robotpy program**
-   - To robot
-     (must be connected to roboRIO)
-     ```bash
-     python robot.py deploy
-     ```
-   - To simulator
-     ```bash
-     python robot.py sim
-     ```
+#### Update PIP requirements
+If there are RobotPy updates we want to upgrade our requirements.txt file to match after verifying it works.
+1. **Install latest version**
+    ```bash
+    pip install --upgrade -r requirements-upgrade.txt
+    ```
+1. **Verify on simulator and/or hardware**
+1. **Freeze versions**
+    ```bash
+    pip freeze -r requirements.txt > requirements-new.txt
+    Copy robotpy section from requirements-new.txt to requirements.txt
+    ```
+1. **Open PR with Updates**
