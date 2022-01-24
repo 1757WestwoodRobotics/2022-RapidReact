@@ -33,7 +33,7 @@ pyfrc==2022.0.0
 pynetconsole==2.0.2
 pynetworktables==2021.0.0
 pyntcore==2022.2.1.1
-robotpy-commands-v2==2022.2.1.0
+robotpy-commands-v2==2022.2.1.1
 robotpy-ctre==2022.0.4
 robotpy-hal==2022.2.1.1
 robotpy-halsim-gui==2022.2.1.0
