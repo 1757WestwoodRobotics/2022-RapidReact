@@ -1,5 +1,5 @@
 from enum import Enum, auto
-from typing import Tuple
+from typing import Tuple, Callable, Any
 
 from commands2 import SubsystemBase
 from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
@@ -140,8 +140,8 @@ class CTRESwerveModule(SwerveModule):
                 return False
             return True
 
-        def configCtre(x: Tuple[str, ErrorCode]) -> bool:
-            return not ctreCheckError(x[0], x[1])
+        def configCtre(x: Tuple[str, Callable[[Any], ErrorCode], str]) -> bool:
+            return not ctreCheckError(x[0], x[1](*x[2]))
 
         # passes a tuple of two items into check error, returns true if error
 
@@ -153,37 +153,40 @@ class CTRESwerveModule(SwerveModule):
         configSettings = [
             (
                 "configFactoryDefault",
-                self.swerveEncoder.configFactoryDefault(
-                    constants.kConfigurationTimeoutLimit
-                ),
+                self.swerveEncoder.configFactoryDefault,
+                [constants.kConfigurationTimeoutLimit],
             ),
             (
                 "configSensorInitializationStrategy",
-                self.swerveEncoder.configSensorInitializationStrategy(
+                self.swerveEncoder.configSensorInitializationStrategy,
+                [
                     SensorInitializationStrategy.BootToAbsolutePosition,
                     constants.kConfigurationTimeoutLimit,
-                ),
+                ],
             ),
             (
                 "configMagnetOffset",
-                self.swerveEncoder.configMagnetOffset(
+                self.swerveEncoder.configMagnetOffset,
+                [
                     -1
                     * self.swerveEncoderOffset,  # invert the offset to zero the encoder
                     constants.kConfigurationTimeoutLimit,
-                ),
+                ],
             ),
             (
                 "configAbsoluteSensorRange",
-                self.swerveEncoder.configAbsoluteSensorRange(
+                self.swerveEncoder.configAbsoluteSensorRange,
+                [
                     AbsoluteSensorRange.Signed_PlusMinus180,
                     constants.kConfigurationTimeoutLimit,
-                ),
+                ],
             ),
             (
                 "setPositionToAbsolute",
-                self.swerveEncoder.setPositionToAbsolute(
+                self.swerveEncoder.setPositionToAbsolute,
+                [
                     constants.kConfigurationTimeoutLimit,
-                ),
+                ],
             ),
         ]
 
@@ -198,33 +201,35 @@ class CTRESwerveModule(SwerveModule):
             [
                 (
                     "configFactoryDefault",
-                    self.driveMotor.configFactoryDefault(
-                        constants.kConfigurationTimeoutLimit
-                    ),
+                    self.driveMotor.configFactoryDefault,
+                    [constants.kConfigurationTimeoutLimit],
                 ),
                 (
                     "config_kP",
-                    self.driveMotor.config_kP(
+                    self.driveMotor.config_kP,
+                    [
                         constants.kDrivePIDSlot,
                         constants.kDrivePGain,
                         constants.kConfigurationTimeoutLimit,
-                    ),
+                    ],
                 ),
                 (
                     "config_kI",
-                    self.driveMotor.config_kI(
+                    self.driveMotor.config_kI,
+                    [
                         constants.kDrivePIDSlot,
                         constants.kDriveIGain,
                         constants.kConfigurationTimeoutLimit,
-                    ),
+                    ],
                 ),
                 (
                     "config_kD",
-                    self.driveMotor.config_kD(
+                    self.driveMotor.config_kD,
+                    [
                         constants.kDrivePIDSlot,
                         constants.kDriveDGain,
                         constants.kConfigurationTimeoutLimit,
-                    ),
+                    ],
                 ),
             ],
         )
@@ -243,33 +248,35 @@ class CTRESwerveModule(SwerveModule):
         configSettings = [
             (
                 "configFactoryDefault",
-                self.steerMotor.configFactoryDefault(
-                    constants.kConfigurationTimeoutLimit
-                ),
+                self.steerMotor.configFactoryDefault,
+                [constants.kConfigurationTimeoutLimit],
             ),
             (
                 "config_kP",
-                self.steerMotor.config_kP(
+                self.steerMotor.config_kP,
+                [
                     constants.kSteerPIDSlot,
                     constants.kSteerPGain,
                     constants.kConfigurationTimeoutLimit,
-                ),
+                ],
             ),
             (
                 "config_kI",
-                self.steerMotor.config_kI(
+                self.steerMotor.config_kI,
+                [
                     constants.kSteerPIDSlot,
                     constants.kSteerIGain,
                     constants.kConfigurationTimeoutLimit,
-                ),
+                ],
             ),
             (
                 "config_kD",
-                self.steerMotor.config_kD(
+                self.steerMotor.config_kD,
+                [
                     constants.kSteerPIDSlot,
                     constants.kSteerDGain,
                     constants.kConfigurationTimeoutLimit,
-                ),
+                ],
             ),
         ]
 
