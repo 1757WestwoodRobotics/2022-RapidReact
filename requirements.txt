@@ -34,7 +34,7 @@ pynetconsole==2.0.2
 pynetworktables==2021.0.0
 pyntcore==2022.2.1.1
 robotpy-commands-v2==2022.2.1.0
-robotpy-ctre==2022.0.4
+robotpy-ctre==2022.0.5
 robotpy-hal==2022.2.1.1
 robotpy-halsim-gui==2022.2.1.0
 robotpy-installer==2022.0.1
