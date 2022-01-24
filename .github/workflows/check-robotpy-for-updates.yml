@@ -3,7 +3,7 @@ name: Check For RobotPy Updates
 on:
   schedule:
     # In UTC this is 7am EST
-    - cron: "* 12 * * *"
+    - cron: "0 12 * * *"
 
 jobs:
   check-robot-py:
