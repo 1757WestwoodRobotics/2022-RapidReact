@@ -38,7 +38,7 @@ robotpy-ctre==2022.0.4
 robotpy-hal==2022.2.1.1
 robotpy-halsim-gui==2022.2.1.0
 robotpy-installer==2022.0.1
-robotpy-navx==2022.0.0
+robotpy-navx==2022.0.1
 robotpy-wpimath==2022.2.1.2
 robotpy-wpiutil==2022.2.1.1
 wpilib==2022.2.1.3
