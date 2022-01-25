@@ -65,6 +65,10 @@ Code for the FRC 1757 2022 Competition Bot
 | back_left_steer     | motors  | 10 - 29 | 15             |
 | back_right_drive    | motors  | 10 - 29 | 16             |
 | back_right_steer    | motors  | 10 - 29 | 17             |
+| shooting_staging    | motors  | 10 - 29 | 18             |
+| shooting_turret     | motors  | 10 - 29 | 19             |
+| shooting_shooting   | motors  | 10 - 29 | 20             |
+| shooting_hood       | motors  | 10 - 29 | 21             |
 | front_left_encoder  | sensors | 40 - 59 | 40             |
 | front_right_encoder | sensors | 40 - 59 | 41             |
 | back_left_encoder   | sensors | 40 - 59 | 42             |

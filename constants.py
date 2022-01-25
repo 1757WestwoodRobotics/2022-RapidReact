@@ -446,3 +446,29 @@ kCameraSimServoObjectName = "Camera Servo"
 kCameraServoPGain = 0.15
 kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
+
+# shooter parameters
+kStagingMotorId = 18
+kTurretMotorId = 19
+kShootingMotorId = 20
+kHoodMotorId = 21
+
+kSimStagingMotorPort = 8
+kSimTurretMotorPort = 9
+kSimShootingMotorPort = 10
+kSimHoodMotorPort = 11
+
+kSimTurretMinimumLimitSwitchPort = 0
+kSimTurretMaximumLimitSwitchPort = 1
+kSimHoodMinimumSwitchPort = 2
+kSimHoodMaximumSwitchPort = 3
+
+kShootingPIDSlot = 0
+kShootingPGain = 1
+kShootingIGain = 0
+kShootingDGain = 0
+
+kStagingMotorName = "shooter_staging"
+kTurretMotorName = "shooting_turret"
+kShootingMotorName = "shooting_shooting"
+kHoodMotorName = "shooting_hood"
