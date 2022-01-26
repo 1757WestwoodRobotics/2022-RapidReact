@@ -12,9 +12,11 @@ from commands.defaultdrive import DefaultDrive
 from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.targetrelativedrive import TargetRelativeDrive
 from commands.resetdrive import ResetDrive
+from commands.runintakemotor import ToggleIntakeMotor
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
+from subsystems.intakesubsystem import IntakeSubsystem
 
 from operatorinterface import OperatorInterface
 
@@ -35,7 +37,7 @@ class RobotContainer:
         # The robot's subsystems
         self.drive = DriveSubsystem()
         self.vision = VisionSubsystem()
-
+        self.intake = IntakeSubsystem()
         # Autonomous routines
 
         # A simple auto routine that drives forward a specified distance, and then stops.
@@ -80,6 +82,10 @@ class RobotContainer:
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
         and then passing it to a JoystickButton.
         """
+        commands2.button.JoystickButton(
+            *self.operatorInterface.runIntakeMotorControl
+        ).whenHeld(ToggleIntakeMotor(self.intake))
+
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl
         ).whileHeld(
