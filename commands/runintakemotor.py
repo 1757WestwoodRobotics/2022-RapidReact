@@ -12,11 +12,11 @@ class ToggleIntakeMotor(CommandBase):
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
-        self.intake.intakeActive = not self.intake.intakeActive
+        self.intake.toggleIntakeMotor()
 
     def execute(self) -> None:
         print("bruh")
-        if self.intake.intakeActive:
+        if self.intake.isIntakeRunning():
             self.intake.runIntake()
         else:
             self.intake.stopIntake()
