@@ -390,6 +390,10 @@ kFieldRelativeCoordinateModeControlButtonName = "fieldRelativeCoordinateModeCont
 kResetSwerveControlButtonName = "resetSwerveControl"
 kTargetRelativeCoordinateModeControlButtonName = "targetRelativeCoordinateModeControl"
 kDriveToTargetControlButtonName = "driveToTargetControl"
+kLaunchCargoButtonName = "launchCargo"
+kToggleIntakeButtonName = "toggleIntake"
+kRunIntakeButtonName = "runIntake"
+kToggleClimberBreakButtonName = "toggleClimber"
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
@@ -414,6 +418,7 @@ kSimBackLeftDriveMotorPort = 4
 kSimBackLeftSteerMotorPort = 5
 kSimBackRightDriveMotorPort = 6
 kSimBackRightSteerMotorPort = 7
+kSimIntakeMotorPort = 8
 
 kSimFrontLeftDriveEncoderPorts = (0, 1)
 kSimFrontLeftSteerEncoderPorts = (2, 3)
@@ -437,6 +442,9 @@ kCameraPanInverted = True
 kCameraTiltInverted = False
 
 kCameraServoMaxAngle = 60 * kRadiansPerDegree
+"""radians"""
+
+kTrackingOnTargetTolerence = 0.1
 """radians"""
 
 kCameraServoRotationNumberKey = "CameraServoRotation"
