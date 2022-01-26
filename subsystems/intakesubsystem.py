@@ -24,14 +24,17 @@ class IntakeSubsystem(SubsystemBase):
         else:
             self.intakeMotor = PWMVictorSPX(constants.kSimIntakeMotorPort)
 
-    def toggleIntake(self) -> None:
-        self.intakeDeployed = not self.intakeDeployed
+    def toggleIntakeDeploy(self) -> None:
+        self.intakeDeploy = not self.intakeDeploy
 
-    def reverseIntake(self) -> None:
-        self.intakeReversed = not self.intakeReversed
+    def toggleIntakeMotor(self) -> None:
+        self.intakeRunning = not self.intakeRunning
 
     def isIntakeDeployed(self) -> bool:
         return self.intakeDeployed
+
+    def isIntakeRunning(self) -> bool:
+        return self.intakeRunning
 
     def deployIntake(self) -> None:
         self.intakeDeployed = True
