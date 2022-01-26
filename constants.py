@@ -455,9 +455,6 @@ kCameraTiltInverted = False
 kCameraServoMaxAngle = 60 * kRadiansPerDegree
 """radians"""
 
-kTrackingOnTargetTolerence = 0.1
-"""radians"""
-
 kCameraServoRotationNumberKey = "CameraServoRotation"
 
 kCameraSimServoObjectName = "Camera Servo"
