@@ -12,8 +12,7 @@ from commands.defaultdrive import DefaultDrive
 from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.targetrelativedrive import TargetRelativeDrive
 from commands.resetdrive import ResetDrive
-from commands.toggleintakemotor import ToggleIntakeMotor
-from commands.toggleintakedeploy import ToggleIntakeDeploy
+from commands.toggleintake import ToggleIntake
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
@@ -83,13 +82,10 @@ class RobotContainer:
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
         and then passing it to a JoystickButton.
         """
-        commands2.button.JoystickButton(
-            *self.operatorInterface.toggleIntakeMotorControl
-        ).whenHeld(ToggleIntakeMotor(self.intake))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.toggleIntakeDeployControl
-        ).whenHeld(ToggleIntakeDeploy(self.intake))
+            *self.operatorInterface.toggleIntakeControl
+        ).whenHeld(ToggleIntake(self.intake))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl
