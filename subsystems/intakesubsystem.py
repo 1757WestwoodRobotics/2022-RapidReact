@@ -1,5 +1,5 @@
 from commands2 import SubsystemBase
-from wpilib import PWMVictorSPX, RobotBase, Solenoid
+from wpilib import PWMVictorSPX, PneumaticHub, PneumaticsModuleType, RobotBase, Solenoid
 import constants
 
 
@@ -10,13 +10,21 @@ class IntakeSubsystem(SubsystemBase):
         self.intakeDeployed = False  # default to intake retracted and off
         self.intakeRunning = False
 
+        self.pneumaticsHub = PneumaticHub(1)
+
+        self.leftSolenoid = Solenoid(PneumaticsModuleType.REVPH, 0)
+        self.leftSolenoid.set(False)
+
+        self.rightSolenoid = Solenoid(PneumaticsModuleType.REVPH, 1)
+        self.rightSolenoid.set(False)
+
         if RobotBase.isReal():
             pass
         else:
             self.intakeMotor = PWMVictorSPX(constants.kSimIntakeMotorPort)
 
     def toggleIntakeDeploy(self) -> None:
-        self.intakeDeploy = not self.intakeDeploy
+        self.intakeDeployed = not self.intakeDeployed
 
     def toggleIntakeMotor(self) -> None:
         self.intakeRunning = not self.intakeRunning
@@ -28,13 +36,19 @@ class IntakeSubsystem(SubsystemBase):
         return self.intakeRunning
 
     def deployIntake(self) -> None:
-        self.intakeActive = True
+        self.intakeDeployed = True
+        self.leftSolenoid.set(True)
+        self.rightSolenoid.set(True)
 
     def retractIntake(self) -> None:
-        self.intakeActive = False
+        self.intakeDeployed = False
+        self.leftSolenoid.set(False)
+        self.rightSolenoid.set(False)
 
     def runIntake(self) -> None:
+        self.intakeRunning = True
         self.intakeMotor.set(1.0)
 
     def stopIntake(self) -> None:
+        self.intakeRunning = False
         self.intakeMotor.set(0)

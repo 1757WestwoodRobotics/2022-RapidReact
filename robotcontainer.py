@@ -12,7 +12,8 @@ from commands.defaultdrive import DefaultDrive
 from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.targetrelativedrive import TargetRelativeDrive
 from commands.resetdrive import ResetDrive
-from commands.runintakemotor import ToggleIntakeMotor
+from commands.toggleintakemotor import ToggleIntakeMotor
+from commands.toggleintakedeploy import ToggleIntakeDeploy
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
@@ -83,8 +84,12 @@ class RobotContainer:
         and then passing it to a JoystickButton.
         """
         commands2.button.JoystickButton(
-            *self.operatorInterface.runIntakeMotorControl
+            *self.operatorInterface.toggleIntakeMotorControl
         ).whenHeld(ToggleIntakeMotor(self.intake))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.toggleIntakeDeployControl
+        ).whenHeld(ToggleIntakeDeploy(self.intake))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl
