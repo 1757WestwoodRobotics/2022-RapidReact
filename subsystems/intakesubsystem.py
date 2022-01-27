@@ -19,13 +19,14 @@ class IntakeSubsystem(SubsystemBase):
         self.rightSolenoid = Solenoid(PneumaticsModuleType.REVPH, 1)
         self.rightSolenoid.set(False)
 
-        if RobotBase.isReal():
-            self.intakeMotor = WPI_TalonFX(constants.kIntakeMotorId)
-        else:
-            self.intakeMotor = PWMVictorSPX(constants.kSimIntakeMotorPort)
+        self.intakeMotor = Falcon(
+            constants.kIntakeMotorName,
+            constants.kIndexerMotorId,
+            constants.kSimIntakeMotorPort,
+        )
 
     def toggleIntakeDeploy(self) -> None:
-        self.intakeDeploy = not self.intakeDeploy
+        self.intakeDeployed = not self.intakeDeployed
 
     def toggleIntakeMotor(self) -> None:
         self.intakeRunning = not self.intakeRunning
@@ -55,4 +56,5 @@ class IntakeSubsystem(SubsystemBase):
             self.intakeMotor.set(1.0)
 
     def stopIntake(self) -> None:
+        self.intakeRunning = False
         self.intakeMotor.set(0)

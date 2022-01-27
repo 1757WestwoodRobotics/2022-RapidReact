@@ -93,8 +93,12 @@ class RobotContainer:
         ).whenPressed(ReverseIntake(self.intake))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.runIntakeMotorControl
+            *self.operatorInterface.toggleIntakeMotorControl
         ).whenHeld(ToggleIntakeMotor(self.intake))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.toggleIntakeDeployControl
+        ).whenHeld(ToggleIntakeDeploy(self.intake))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl
