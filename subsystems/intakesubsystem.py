@@ -8,7 +8,6 @@ class IntakeSubsystem(SubsystemBase):
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
         self.intakeDeployed = False  # default to intake retracted and off
-        self.intakeRunning = False
 
         self.pneumaticsHub = PneumaticHub(1)
 
@@ -23,27 +22,23 @@ class IntakeSubsystem(SubsystemBase):
         else:
             self.intakeMotor = PWMVictorSPX(constants.kSimIntakeMotorPort)
 
-    def toggleIntakeDeploy(self) -> None:
+    def toggleIntake(self) -> None:
         self.intakeDeployed = not self.intakeDeployed
-
-    def toggleIntakeMotor(self) -> None:
-        self.intakeRunning = not self.intakeRunning
 
     def isIntakeDeployed(self) -> bool:
         return self.intakeDeployed
-
-    def isIntakeRunning(self) -> bool:
-        return self.intakeRunning
 
     def deployIntake(self) -> None:
         self.intakeDeployed = True
         self.leftSolenoid.set(True)
         self.rightSolenoid.set(True)
+        self.runIntake()
 
     def retractIntake(self) -> None:
         self.intakeDeployed = False
         self.leftSolenoid.set(False)
         self.rightSolenoid.set(False)
+        self.stopIntake()
 
     def runIntake(self) -> None:
         self.intakeRunning = True
