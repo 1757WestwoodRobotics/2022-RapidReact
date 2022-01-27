@@ -7,7 +7,8 @@ class IntakeSubsystem(SubsystemBase):
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
-        self.intakeDeployed = False  # default to intake retracted and off
+        self.intakeDeployed = False  # default to intake retracted and not reverseed
+        self.intakeReversed = False
 
         self.pneumaticsHub = PneumaticHub(1)
 
@@ -25,6 +26,9 @@ class IntakeSubsystem(SubsystemBase):
     def toggleIntake(self) -> None:
         self.intakeDeployed = not self.intakeDeployed
 
+    def reverseIntake(self) -> None:
+        self.intakeReversed = not self.intakeReversed
+
     def isIntakeDeployed(self) -> bool:
         return self.intakeDeployed
 
@@ -32,7 +36,7 @@ class IntakeSubsystem(SubsystemBase):
         self.intakeDeployed = True
         self.leftSolenoid.set(True)
         self.rightSolenoid.set(True)
-        self.runIntake()
+        self.runIntake(self.intakeReversed)
 
     def retractIntake(self) -> None:
         self.intakeDeployed = False
@@ -40,10 +44,11 @@ class IntakeSubsystem(SubsystemBase):
         self.rightSolenoid.set(False)
         self.stopIntake()
 
-    def runIntake(self) -> None:
-        self.intakeRunning = True
-        self.intakeMotor.set(1.0)
+    def runIntake(self, reverse: bool) -> None:
+        if reverse:
+            self.intakeMotor.set(-1.0)
+        else:
+            self.intakeMotor.set(1.0)
 
     def stopIntake(self) -> None:
-        self.intakeRunning = False
         self.intakeMotor.set(0)
