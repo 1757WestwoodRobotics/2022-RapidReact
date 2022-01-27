@@ -85,8 +85,12 @@ class OperatorInterface:
             constants.kDriveToTargetControlButtonName
         )
 
-        self.runIntakeMotorControl = getButtonBindingOfName(
-            constants.kRunIntakeButtonName
+        self.toggleIntakeMotorControl = getButtonBindingOfName(
+            constants.kToggleIntakeMotorButtonName
+        )
+
+        self.toggleIntakeDeployControl = getButtonBindingOfName(
+            constants.kToggleIntakeDeployButtonName
         )
 
         self.chassisControls = HolonomicInput(
