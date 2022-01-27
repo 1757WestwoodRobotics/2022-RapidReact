@@ -56,11 +56,18 @@
         "X (Xbox)"
     ],
     "toggleIntake": [
-        0,
+        1,
         {
-            "Button": 1
+            "Button": 10
         },
-        "A (Xbox)"
+        "Right Stick (Xbox)"
+    ],
+    "reverseIntakeMotor": [
+        1,
+        {
+            "Button": 8
+        },
+        "Right Bumper (Xbox)"
     ],
     "toggleClimber": [
         0,
