@@ -25,17 +25,11 @@ class IntakeSubsystem(SubsystemBase):
             constants.kSimIntakeMotorPort,
         )
 
-    def toggleIntakeDeploy(self) -> None:
+    def toggleIntake(self) -> None:
         self.intakeDeployed = not self.intakeDeployed
-
-    def toggleIntakeMotor(self) -> None:
-        self.intakeRunning = not self.intakeRunning
 
     def isIntakeDeployed(self) -> bool:
         return self.intakeDeployed
-
-    def isIntakeRunning(self) -> bool:
-        return self.intakeRunning
 
     def deployIntake(self) -> None:
         self.intakeDeployed = True

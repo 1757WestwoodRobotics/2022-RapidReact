@@ -97,8 +97,8 @@ class RobotContainer:
         ).whenHeld(ToggleIntakeMotor(self.intake))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.toggleIntakeDeployControl
-        ).whenHeld(ToggleIntakeDeploy(self.intake))
+            *self.operatorInterface.toggleIntakeControl
+        ).whenHeld(ToggleIntake(self.intake))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl

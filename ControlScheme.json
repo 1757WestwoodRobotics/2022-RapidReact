@@ -75,19 +75,5 @@
             "Button": 2
         },
         "B (Xbox)"
-    ],
-    "toggleIntakeMotor": [
-        1,
-        {
-            "Button": 1
-        },
-        "A (Xbox)"
-    ],
-    "toggleIntakeDeploy": [
-        1,
-        {
-            "Button": 2
-        },
-        "B (Xbox)"
     ]
 }
