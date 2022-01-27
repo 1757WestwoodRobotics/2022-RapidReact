@@ -28,6 +28,9 @@ class IntakeSubsystem(SubsystemBase):
     def toggleIntake(self) -> None:
         self.intakeDeployed = not self.intakeDeployed
 
+    def reverseIntake(self) -> None:
+        self.intakeReversed = not self.intakeReversed
+
     def isIntakeDeployed(self) -> bool:
         return self.intakeDeployed
 
@@ -50,5 +53,4 @@ class IntakeSubsystem(SubsystemBase):
             self.intakeMotor.set(1.0)
 
     def stopIntake(self) -> None:
-        self.intakeRunning = False
         self.intakeMotor.set(0)
