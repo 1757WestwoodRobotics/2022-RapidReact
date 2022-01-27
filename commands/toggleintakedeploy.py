@@ -3,7 +3,7 @@ from commands2 import CommandBase
 from subsystems.intakesubsystem import IntakeSubsystem
 
 
-class ToggleIntakeMotor(CommandBase):
+class ToggleIntakeDeploy(CommandBase):
     def __init__(self, intake: IntakeSubsystem) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
@@ -12,11 +12,10 @@ class ToggleIntakeMotor(CommandBase):
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
-        self.intake.toggleIntakeMotor()
+        self.intake.toggleIntakeDeploy()
 
     def execute(self) -> None:
-        print("bruh")
-        if self.intake.isIntakeRunning():
-            self.intake.runIntake()
+        if self.intake.isIntakeDeployed():
+            self.intake.deployIntake()
         else:
-            self.intake.stopIntake()
+            self.intake.retractIntake()
