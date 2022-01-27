@@ -468,6 +468,11 @@ kShootingPGain = 1
 kShootingIGain = 0
 kShootingDGain = 0
 
+kHoodPIDSlot = 0
+kHoodPGain = 1
+kHoodIGain = 0
+kHoodDGain = 0
+
 kStagingMotorName = "shooter_staging"
 kTurretMotorName = "shooting_turret"
 kShootingMotorName = "shooting_shooting"
