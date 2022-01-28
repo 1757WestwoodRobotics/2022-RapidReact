@@ -1,4 +1,5 @@
 from commands2 import SubsystemBase
+from ctre import WPI_TalonFX
 from wpilib import PWMVictorSPX, PneumaticHub, PneumaticsModuleType, RobotBase, Solenoid
 import constants
 
@@ -19,7 +20,7 @@ class IntakeSubsystem(SubsystemBase):
         self.rightSolenoid.set(False)
 
         if RobotBase.isReal():
-            pass
+            self.intakeMotor = WPI_TalonFX(constants.kIntakeMotorId)
         else:
             self.intakeMotor = PWMVictorSPX(constants.kSimIntakeMotorPort)
 
