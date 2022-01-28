@@ -1,20 +1,20 @@
-+{
-+    "extends": [
-+        "config:base"
-+    ],
-+    "schedule": [
-+        "before 8am"
-+    ],
-+    "reviewers": [
-+        "agelsomini",
-+        "caloisio",
-+        "lmaxwell24"
-+    ],
-+    "labels": ["dependencies"],
-+    "packageRules": [
-+        {
-+            "matchPackagePatterns": ["^robotpy|^wpilib"],
-+            "groupName": "robotpy packages"
-+        }
-+    ]
-+}
+{
+    "extends": [
+        "config:base"
+    ],
+    "schedule": [
+        "before 8am"
+    ],
+    "reviewers": [
+        "agelsomini",
+        "caloisio",
+        "lmaxwell24"
+    ],
+    "labels": ["dependencies"],
+    "packageRules": [
+        {
+            "matchPackagePatterns": ["^robotpy|^wpilib"],
+            "groupName": "robotpy packages"
+        }
+    ]
+}
