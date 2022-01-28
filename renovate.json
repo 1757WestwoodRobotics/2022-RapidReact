@@ -13,7 +13,7 @@
     "labels": ["dependencies"],
     "packageRules": [
         {
-            "matchPackagePatterns": ["^robotpy|^wpilib"],
+            "matchPackagePatterns": ["^robotpy|^wpilib|^pyntcore|^pyfrc|^pynetconsole|^pynetworktables"],
             "groupName": "robotpy packages"
         }
     ]
