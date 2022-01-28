@@ -9,7 +9,7 @@
 +        "agelsomini",
 +        "caloisio",
 +        "lmaxwell24"
-+    ],,
++    ],
 +    "labels": ["dependencies"],
 +    "packageRules": [
 +        {
