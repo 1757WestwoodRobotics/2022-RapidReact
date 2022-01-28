@@ -212,6 +212,9 @@ class PhysicsEngine:
         )
         simTargetObject.setPose(constants.kSimDefaultTargetLocation)
 
+        simBallObject = self.physics_controller.field.getObject(constants.kSimBallName)
+        simBallObject.setPose(constants.kSimDefaultBallLocation)
+
         self.limelightSim = LimelightSim()
 
     # pylint: disable-next=unused-argument
@@ -241,7 +244,7 @@ class PhysicsEngine:
             [simRobotPose.X(), simRobotPose.Y(), simRobotPose.rotation().radians()],
         )
 
-        # publish the simulated target pose to nt
+        # publish the simulated target and ball pose to nt
         simTargetObject = self.physics_controller.field.getObject(
             constants.kSimTargetName
         )
@@ -249,6 +252,13 @@ class PhysicsEngine:
         SmartDashboard.putNumberArray(
             constants.kSimTargetPoseArrayKey,
             [simTargetPose.X(), simTargetPose.Y(), simTargetPose.rotation().radians()],
+        )
+
+        simBallObject = self.physics_controller.field.getObject(constants.kSimBallName)
+        simBallPose = simBallObject.getPose()
+        SmartDashboard.putNumberArray(
+            constants.kSimBallPoseArrayKey,
+            [simBallPose.X(), simBallPose.Y(), simBallPose.rotation().radians()],
         )
 
         # publish the simulated limelight nt entries

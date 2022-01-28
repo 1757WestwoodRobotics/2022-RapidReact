@@ -205,6 +205,7 @@ kBackLeftDriveMotorId = 14
 kBackLeftSteerMotorId = 15
 kBackRightDriveMotorId = 16
 kBackRightSteerMotorId = 17
+kIntakeMotorId = 18
 
 # Encoders
 kFrontLeftSteerEncoderId = 40
@@ -400,11 +401,15 @@ kSimDefaultTargetLocation = Pose2d(
 )
 """[meters, meters, radians]"""
 
+kSimBallName = "SimBall"
+kSimDefaultBallLocation = Pose2d(kFieldLength / 4, kFieldWidth / 2, 0)
+
 kSimDefaultTargetHeight = 10
 """meters"""
 
 kSimRobotPoseArrayKey = "SimRobotPoseArray"
 kSimTargetPoseArrayKey = "SimTargetPoseArray"
+kSimBallPoseArrayKey = "SimBallPoseArray"
 kSimTargetHeightKey = "SimTargetHeight"
 kSimTargetTrackingModuleName = "sim_target_tracker"
 
