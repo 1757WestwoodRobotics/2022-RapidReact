@@ -67,7 +67,7 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
     def _setSimMotor(self, amount: float) -> None:
         """moves just the simulated motor [-1,1]"""
         if not RobotBase.isReal():
-            clampedAmount = clamp(amount, -1, -1)
+            clampedAmount = clamp(amount, -1, 1)
             self.motor.set(clampedAmount)
             self.simEncoder += (
                 clampedAmount
