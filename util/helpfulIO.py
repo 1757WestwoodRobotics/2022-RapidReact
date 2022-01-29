@@ -82,9 +82,9 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
         if RobotBase.isReal():
             self.motor.set(ControlMode.Position, pos)
         else:
-            positionChange = pos - self.simEncoder
+            positionChange = self.simEncoder - pos
             change = self.pidController.calculate(positionChange)
-            self._setSimMotor(change)
+            self._setSimMotor(change / constants.kTalonEncoderPulsesPerRevolution)
 
     def getPosition(self) -> int:
         """returns the position in encoder ticks"""
