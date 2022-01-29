@@ -12,9 +12,11 @@ from commands.defaultdrive import DefaultDrive
 from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.targetrelativedrive import TargetRelativeDrive
 from commands.resetdrive import ResetDrive
+from commands.shooter.trackturret import TrackTurret
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
+from subsystems.shootingsubsystem import ShootingSubsystem
 
 from operatorinterface import OperatorInterface
 
@@ -35,6 +37,7 @@ class RobotContainer:
         # The robot's subsystems
         self.drive = DriveSubsystem()
         self.vision = VisionSubsystem()
+        self.shooting = ShootingSubsystem()
 
         # Autonomous routines
 
@@ -73,6 +76,8 @@ class RobotContainer:
                 self.operatorInterface.chassisControls.rotation,
             )
         )
+
+        self.shooting.setDefaultCommand(TrackTurret(self.shooting))
 
     def configureButtonBindings(self):
         """

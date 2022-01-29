@@ -286,7 +286,6 @@ kFrontLeftSteerInverted = False
 kFrontRightSteerInverted = False
 kBackLeftSteerInverted = False
 kBackRightSteerInverted = False
-
 """
 To determine encoder offsets (with robot ON and DISABLED):
   1. Rotate all swerve modules so that the wheels:
@@ -455,8 +454,8 @@ kHoodMotorId = 21
 
 kSimStagingMotorPort = 8
 kSimTurretMotorPort = 9
-kSimShootingMotorPort = 10
-kSimHoodMotorPort = 11
+kSimShootingMotorPort = 18
+kSimHoodMotorPort = 19
 
 kSimTurretMinimumLimitSwitchPort = 0
 kSimTurretMaximumLimitSwitchPort = 1
@@ -467,6 +466,13 @@ kShootingPIDSlot = 0
 kShootingPGain = 1
 kShootingIGain = 0
 kShootingDGain = 0
+
+kTurretPIDSlot = 0
+kTurretPGain = 0.15
+kTurretIGain = 0
+kTurretDGain = 0
+
+kTurretGearRatio = 1 / 3
 
 kHoodPIDSlot = 0
 kHoodPGain = 1

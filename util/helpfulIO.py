@@ -17,9 +17,9 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
         name: str,
         realId: int,
         simId: int,
-        PGain: int = 1,
-        IGain: int = 0,
-        DGain: int = 0,
+        PGain: float = 1,
+        IGain: float = 0,
+        DGain: float = 0,
         PIDSlot: int = 0,
     ) -> None:  # depending on if its in simulation or the real motor, different motors will be used
         self.name = name
@@ -71,9 +71,12 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
             self.motor.set(clampedAmount)
             self.simEncoder += (
                 clampedAmount
-                * DCMotor.falcon500().freeSpeed
-                * constants.kTalonEncoderPulsesPerRevolution
-            )  # amount of free speed, free speed is in RPM, convert from revolutions to encodes ticks expected
+                # * 2 * tau # radians per second
+                * DCMotor.falcon500().freeSpeed  # radians per second
+                * constants.kTalonEncoderPulsesPerRadian  # encoder ticks per radian
+                * 1
+                / 50  # 50 updates per second
+            )  # amount of free speed, free speed is in RPS, convert from revolutions to encodes ticks expected
         else:
             raise IndexError("Cannot Move A Simulated Motor On A Real Robot")
 
@@ -82,9 +85,13 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
         if RobotBase.isReal():
             self.motor.set(ControlMode.Position, pos)
         else:
-            positionChange = pos - self.simEncoder
-            change = self.pidController.calculate(positionChange)
-            self._setSimMotor(change)
+            change = self.pidController.calculate(self.simEncoder, pos)
+            print(
+                f"Change from PID Controller: {change}\n input: {pos}\ncurrent encoder count: {self.simEncoder}"
+            )
+            self._setSimMotor(
+                change / constants.kTalonEncoderPulsesPerRevolution
+            )  # convert the change in encoder ticks into change into motor %
 
     def getPosition(self) -> int:
         """returns the position in encoder ticks"""

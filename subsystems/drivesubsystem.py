@@ -135,7 +135,6 @@ class PWMSwerveModule(SwerveModule):
         pass
 
 
-
 class CTRESwerveModule(SwerveModule):
     """
     Implementation of SwerveModule for the SDS swerve modules
