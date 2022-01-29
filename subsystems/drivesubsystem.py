@@ -6,7 +6,6 @@ from ctre import (
     AbsoluteSensorRange,
     CANCoder,
     ControlMode,
-    ErrorCode,
     SensorInitializationStrategy,
     WPI_TalonFX,
 )
@@ -21,6 +20,7 @@ from wpimath.kinematics import (
 
 import constants
 from util import convenientmath
+from util.ctrecheck import ctreCheckError
 
 
 class SwerveModule:
@@ -133,12 +133,6 @@ class CTRESwerveModule(SwerveModule):
         self.steerMotorInverted = steerMotorInverted
         self.swerveEncoder = swerveEncoder
         self.swerveEncoderOffset = swerveEncoderOffset
-
-        def ctreCheckError(name: str, errorCode: ErrorCode) -> bool:
-            if (errorCode is not None) and (errorCode != ErrorCode.OK):
-                print(f"ERROR: {name}: {errorCode}")
-                return False
-            return True
 
         print(f"Initializing swerve module: {self.name}")
         print(
