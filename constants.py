@@ -57,6 +57,9 @@ kRadiansPerDegree = kRadiansPerRevolution / kDegeersPerRevolution
 kMillisecondsPerSecond = 1000 / 1
 """milliseconds / second"""
 
+kSecondsPerMinute = 60 / 1
+"""seconds / minute"""
+
 # Debug parameters
 kPrintFrequency = 2
 """ 1 / second"""
@@ -472,6 +475,8 @@ kShootingPIDSlot = 0
 kShootingPGain = 1
 kShootingIGain = 0
 kShootingDGain = 0
+
+kShootingMappingFunction = lambda x: 100 * x  # TODO: a real tested algorihm
 
 kTurretPIDSlot = 0
 kTurretPGain = 0.15

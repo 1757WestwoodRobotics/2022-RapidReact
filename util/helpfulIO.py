@@ -100,16 +100,28 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
         else:
             return int(self.simEncoder)
 
+    def getSpeed(self) -> int:
+        """returns rpm of the motor"""
+        if RobotBase.isReal():
+            return (
+                self.motor.getSelectedSensorVelocity()
+                / constants.k100MillisecondsPerSecond
+                / constants.kTalonEncoderPulsesPerRevolution
+            )
+        return self.motor.get() * DCMotor.falcon500().freeSpeed
+
     def setSpeed(self, rpm: int):
         """set the speed of the motor in Revolutions Per Minute"""
         if not RobotBase.isReal():
-            amount = self.pidController.calculate(rpm)
+            amount = self.pidController.calculate(self.getSpeed(), rpm)
             self._setSimMotor(
-                amount / DCMotor.falcon500().freeSpeed
+                (amount + self.getSpeed()) / DCMotor.falcon500().freeSpeed
             )  # use percent based on "ideal" motor
         else:
             driveEncoderPulsesPerSecond = (
-                rpm * constants.kWheelEncoderPulsesPerRevolution
+                rpm
+                * constants.kWheelEncoderPulsesPerRevolution
+                / constants.kSecondsPerMinute
             )
             self.motor.set(
                 ControlMode.Velocity,
