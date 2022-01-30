@@ -1,3 +1,5 @@
+import math
+from turtle import distance
 import typing
 
 from commands2 import SubsystemBase
@@ -130,6 +132,61 @@ class BallTrackingModule:
         return self.targetDistance
 
     def update(self) -> None:
+        NetworkTables.initialize()
+        self.photonvisionNetworkTable = NetworkTables.getTable("photonvision")
+
+        # replace with constants later
+        intakeCameraFov = 50 * constants.kRadiansPerDegree
+        intakeCameraHeightInMeters = 1
+        intakeCameraCenterOffsetInMeters = 0.2
+        isIntakeCameraCentered = False
+
+        if self.photonvisionNetworkTable.getBoolean("hasTarget", False):
+            if RobotBase.isReal():
+                ballAngleYToCamera = Rotation2d(
+                    self.photonvisionNetworkTable.getValue("targetPitch", 0)
+                    * constants.kRadiansPerDegree
+                )
+
+                distanceToCamera = (
+                    Rotation2d.tan(ballAngleYToCamera.radians() + intakeCameraFov / 2)
+                    * intakeCameraHeightInMeters
+                )
+            else:
+                distanceToCamera = self.photonvisionNetworkTable.getValue(
+                    "simDistance", float("inf")
+                )
+
+            if not isIntakeCameraCentered:
+                ballAngleXToCamera = self.photonvisionNetworkTable.getValue("targetYaw")
+                supplementaryAngleToCamera = Rotation2d(
+                    (180 - ballAngleXToCamera) * constants.kRadiansPerDegree
+                )
+                self.targetDistance = math.sqrt(
+                    intakeCameraCenterOffsetInMeters ** 2
+                    + distanceToCamera ** 2
+                    - 2
+                    * intakeCameraCenterOffsetInMeters
+                    * distanceToCamera
+                    * supplementaryAngleToCamera.cos()
+                )
+
+                self.targetAngle = Rotation2d(
+                    math.asin(
+                        (supplementaryAngleToCamera.sin() * distanceToCamera)
+                        / self.targetDistance
+                    )
+                )
+            else:
+                self.targetDistance = distanceToCamera
+                self.targetAngle = Rotation2d(
+                    self.photonvisionNetworkTable.getValue("targetYaw")
+                    * constants.kRadiansPerDegree
+                )
+        else:
+            self.targetAngle = None
+            self.targetDistance = None
+
         if self.targetAngle is not None:
             SmartDashboard.putNumber(
                 constants.kBallAngleRelativeToRobotKeys.valueKey,
