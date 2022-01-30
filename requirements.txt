@@ -29,7 +29,7 @@ wheel
 wrapt
 # RobotPy packages.  We explicitly list the version number on all these packages so that when RobotPy
 # updates we don't break the world until we have a chance to test/update.
-pyfrc==2022.0.1
+pyfrc==2022.0.2
 pynetconsole==2.0.2
 pynetworktables==2021.0.0
 pyntcore==2022.2.1.2
