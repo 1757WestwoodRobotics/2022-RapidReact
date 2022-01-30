@@ -38,6 +38,10 @@ class ShootingSubsystem(SubsystemBase):
             constants.kHoodMotorName,
             constants.kHoodMotorId,
             constants.kSimHoodMotorPort,
+            constants.kHoodPGain,
+            constants.kHoodIGain,
+            constants.kHoodDGain,
+            constants.kHoodPIDSlot,
         )
         self.turretMaximumSwitch = limitSwitch(
             self.turretMotor, False, constants.kSimTurretMaximumLimitSwitchPort
@@ -69,14 +73,20 @@ class ShootingSubsystem(SubsystemBase):
         """angle to fire the ball with
         absolute with 0 being straight and 90 degrees being direct to the sky"""
         print(f"hood angle set to {angle}")
-        encoderPulses = angle.radians() * constants.kTalonEncoderPulsesPerRadian
+        encoderPulses = (
+            angle.radians()
+            * constants.kTalonEncoderPulsesPerRadian
+            / constants.kHoodGearRatio
+        )
         self.hoodMotor.setPosition(encoderPulses)
 
     def rotateTurret(self, angle: Rotation2d):
         print(f"Turret rotated to {angle.degrees()}")
         encoderPulses = (
-            angle.radians() * constants.kTalonEncoderPulsesPerRadian
-        ) / constants.kTurretGearRatio
+            angle.radians()
+            * constants.kTalonEncoderPulsesPerRadian
+            / constants.kTurretGearRatio
+        )
         self.turretMotor.setPosition(encoderPulses)
 
     def getTurretRotation(self) -> Rotation2d:

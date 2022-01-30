@@ -2,6 +2,7 @@ import wpilib
 
 import commands2
 import commands2.button
+from commands.shooter.trackhood import TrackHood
 
 import constants
 
@@ -12,7 +13,6 @@ from commands.defaultdrive import DefaultDrive
 from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.targetrelativedrive import TargetRelativeDrive
 from commands.resetdrive import ResetDrive
-from commands.shooter.trackturret import TrackTurret
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
@@ -77,7 +77,7 @@ class RobotContainer:
             )
         )
 
-        self.shooting.setDefaultCommand(TrackTurret(self.shooting))
+        self.shooting.setDefaultCommand(TrackHood(self.shooting))
 
     def configureButtonBindings(self):
         """

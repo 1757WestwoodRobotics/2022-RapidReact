@@ -184,6 +184,9 @@ kBackRightModuleName = "back_right"
 kLimelightMountingOffset = Translation2d(
     (kRobotLength / 2) - (4.125 * kMetersPerInch), 0.0
 )
+kLimelightVerticalOffset = 26 * kMetersPerInch
+"""meters"""
+kLimelightAngleOffset = Rotation2d.fromDegrees(45)
 kTrackerPanAngleKey = "tracker/pan_angle"
 kLimelightTrackerModuleName = "limelight_target_tracker"
 
@@ -192,9 +195,12 @@ kLimelightTargetInvalidValue = 0.0
 kLimelightTargetValidValue = 1.0
 kLimelightMinHorizontalFoV = Rotation2d.fromDegrees(-27)
 kLimelightMaxHorizontalFoV = Rotation2d.fromDegrees(27)
+kLimelightMinVerticalFoV = Rotation2d.fromDegrees(-20.5)
+kLimelightMaxVerticalFoV = Rotation2d.fromDegrees(20.5)
 kLimelightNetworkTableName = "limelight"
 kLimelightTargetValidKey = "tv"
 kLimelightTargetHorizontalAngleKey = "tx"
+kLimelightTargetVerticalAngleKey = "ty"
 
 # Motors
 kFrontLeftDriveMotorId = 10
@@ -397,7 +403,7 @@ kSimDefaultTargetLocation = Pose2d(
 )
 """[meters, meters, radians]"""
 
-kSimDefaultTargetHeight = 10
+kSimDefaultTargetHeight = 8 * kMetersPerFoot + 8 * kMetersPerInch  # 8ft 8in
 """meters"""
 
 kSimRobotPoseArrayKey = "SimRobotPoseArray"
@@ -475,9 +481,13 @@ kTurretDGain = 0
 kTurretGearRatio = 1 / 3
 
 kHoodPIDSlot = 0
-kHoodPGain = 1
+kHoodPGain = 0.15
 kHoodIGain = 0
 kHoodDGain = 0
+
+kHoodGearRatio = 1 / 3
+
+kHoodMappingFunction = lambda x: 20 / x  # TODO: a real tested algorithm
 
 kStagingMotorName = "shooter_staging"
 kTurretMotorName = "shooting_turret"

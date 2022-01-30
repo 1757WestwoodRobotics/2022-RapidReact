@@ -9,6 +9,7 @@
 # of your robot code without too much extra effort.
 #
 
+from math import atan
 import typing
 from wpilib import RobotController, SmartDashboard
 from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim
@@ -119,11 +120,29 @@ class LimelightSim:
             constants.kLimelightNetworkTableName
         )
 
-    def update(self, limelightPose: Pose2d, targetPose: Pose2d) -> None:
+    def update(
+        self,
+        limelightPose: Pose2d,
+        targetPose: Pose2d,
+    ) -> None:
         targetInLimelight = Transform2d(limelightPose, targetPose)
         targetAngle = convenientmath.rotationFromTranslation(
             targetInLimelight.translation()
         )
+        targetDistance = limelightPose.translation().distance(targetPose.translation())
+        targetVerticalAngle = (
+            Rotation2d(
+                atan(
+                    (
+                        constants.kSimDefaultTargetHeight
+                        - constants.kLimelightVerticalOffset
+                    )
+                    / targetDistance
+                )
+            )
+            - constants.kLimelightAngleOffset
+        )
+
         targetValid = constants.kLimelightTargetInvalidValue
         if (
             constants.kLimelightMinHorizontalFoV.radians()
@@ -134,6 +153,16 @@ class LimelightSim:
             self.limelightNetworkTable.putNumber(
                 constants.kLimelightTargetHorizontalAngleKey,
                 -1 * targetAngle.degrees(),  # limelight uses reversed direction along x
+            )
+
+        if (
+            constants.kLimelightMinVerticalFoV.radians()
+            < targetVerticalAngle.radians()
+            < constants.kLimelightMaxVerticalFoV.radians()
+        ):
+            self.limelightNetworkTable.putNumber(
+                constants.kLimelightTargetVerticalAngleKey,
+                targetVerticalAngle.degrees(),
             )
 
         self.limelightNetworkTable.putNumber(
