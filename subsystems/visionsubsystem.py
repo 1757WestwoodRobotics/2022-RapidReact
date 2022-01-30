@@ -117,6 +117,45 @@ class SimTrackingModule(TrackingModule):
         pass
 
 
+class BallTrackingModule:
+    def __init__(self, name: str) -> None:
+        self.name = name
+        self.targetAngle = None
+        self.targetDistance = None
+
+    def getTargetAngle(self) -> typing.Optional[Rotation2d]:
+        return self.targetAngle
+
+    def getTargetDistance(self) -> typing.Optional[float]:
+        return self.targetDistance
+
+    def update(self) -> None:
+        if self.targetAngle is not None:
+            SmartDashboard.putNumber(
+                constants.kBallAngleRelativeToRobotKeys.valueKey,
+                convenientmath.normalizeRotation(self.targetAngle).radians(),
+            )
+            SmartDashboard.putBoolean(
+                constants.kBallAngleRelativeToRobotKeys.validKey, True
+            )
+        else:
+            SmartDashboard.putBoolean(
+                constants.kBallAngleRelativeToRobotKeys.validKey, False
+            )
+
+        if self.targetDistance is not None:
+            SmartDashboard.putNumber(
+                constants.kBallDistanceRelativeToRobotKeys.valueKey, self.targetDistance
+            )
+            SmartDashboard.putBoolean(
+                constants.kBallDistanceRelativeToRobotKeys.validKey, True
+            )
+        else:
+            SmartDashboard.putBoolean(
+                constants.kBallDistanceRelativeToRobotKeys.validKey, False
+            )
+
+
 class LimelightTrackingModule(TrackingModule):
     """
     Implementation of TrackingModule designed for use with the Limelight smart-camera
@@ -209,6 +248,8 @@ class VisionSubsystem(SubsystemBase):
             constants.kLimelightTrackerModuleName
         )
 
+        self.ballTrackingModule = BallTrackingModule("ball_tracking_module")
+
         self.printTimer = Timer()
 
     def resetTrackingModule(self):
@@ -219,6 +260,7 @@ class VisionSubsystem(SubsystemBase):
         Called periodically by the command framework. Updates the estimate of the target's pose from the tracking data.
         """
         self.trackingModule.update()
+        self.ballTrackingModule.update()
 
         targetAngle = self.trackingModule.getTargetAngle()
         if targetAngle is None:

@@ -323,6 +323,14 @@ kTargetPoseArrayKeys = OptionalValueKeys("TargetPoseArray")
 
 kTargetName = "Target"
 
+
+kBallAngleRelativeToRobotKeys = OptionalValueKeys("BallAngleRelativeToRobot")
+kBallDistanceRelativeToRobotKeys = OptionalValueKeys("BallDistanceRelativeToRobot")
+
+kBallPoseArrayKeys = OptionalValueKeys("BallPoseArray")
+
+kBallName = "Ball"
+
 # Autonomous
 kAutoDriveDistance = 3 * kWheelCircumference
 """meters"""
