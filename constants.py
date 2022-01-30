@@ -462,3 +462,8 @@ kCameraSimServoObjectName = "Camera Servo"
 kCameraServoPGain = 0.15
 kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
+
+kIntakeCameraFov = 50 * kRadiansPerDegree
+kIntakeCameraHeightInMeters = 0.5
+kIntakeCameraCenterOffsetInMeters = 0.2
+kIsIntakeCameraCentered = False

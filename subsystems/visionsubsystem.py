@@ -135,12 +135,6 @@ class BallTrackingModule:
         NetworkTables.initialize()
         self.photonvisionNetworkTable = NetworkTables.getTable("photonvision")
 
-        # replace with constants later
-        intakeCameraFov = 50 * constants.kRadiansPerDegree
-        intakeCameraHeightInMeters = 1
-        intakeCameraCenterOffsetInMeters = 0.2
-        isIntakeCameraCentered = False
-
         if self.photonvisionNetworkTable.getBoolean("hasTarget", False):
             if RobotBase.isReal():
                 ballAngleYToCamera = Rotation2d(
@@ -149,24 +143,26 @@ class BallTrackingModule:
                 )
 
                 distanceToCamera = (
-                    Rotation2d.tan(ballAngleYToCamera.radians() + intakeCameraFov / 2)
-                    * intakeCameraHeightInMeters
+                    Rotation2d.tan(
+                        ballAngleYToCamera.radians() + constants.kIntakeCameraFov / 2
+                    )
+                    * constants.kIntakeCameraHeightInMeters
                 )
             else:
                 distanceToCamera = self.photonvisionNetworkTable.getValue(
                     "simDistance", float("inf")
                 )
 
-            if not isIntakeCameraCentered:
+            if not constants.kIsIntakeCameraCentered:
                 ballAngleXToCamera = self.photonvisionNetworkTable.getValue("targetYaw")
                 supplementaryAngleToCamera = Rotation2d(
                     (180 - ballAngleXToCamera) * constants.kRadiansPerDegree
                 )
                 self.targetDistance = math.sqrt(
-                    intakeCameraCenterOffsetInMeters ** 2
+                    constants.kIntakeCameraCenterOffsetInMeters ** 2
                     + distanceToCamera ** 2
                     - 2
-                    * intakeCameraCenterOffsetInMeters
+                    * constants.kIntakeCameraCenterOffsetInMeters
                     * distanceToCamera
                     * supplementaryAngleToCamera.cos()
                 )
