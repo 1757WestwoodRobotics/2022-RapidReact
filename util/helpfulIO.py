@@ -86,9 +86,6 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
             self.motor.set(ControlMode.Position, pos)
         else:
             change = self.pidController.calculate(self.simEncoder, pos)
-            print(
-                f"Change from PID Controller: {change}\n input: {pos}\ncurrent encoder count: {self.simEncoder}"
-            )
             self._setSimMotor(
                 change / constants.kTalonEncoderPulsesPerRevolution
             )  # convert the change in encoder ticks into change into motor %

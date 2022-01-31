@@ -58,7 +58,6 @@ class ShootingSubsystem(SubsystemBase):
         )
 
     def setWheelSpeed(self, speed: int) -> None:
-        print(f"Speed set to {speed}")
         self.shootingMotor.setSpeed(speed)
 
     def launchCargo(self) -> None:
@@ -72,7 +71,6 @@ class ShootingSubsystem(SubsystemBase):
     def setHoodAngle(self, angle: Rotation2d) -> None:
         """angle to fire the ball with
         absolute with 0 being straight and 90 degrees being direct to the sky"""
-        print(f"hood angle set to {angle}")
         encoderPulses = (
             angle.radians()
             * constants.kTalonEncoderPulsesPerRadian
@@ -81,7 +79,6 @@ class ShootingSubsystem(SubsystemBase):
         self.hoodMotor.setPosition(encoderPulses)
 
     def rotateTurret(self, angle: Rotation2d):
-        print(f"Turret rotated to {angle.degrees()}")
         encoderPulses = (
             angle.radians()
             * constants.kTalonEncoderPulsesPerRadian
@@ -94,11 +91,9 @@ class ShootingSubsystem(SubsystemBase):
             (self.turretMotor.getPosition() / constants.kTalonEncoderPulsesPerRadian)
             * constants.kTurretGearRatio
         )
-        print(f"Current Turret Angle: {angle.degrees()}")
         return angle
 
     def trackTurret(self, relativeAngle: float):
         """relativeAngle: radians"""
-        print(f"CURRENT TIME: {Timer.getMatchTime()}")
         rotation = self.getTurretRotation() + Rotation2d(relativeAngle)
         self.rotateTurret(rotation)
