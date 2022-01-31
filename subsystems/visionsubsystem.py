@@ -120,8 +120,7 @@ class SimTrackingModule(TrackingModule):
 
 
 class BallTrackingModule:
-    def __init__(self, name: str) -> None:
-        self.name = name
+    def __init__(self) -> None:
         self.targetAngle = None
         self.targetDistance = None
 
@@ -133,31 +132,40 @@ class BallTrackingModule:
 
     def update(self) -> None:
         NetworkTables.initialize()
-        self.photonvisionNetworkTable = NetworkTables.getTable("photonvision")
+        self.photonvisionNetworkTable = NetworkTables.getTable(
+            constants.kPhotonvisionNetworkTableName
+        )
 
-        if self.photonvisionNetworkTable.getBoolean("hasTarget", False):
+        if self.photonvisionNetworkTable.getBoolean(
+            constants.kPhotonvisionTargetValidKey, False
+        ):
             if RobotBase.isReal():
-                ballAngleYToCamera = Rotation2d(
-                    self.photonvisionNetworkTable.getValue("targetPitch", 0)
-                    * constants.kRadiansPerDegree
+                ballAngleYToCamera = Rotation2d.fromDegrees(
+                    self.photonvisionNetworkTable.getValue(
+                        constants.kPhotonvisionTargetVerticalAngleKey, 0
+                    )
                 )
 
                 distanceToCamera = (
                     Rotation2d.tan(
-                        ballAngleYToCamera.radians() + constants.kIntakeCameraFov / 2
+                        ballAngleYToCamera.radians()
+                        + constants.kIntakeCameraMaxVerticalFOV.radians() / 2
                     )
                     * constants.kIntakeCameraHeightInMeters
                 )
             else:
                 distanceToCamera = self.photonvisionNetworkTable.getValue(
-                    "simDistance", float("inf")
+                    constants.kPhotonvisionTargetSimDistanceKey, float("inf")
                 )
 
             if not constants.kIsIntakeCameraCentered:
-                ballAngleXToCamera = self.photonvisionNetworkTable.getValue("targetYaw")
-                supplementaryAngleToCamera = Rotation2d(
-                    (180 - ballAngleXToCamera) * constants.kRadiansPerDegree
+                ballAngleXToCamera = self.photonvisionNetworkTable.getValue(
+                    constants.kPhotonvisionTargetHorizontalAngleKey, float("inf")
                 )
+                supplementaryAngleToCamera = Rotation2d.fromDegrees(
+                    180 - ballAngleXToCamera
+                )
+
                 self.targetDistance = math.sqrt(
                     constants.kIntakeCameraCenterOffsetInMeters ** 2
                     + distanceToCamera ** 2
@@ -175,10 +183,12 @@ class BallTrackingModule:
                 )
             else:
                 self.targetDistance = distanceToCamera
-                self.targetAngle = Rotation2d(
-                    self.photonvisionNetworkTable.getValue("targetYaw")
-                    * constants.kRadiansPerDegree
+                self.targetAngle = Rotation2d.fromDegrees(
+                    self.photonvisionNetworkTable.getValue(
+                        constants.kPhotonvisionTargetHorizontalAngleKey
+                    )
                 )
+
         else:
             self.targetAngle = None
             self.targetDistance = None
@@ -301,7 +311,7 @@ class VisionSubsystem(SubsystemBase):
             constants.kLimelightTrackerModuleName
         )
 
-        self.ballTrackingModule = BallTrackingModule("ball_tracking_module")
+        self.ballTrackingModule = BallTrackingModule()
 
         self.printTimer = Timer()
 

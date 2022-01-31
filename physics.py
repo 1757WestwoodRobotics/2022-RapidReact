@@ -141,6 +141,32 @@ class LimelightSim:
         )
 
 
+class IntakeCameraSim:
+    def __init__(self) -> None:
+        NetworkTables.initialize()
+        self.photonvisionNetworkTable = NetworkTables.getTable(
+            constants.kPhotonvisionNetworkTableName
+        )
+
+    def update(self, intakeCameraPose: Pose2d, ballPose: Pose2d) -> None:
+        ballInCamera = Transform2d(intakeCameraPose, ballPose)
+        ballAngle = convenientmath.rotationFromTranslation(ballInCamera.translation())
+        ballValid = False
+        if (
+            constants.kIntakeCameraMinHorizontalFOV.radians()
+            < ballAngle.radians()
+            < constants.kIntakeCameraMaxHorizontalFOV.radians()
+        ):
+            ballValid = True
+            ballDistance = intakeCameraPose.translation().distance(
+                ballPose.translation()
+            )
+            self.photonvisionNetworkTable.putNumber(constants.kPhotonvisionTargetSimDistanceKey, ballDistance)
+            self.photonvisionNetworkTable.putNumber(constants.kPhotonvisionTargetHorizontalAngleKey, ballAngle.degrees())
+
+        self.photonvisionNetworkTable.putBoolean(constants.kPhotonvisionTargetValidKey, ballValid)
+
+
 class PhysicsEngine:
     """
     Simulates a drivetrain
@@ -216,6 +242,7 @@ class PhysicsEngine:
         simBallObject.setPose(constants.kSimDefaultBallLocation)
 
         self.limelightSim = LimelightSim()
+        self.intakeCameraSim = IntakeCameraSim()
 
     # pylint: disable-next=unused-argument
     def update_sim(self, now: float, tm_diff: float) -> None:
@@ -261,6 +288,18 @@ class PhysicsEngine:
             [simBallPose.X(), simBallPose.Y(), simBallPose.rotation().radians()],
         )
 
+        simIntakeCameraPose = simRobotPose.transformBy(
+            Transform2d(
+                Translation2d(constants.kIntakeCameraCenterOffsetInMeters, 0.0),
+                Rotation2d(),
+            )
+        )
+        simIntakeCameraObject = self.physics_controller.field.getObject(
+            constants.kSimIntakeCameraObjectName
+        )
+        simIntakeCameraObject.setPose(simIntakeCameraPose)
+
+        self.intakeCameraSim.update(simIntakeCameraPose, simBallPose)
         # publish the simulated limelight nt entries
         limelightPanAngle = SmartDashboard.getNumber(constants.kTrackerPanAngleKey, 0)
         robotToLimelightTransform = Transform2d(

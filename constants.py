@@ -196,6 +196,13 @@ kLimelightNetworkTableName = "limelight"
 kLimelightTargetValidKey = "tv"
 kLimelightTargetHorizontalAngleKey = "tx"
 
+# Photonvision
+kPhotonvisionNetworkTableName = "photonvision"
+kPhotonvisionTargetValidKey = "hasTarget"
+kPhotonvisionTargetHorizontalAngleKey = "targetYaw"
+kPhotonvisionTargetVerticalAngleKey = "targetPitch"
+
+kPhotonvisionTargetSimDistanceKey = "simDistance"
 # Motors
 kFrontLeftDriveMotorId = 10
 kFrontLeftSteerMotorId = 11
@@ -463,7 +470,13 @@ kCameraServoPGain = 0.15
 kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
 
-kIntakeCameraFov = 50 * kRadiansPerDegree
+# Intake Camera
+kIntakeCameraMaxVerticalFOV = Rotation2d.fromDegrees(25)
+kIntakeCameraMinVerticalFOV = Rotation2d.fromDegrees(-25)
+kIntakeCameraMaxHorizontalFOV = Rotation2d.fromDegrees(35)
+kIntakeCameraMinHorizontalFOV = Rotation2d.fromDegrees(-35)
 kIntakeCameraHeightInMeters = 0.5
 kIntakeCameraCenterOffsetInMeters = 0.2
 kIsIntakeCameraCentered = False
+
+kSimIntakeCameraObjectName = "Intake Camera"
