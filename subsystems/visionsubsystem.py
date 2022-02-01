@@ -138,24 +138,19 @@ class BallTrackingModule:
         if self.photonvisionNetworkTable.getBoolean(
             constants.kPhotonvisionTargetValidKey, False
         ):
-            if RobotBase.isReal():
-                ballAngleYToCamera = Rotation2d.fromDegrees(
-                    self.photonvisionNetworkTable.getValue(
-                        constants.kPhotonvisionTargetVerticalAngleKey, 0
-                    )
+            ballAngleYToCamera = Rotation2d.fromDegrees(
+                self.photonvisionNetworkTable.getValue(
+                    constants.kPhotonvisionTargetVerticalAngleKey, 0
                 )
+            )
 
-                distanceToCamera = (
-                    Rotation2d.tan(
-                        ballAngleYToCamera.radians()
-                        + constants.kIntakeCameraMaxVerticalFOV.radians() / 2
-                    )
-                    * constants.kIntakeCameraHeightInMeters
-                )
-            else:
-                distanceToCamera = self.photonvisionNetworkTable.getValue(
-                    constants.kPhotonvisionTargetSimDistanceKey, float("inf")
-                )
+            distanceToCamera = (
+                Rotation2d(
+                    constants.kIntakeCameraTiltAngle.radians()
+                    + ballAngleYToCamera.radians()
+                ).tan()
+                * constants.kIntakeCameraHeightInMeters
+            )
 
             if not constants.kIsIntakeCameraCentered:
                 ballAngleXToCamera = self.photonvisionNetworkTable.getValue(

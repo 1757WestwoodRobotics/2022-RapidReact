@@ -9,6 +9,7 @@
 # of your robot code without too much extra effort.
 #
 
+import math
 import typing
 from wpilib import RobotController, SmartDashboard
 from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim
@@ -150,22 +151,34 @@ class IntakeCameraSim:
 
     def update(self, intakeCameraPose: Pose2d, ballPose: Pose2d) -> None:
         ballInCamera = Transform2d(intakeCameraPose, ballPose)
-        ballAngle = convenientmath.rotationFromTranslation(ballInCamera.translation())
+        ballHorizontalAngle = convenientmath.rotationFromTranslation(
+            ballInCamera.translation()
+        )
+        ballDistance = intakeCameraPose.translation().distance(ballPose.translation())
+        ballVerticalAngle = (
+            Rotation2d(
+                math.atan(ballDistance / constants.kIntakeCameraHeightInMeters)
+            ).degrees()
+            - constants.kIntakeCameraTiltAngle.degrees()
+        )
         ballValid = False
         if (
             constants.kIntakeCameraMinHorizontalFOV.radians()
-            < ballAngle.radians()
+            < ballHorizontalAngle.radians()
             < constants.kIntakeCameraMaxHorizontalFOV.radians()
+            and constants.kIntakeCameraMinVerticalFOV.degrees()
+            < ballVerticalAngle
+            < constants.kIntakeCameraMaxVerticalFOV.degrees()
         ):
             ballValid = True
-            ballDistance = intakeCameraPose.translation().distance(
-                ballPose.translation()
+
+            self.photonvisionNetworkTable.putNumber(
+                constants.kPhotonvisionTargetVerticalAngleKey,
+                ballVerticalAngle,
             )
             self.photonvisionNetworkTable.putNumber(
-                constants.kPhotonvisionTargetSimDistanceKey, ballDistance
-            )
-            self.photonvisionNetworkTable.putNumber(
-                constants.kPhotonvisionTargetHorizontalAngleKey, ballAngle.degrees()
+                constants.kPhotonvisionTargetHorizontalAngleKey,
+                ballHorizontalAngle.degrees(),
             )
 
         self.photonvisionNetworkTable.putBoolean(

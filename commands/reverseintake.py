@@ -12,7 +12,7 @@ class ReverseIntake(CommandBase):
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
-        self.intake.reverseIntake()
+        self.intake.toggleReverseIntake()
 
         if self.intake.isIntakeDeployed():
             self.intake.runIntake(self.intake.intakeReversed)

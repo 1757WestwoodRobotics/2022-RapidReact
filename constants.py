@@ -334,9 +334,6 @@ kTargetName = "Target"
 kBallAngleRelativeToRobotKeys = OptionalValueKeys("BallAngleRelativeToRobot")
 kBallDistanceRelativeToRobotKeys = OptionalValueKeys("BallDistanceRelativeToRobot")
 
-kBallPoseArrayKeys = OptionalValueKeys("BallPoseArray")
-
-kBallName = "Ball"
 
 # Autonomous
 kAutoDriveDistance = 3 * kWheelCircumference
@@ -472,6 +469,7 @@ kIntakeCameraMaxVerticalFOV = Rotation2d.fromDegrees(25)
 kIntakeCameraMinVerticalFOV = Rotation2d.fromDegrees(-25)
 kIntakeCameraMaxHorizontalFOV = Rotation2d.fromDegrees(35)
 kIntakeCameraMinHorizontalFOV = Rotation2d.fromDegrees(-35)
+kIntakeCameraTiltAngle = Rotation2d.fromDegrees(90 - 25)
 kIntakeCameraHeightInMeters = 0.5
 kIntakeCameraCenterOffsetInMeters = 0.2
 kIsIntakeCameraCentered = False
