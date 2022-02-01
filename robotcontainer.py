@@ -14,6 +14,7 @@ from commands.targetrelativedrive import TargetRelativeDrive
 from commands.resetdrive import ResetDrive
 from commands.toggleintake import ToggleIntake
 from commands.reverseintake import ReverseIntake
+from commands.autoballintake import AutoBallIntake
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
@@ -77,6 +78,8 @@ class RobotContainer:
             )
         )
 
+        self.autoBallIntake = AutoBallIntake(self.drive, self.intake)
+
     def configureButtonBindings(self):
         """
         Use this method to define your button->command mappings. Buttons can be created by
@@ -125,6 +128,10 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl
         ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.autoBallIntakeControl
+        ).whenHeld(AutoBallIntake(self.drive, self.intake))
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()

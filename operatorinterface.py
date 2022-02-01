@@ -93,6 +93,10 @@ class OperatorInterface:
             constants.kReverseIntakeMotorButtonName
         )
 
+        self.autoBallIntakeControl = getButtonBindingOfName(
+            constants.kAutoBallIntakeName
+        )
+
         self.chassisControls = HolonomicInput(
             Invert(
                 Deadband(

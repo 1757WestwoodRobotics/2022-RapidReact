@@ -75,5 +75,12 @@
             "Button": 2
         },
         "B (Xbox)"
+    ],
+    "autoBallIntake": [
+        0,
+        {
+            "Button": 1
+        },
+        "A (Xbox)"
     ]
 }

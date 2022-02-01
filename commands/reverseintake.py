@@ -17,6 +17,7 @@ class ReverseIntake(CommandBase):
         if self.intake.isIntakeDeployed():
             self.intake.runIntake(self.intake.intakeReversed)
 
+    # pylint: disable=unused-argument,no-self-use
     def end(self, _interrupted: bool) -> None:
         pass
 
