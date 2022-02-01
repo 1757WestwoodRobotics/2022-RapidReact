@@ -477,3 +477,10 @@ kIntakeCameraCenterOffsetInMeters = 0.2
 kIsIntakeCameraCentered = False
 
 kSimIntakeCameraObjectName = "Intake Camera"
+
+# Intake auto intake constants
+kDriveToBallPGain = 0.5
+kDriveToBallIGain = 0
+kDriveToBallDGain = 0.2
+kAutoBallIntakeName = "autoBallIntake"
+# Names are stored further up, about line 335

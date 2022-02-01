@@ -161,10 +161,16 @@ class IntakeCameraSim:
             ballDistance = intakeCameraPose.translation().distance(
                 ballPose.translation()
             )
-            self.photonvisionNetworkTable.putNumber(constants.kPhotonvisionTargetSimDistanceKey, ballDistance)
-            self.photonvisionNetworkTable.putNumber(constants.kPhotonvisionTargetHorizontalAngleKey, ballAngle.degrees())
+            self.photonvisionNetworkTable.putNumber(
+                constants.kPhotonvisionTargetSimDistanceKey, ballDistance
+            )
+            self.photonvisionNetworkTable.putNumber(
+                constants.kPhotonvisionTargetHorizontalAngleKey, ballAngle.degrees()
+            )
 
-        self.photonvisionNetworkTable.putBoolean(constants.kPhotonvisionTargetValidKey, ballValid)
+        self.photonvisionNetworkTable.putBoolean(
+            constants.kPhotonvisionTargetValidKey, ballValid
+        )
 
 
 class PhysicsEngine:

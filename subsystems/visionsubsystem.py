@@ -1,5 +1,4 @@
 import math
-from turtle import distance
 import typing
 
 from commands2 import SubsystemBase
@@ -123,6 +122,9 @@ class BallTrackingModule:
     def __init__(self) -> None:
         self.targetAngle = None
         self.targetDistance = None
+        self.photonvisionNetworkTable = NetworkTables.getTable(
+            constants.kPhotonvisionNetworkTableName
+        )
 
     def getTargetAngle(self) -> typing.Optional[Rotation2d]:
         return self.targetAngle
@@ -132,9 +134,6 @@ class BallTrackingModule:
 
     def update(self) -> None:
         NetworkTables.initialize()
-        self.photonvisionNetworkTable = NetworkTables.getTable(
-            constants.kPhotonvisionNetworkTableName
-        )
 
         if self.photonvisionNetworkTable.getBoolean(
             constants.kPhotonvisionTargetValidKey, False
@@ -167,8 +166,8 @@ class BallTrackingModule:
                 )
 
                 self.targetDistance = math.sqrt(
-                    constants.kIntakeCameraCenterOffsetInMeters ** 2
-                    + distanceToCamera ** 2
+                    constants.kIntakeCameraCenterOffsetInMeters**2
+                    + distanceToCamera**2
                     - 2
                     * constants.kIntakeCameraCenterOffsetInMeters
                     * distanceToCamera
