@@ -13,9 +13,3 @@ class ToggleIntake(CommandBase):
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
         self.intake.toggleIntake()
-
-    def execute(self) -> None:
-        if self.intake.isIntakeDeployed():
-            self.intake.deployIntake()
-        else:
-            self.intake.retractIntake()
