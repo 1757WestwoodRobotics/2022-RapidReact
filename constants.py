@@ -498,3 +498,7 @@ kStagingMotorName = "shooter_staging"
 kTurretMotorName = "shooting_turret"
 kShootingMotorName = "shooting_shooting"
 kHoodMotorName = "shooting_hood"
+
+kShootingWheelSpeedKey = "shooting/wheelSpeed"
+kShootingHoodAngleKey = "shooting/hoodAngle"
+kShootingTurretAngleKey = "shooting/turretAngle"

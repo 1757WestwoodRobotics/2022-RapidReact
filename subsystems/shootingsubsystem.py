@@ -1,4 +1,5 @@
 from commands2 import SubsystemBase
+from wpilib import SmartDashboard
 
 from wpimath.geometry import Rotation2d
 from util.helpfulIO import Falcon, limitSwitch
@@ -57,6 +58,19 @@ class ShootingSubsystem(SubsystemBase):
             self.hoodMotor, True, constants.kSimHoodMaximumSwitchPort
         )
 
+    def periodic(self) -> None:
+        SmartDashboard.putNumber(constants.kShootingWheelSpeedKey, self.getWheelSpeed())
+        SmartDashboard.putNumber(
+            constants.kShootingHoodAngleKey, self.getHoodAngle().degrees()
+        )
+        SmartDashboard.putNumber(
+            constants.kShootingTurretAngleKey, self.getTurretRotation().degrees()
+        )
+
+    def getWheelSpeed(self) -> int:
+        """returns wheel speed in RPM"""
+        return self.shootingMotor.getSpeed()
+
     def setWheelSpeed(self, speed: int) -> None:
         self.shootingMotor.setSpeed(speed)
 
@@ -77,6 +91,13 @@ class ShootingSubsystem(SubsystemBase):
             / constants.kHoodGearRatio
         )
         self.hoodMotor.setPosition(encoderPulses)
+
+    def getHoodAngle(self) -> Rotation2d:
+        return Rotation2d(
+            self.hoodMotor.getPosition()
+            / constants.kTalonEncoderPulsesPerRadian
+            * constants.kHoodGearRatio
+        )
 
     def rotateTurret(self, angle: Rotation2d):
         encoderPulses = (
