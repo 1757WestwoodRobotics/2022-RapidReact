@@ -46,7 +46,7 @@ class DriveDistance(CommandBase):
                 0, self.speedFactor, 0, DriveSubsystem.CoordinateMode.RobotRelative
             )
 
-    # pylint: disable=unused-argument
+    # pylint: disable-next=unused-argument
     def end(self, interrupted: bool) -> None:
         self.drive.arcadeDriveWithFactors(
             0, 0, 0, DriveSubsystem.CoordinateMode.RobotRelative

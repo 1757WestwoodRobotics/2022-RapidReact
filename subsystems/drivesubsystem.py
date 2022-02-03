@@ -86,7 +86,7 @@ class SwerveModule:
             self.setSwerveAngleTarget(optimizedAngle)
 
 
-# pylint: disable=abstract-method
+# pylint: disable-next=abstract-method
 class PWMSwerveModule(SwerveModule):
     """
     Implementation of SwerveModule designed for ease of simulation:
@@ -469,8 +469,8 @@ class DriveSubsystem(SubsystemBase):
         SmartDashboard.putBoolean(constants.kRobotPoseArrayKeys.validKey, True)
 
         if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
-            # pylint:disable=consider-using-f-string
             print(
+                # pylint:disable-next=consider-using-f-string
                 "r: {:.1f}, {:.1f}, {:.0f}* fl: {:.0f}* {:.1f} fr: {:.0f}* {:.1f} bl: {:.0f}* {:.1f} br: {:.0f}* {:.1f}".format(
                     robotPose.X(),
                     robotPose.Y(),

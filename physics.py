@@ -214,7 +214,7 @@ class PhysicsEngine:
 
         self.limelightSim = LimelightSim()
 
-    # pylint: disable=unused-argument
+    # pylint: disable-next=unused-argument
     def update_sim(self, now: float, tm_diff: float) -> None:
         """
         Called when the simulation parameters for the program need to be
