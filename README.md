@@ -106,7 +106,7 @@ py -3 -m venv ./.venv
 1. **Install / update robotpy**
    (must have internet connection)
    ```bash
-   python -m pip install --no-deps -r requirements.txt
+   python -m pip install -r requirements.txt
    ```
    (examples: `robotpy`, `robotpy[ctre,navx]`, `robotpy[all]`) (see: [robotpy on pypi](https://pypi.org/project/robotpy/))
 1. **Download python for roboRIO**

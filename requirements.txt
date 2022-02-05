@@ -1,32 +1,7 @@
-# Non RobotPy packages, some are required by RobotPy because for simplicity we don't pin them,
-# just explicitly list that they are required
-attrs
-astroid
-bcrypt
-cffi
-click
-cryptography
-lazy-object-proxy
-iniconfig
-isort
-mccabe
-pluggy
-packaging
-paramiko
-pint
-platformdirs
-py
-pycparser
-pynacl
-pyparsing
-pyyaml
+# Non RobotPy packages that we use
+black
 pylint
 pytest
-six
-toml
-typing-extensions
-wheel
-wrapt
 # RobotPy packages.  We explicitly list the version number on all these packages so that when RobotPy
 # updates we don't break the world until we have a chance to test/update.
 pyfrc==2022.0.2
