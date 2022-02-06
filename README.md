@@ -103,6 +103,11 @@ py -3 -m venv ./.venv
      ```bash
      source <path-to-mentorbot-repo>/.venv/bin/activate
      ```
+1. **Update pip and wheel.  Old versions of pip can prevent binary wheels from being installed.  Installing wheel makes other installs faster**
+   (must have internet connection)
+   ```bash
+   python -m pip install --upgrade pip wheel
+   ```
 1. **Install / update robotpy**
    (must have internet connection)
    ```bash
