@@ -33,5 +33,4 @@ class AimSystem(CommandBase):
             angle = SmartDashboard.getNumber(
                 constants.kTargetAngleRelativeToRobotKeys.valueKey, 0.0
             )
-            print(f"angle from limelight {angle}")
             self.shoot.trackTurret(angle)

@@ -213,13 +213,22 @@ class VisionSubsystem(SubsystemBase):
             robotPoseX, robotPoseY, robotPoseAngle = SmartDashboard.getNumberArray(
                 constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0]
             )
-            robotPose = Pose2d(robotPoseX, robotPoseY, robotPoseAngle)
+
+            limelightPanAngle = (
+                SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 0)
+                * constants.kRadiansPerDegree
+            )
+
+            robotPose = Pose2d(
+                robotPoseX, robotPoseY, robotPoseAngle + limelightPanAngle
+            )
             robotToTarget = Transform2d(
                 convenientmath.translationFromDistanceAndRotation(
                     targetDistance, targetAngle
                 ),
                 targetFacingAngle,
             )
+
             targetPose = robotPose + robotToTarget
             SmartDashboard.putNumberArray(
                 constants.kTargetPoseArrayKeys.valueKey,
