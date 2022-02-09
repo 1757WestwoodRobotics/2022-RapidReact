@@ -12,11 +12,8 @@ class IntakeSubsystem(SubsystemBase):
 
         self.pneumaticsHub = PneumaticHub(1)
 
-        self.leftSolenoid = Solenoid(PneumaticsModuleType.REVPH, 0)
-        self.leftSolenoid.set(False)
-
-        self.rightSolenoid = Solenoid(PneumaticsModuleType.REVPH, 1)
-        self.rightSolenoid.set(False)
+        self.intakeSolenoid = Solenoid(PneumaticsModuleType.REVPH, 0)
+        self.intakeSolenoid.set(False)
 
         if RobotBase.isReal():
             pass
@@ -43,14 +40,12 @@ class IntakeSubsystem(SubsystemBase):
 
     def deployIntake(self) -> None:
         self.intakeDeployed = True
-        self.leftSolenoid.set(True)
-        self.rightSolenoid.set(True)
+        self.intakeSolenoid.set(True)
         self.runIntake(self.intakeReversed)
 
     def retractIntake(self) -> None:
         self.intakeDeployed = False
-        self.leftSolenoid.set(False)
-        self.rightSolenoid.set(False)
+        self.intakeSolenoid.set(False)
         self.stopIntake()
 
     def runIntake(self, reverse: bool) -> None:
@@ -61,3 +56,8 @@ class IntakeSubsystem(SubsystemBase):
 
     def stopIntake(self) -> None:
         self.intakeMotor.set(0)
+
+    def debugDeploy(self) -> None:
+        self.intakeDeployed = True
+        self.intakeSolenoid.set(True)
+        self.stopIntake()
