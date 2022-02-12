@@ -12,10 +12,11 @@ class IntakeSubsystem(SubsystemBase):
 
         self.pneumaticsHub = PneumaticHub(1)
 
-        self.intakeSolenoid = Solenoid(PneumaticsModuleType.REVPH, 0)
+        self.intakeSolenoid = Solenoid(PneumaticsModuleType.REVPH, 1)
         self.intakeSolenoid.set(False)
 
         if RobotBase.isReal():
+            # self.intakeMotor = WPI_TalonFX()
             pass
         else:
             self.intakeMotor = PWMVictorSPX(constants.kSimIntakeMotorPort)
@@ -50,12 +51,15 @@ class IntakeSubsystem(SubsystemBase):
 
     def runIntake(self, reverse: bool) -> None:
         if reverse:
-            self.intakeMotor.set(-1.0)
+            # self.intakeMotor.set(-1.0)
+            pass
         else:
-            self.intakeMotor.set(1.0)
+            # self.intakeMotor.set(1.0)
+            pass
 
     def stopIntake(self) -> None:
-        self.intakeMotor.set(0)
+        # self.intakeMotor.set(0)
+        pass
 
     def debugDeploy(self) -> None:
         self.intakeDeployed = True

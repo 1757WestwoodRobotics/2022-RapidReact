@@ -97,6 +97,9 @@ class OperatorInterface:
             constants.kAutoBallIntakeName
         )
 
+        self.runIndexer = getButtonBindingOfName(constants.kRunIndexerName)
+        self.reverseIndexer = getButtonBindingOfName(constants.kReverseIndexerName)
+
         self.chassisControls = HolonomicInput(
             Invert(
                 Deadband(
