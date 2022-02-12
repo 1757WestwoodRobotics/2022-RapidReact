@@ -213,6 +213,7 @@ kBackLeftSteerMotorId = 15
 kBackRightDriveMotorId = 16
 kBackRightSteerMotorId = 17
 kIntakeMotorId = 18
+kIndexerMotorId = 19
 
 # Encoders
 kFrontLeftSteerEncoderId = 40
@@ -405,6 +406,8 @@ kTargetRelativeCoordinateModeControlButtonName = "targetRelativeCoordinateModeCo
 kDriveToTargetControlButtonName = "driveToTargetControl"
 kToggleIntakeButtonName = "toggleIntake"
 kReverseIntakeMotorButtonName = "reverseIntakeMotor"
+kRunIndexerButtonName = "runIndexer"
+kReverseIndexerButtonName = "reverseIndexer"
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
@@ -434,6 +437,8 @@ kSimBackLeftSteerMotorPort = 5
 kSimBackRightDriveMotorPort = 6
 kSimBackRightSteerMotorPort = 7
 kSimIntakeMotorPort = 8
+kSimIndexerMotorPort = 19
+kSimStagingMotorPort = 18
 
 kSimFrontLeftDriveEncoderPorts = (0, 1)
 kSimFrontLeftSteerEncoderPorts = (2, 3)

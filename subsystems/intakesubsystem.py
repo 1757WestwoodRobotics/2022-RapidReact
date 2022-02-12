@@ -42,6 +42,7 @@ class IntakeSubsystem(SubsystemBase):
 
     def deployIntake(self) -> None:
         self.intakeDeployed = True
+        self.intakeReversed = False
         self.intakeSolenoid.set(True)
         self.runIntake(self.intakeReversed)
 

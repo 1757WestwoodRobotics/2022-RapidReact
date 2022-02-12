@@ -15,10 +15,13 @@ from commands.resetdrive import ResetDrive
 from commands.toggleintake import ToggleIntake
 from commands.reverseintake import ReverseIntake
 from commands.autoballintake import AutoBallIntake
+from commands.runindexer import RunIndexer
+from commands.reverseindexer import ReverseIndexer
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
 from subsystems.intakesubsystem import IntakeSubsystem
+from subsystems.indexersubsystem import IndexerSubsystem
 
 from operatorinterface import OperatorInterface
 
@@ -40,6 +43,7 @@ class RobotContainer:
         self.drive = DriveSubsystem()
         self.vision = VisionSubsystem()
         self.intake = IntakeSubsystem()
+        self.indexer = IndexerSubsystem()
         # Autonomous routines
 
         # A simple auto routine that drives forward a specified distance, and then stops.
