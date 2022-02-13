@@ -2,6 +2,7 @@ from commands2 import SubsystemBase
 from ctre import WPI_TalonFX
 from wpilib import PWMVictorSPX, PneumaticHub, PneumaticsModuleType, RobotBase, Solenoid
 import constants
+from util.helpfulIO import Falcon
 
 
 class IntakeSubsystem(SubsystemBase):
@@ -55,12 +56,12 @@ class IntakeSubsystem(SubsystemBase):
 
     def runIntake(self, reverse: bool) -> None:
         if reverse:
-            self.intakeMotor.set(-1.0)
+            self.intakeMotor.setSpeed(-1000)
         else:
-            self.intakeMotor.set(1.0)
+            self.intakeMotor.setSpeed(1000)
 
     def stopIntake(self) -> None:
-        self.intakeMotor.set(0)
+        self.intakeMotor.setSpeed(0)
 
     def debugDeploy(self) -> None:
         self.intakeDeployed = True

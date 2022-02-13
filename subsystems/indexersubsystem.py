@@ -3,6 +3,7 @@ from wpilib import PWMVictorSPX, RobotBase
 from ctre import WPI_TalonFX
 
 import constants
+from util.helpfulIO import Falcon
 
 
 class IndexerSubsystem(SubsystemBase):
@@ -11,11 +12,11 @@ class IndexerSubsystem(SubsystemBase):
         self.setName(__class__.__name__)
         self.indexerRunning = False
         self.indexerReversed = False
-
-        if RobotBase.isReal():
-            self.indexerMotor = WPI_TalonFX(constants.kIndexerMotorId)
-        else:
-            self.indexerMotor = PWMVictorSPX(constants.kSimIndexerMotorPort)
+        self.indexerMotor = Falcon(
+            constants.kIndexerMotorName,
+            constants.kIndexerMotorId,
+            constants.kSimIndexerMotorPort,
+        )
 
     def isIndexerRunning(self) -> bool:
         return self.indexerRunning

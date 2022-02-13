@@ -213,7 +213,11 @@ kBackLeftSteerMotorId = 15
 kBackRightDriveMotorId = 16
 kBackRightSteerMotorId = 17
 kIntakeMotorId = 18
+kIntakeMotorName = "IntakeMotor"
 kIndexerMotorId = 19
+kIndexerMotorName = "IndexerMotor"
+kStagingMotorId = 20
+kStagingMotorName = "StagingMotor"
 
 # Encoders
 kFrontLeftSteerEncoderId = 40
