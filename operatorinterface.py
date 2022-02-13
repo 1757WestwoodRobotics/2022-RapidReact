@@ -140,7 +140,7 @@ class OperatorInterface:
                         getAxisBindingOfName(constants.kChassisRotationAxisName),
                         constants.kXboxJoystickDeadband,
                     ),
-                    self.scaler,
+                    lambda: 0.3,
                 )
             ),
         )
