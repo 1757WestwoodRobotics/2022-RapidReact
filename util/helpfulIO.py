@@ -112,7 +112,12 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
         if not RobotBase.isReal():
             amount = self.pidController.calculate(self.getSpeed(), rpm)
             self._setSimMotor(
-                (amount + self.getSpeed()) / DCMotor.falcon500().freeSpeed
+                (amount + self.getSpeed())
+                / (
+                    DCMotor.falcon500().freeSpeed
+                    / constants.kRadiansPerRevolution
+                    * constants.kSecondsPerMinute
+                )
             )  # use percent based on "ideal" motor
         else:
             driveEncoderPulsesPerSecond = (
