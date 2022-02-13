@@ -8,12 +8,33 @@ import constants
 
 class AimSystem(CommandBase):
     def __init__(self, shoot: ShootingSubsystem) -> None:
+        SmartDashboard.putBoolean(constants.kShootingManualModeKey, False)
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
         self.shoot = shoot
         self.addRequirements([self.shoot])
 
     def execute(self) -> None:
+        if SmartDashboard.getBoolean(constants.kShootingManualModeKey, False):
+            self.manualMode()
+        else:
+            self.normalMode()
+
+        if SmartDashboard.getBoolean(
+            constants.kTargetAngleRelativeToRobotKeys.validKey, False
+        ):
+            angle = SmartDashboard.getNumber(
+                constants.kTargetAngleRelativeToRobotKeys.valueKey, 0.0
+            )
+            self.shoot.trackTurret(angle)  # always track the turret
+
+    def manualMode(self) -> None:
+        wheelSpeed = SmartDashboard.getNumber(constants.kShootingWheelSpeedKey, 0)
+        hoodAngle = SmartDashboard.getNumber(constants.kShootingHoodAngleKey, 0)
+        self.shoot.setWheelSpeed(wheelSpeed)
+        self.shoot.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
+
+    def normalMode(self) -> None:
         if SmartDashboard.getBoolean(
             constants.kTargetDistanceRelativeToRobotKeys.validKey, False
         ):
@@ -26,11 +47,3 @@ class AimSystem(CommandBase):
 
             targetAngle = Rotation2d(constants.kHoodMappingFunction(distance))
             self.shoot.setHoodAngle(targetAngle)
-
-        if SmartDashboard.getBoolean(
-            constants.kTargetAngleRelativeToRobotKeys.validKey, False
-        ):
-            angle = SmartDashboard.getNumber(
-                constants.kTargetAngleRelativeToRobotKeys.valueKey, 0.0
-            )
-            self.shoot.trackTurret(angle)

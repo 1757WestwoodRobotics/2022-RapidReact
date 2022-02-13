@@ -59,10 +59,13 @@ class ShootingSubsystem(SubsystemBase):
         )
 
     def periodic(self) -> None:
-        SmartDashboard.putNumber(constants.kShootingWheelSpeedKey, self.getWheelSpeed())
-        SmartDashboard.putNumber(
-            constants.kShootingHoodAngleKey, self.getHoodAngle().degrees()
-        )
+        if not SmartDashboard.getBoolean(constants.kShootingManualModeKey, False):
+            SmartDashboard.putNumber(
+                constants.kShootingWheelSpeedKey, self.getWheelSpeed()
+            )
+            SmartDashboard.putNumber(
+                constants.kShootingHoodAngleKey, self.getHoodAngle().degrees()
+            )
         SmartDashboard.putNumber(
             constants.kShootingTurretAngleKey, self.getTurretRotation().degrees()
         )
