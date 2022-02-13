@@ -1,6 +1,4 @@
 {
-<<<<<<< Updated upstream
-=======
     "fieldRelativeCoordinateModeControl": [
         0,
         {
@@ -84,20 +82,5 @@
             "Button": 1
         },
         "A (Xbox)"
-    ],
-    "runIndexer": [
-        0,
-        {
-            "Button": 9
-        },
-        "Xbox Button (Xbox)"
-    ],
-    "reverseIndexer": [
-        0,
-        {
-            "Button": 7
-        },
-        "Select Button (Xbox)"
     ]
 }
->>>>>>> Stashed changes

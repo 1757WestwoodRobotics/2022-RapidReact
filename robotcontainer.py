@@ -15,13 +15,10 @@ from commands.resetdrive import ResetDrive
 from commands.toggleintake import ToggleIntake
 from commands.reverseintake import ReverseIntake
 from commands.autoballintake import AutoBallIntake
-from commands.runindexer import runIndexer
-from commands.reverseindexer import reverseIndexer
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
 from subsystems.intakesubsystem import IntakeSubsystem
-from subsystems.indexersubsystem import IndexerSubsystem
 
 from operatorinterface import OperatorInterface
 

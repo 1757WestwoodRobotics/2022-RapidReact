@@ -482,6 +482,3 @@ kDriveToBallIGain = 0
 kDriveToBallDGain = 0.2
 kAutoBallIntakeName = "autoBallIntake"
 # Names are stored further up, about line 335
-kRunIndexerName = "runIndexer"
-kReverseIndexerName = "reverseIndexer"
-kSimIndexerMotorPort = 9
