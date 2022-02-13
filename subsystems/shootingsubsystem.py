@@ -11,12 +11,6 @@ class ShootingSubsystem(SubsystemBase):
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
         # actuators
-        self.stagingMotor = Falcon(
-            constants.kStagingMotorName,
-            constants.kStagingMotorId,
-            constants.kSimStagingMotorPort,
-        )
-
         self.turretMotor = Falcon(
             constants.kTurretMotorName,
             constants.kTurretMotorId,
@@ -76,14 +70,6 @@ class ShootingSubsystem(SubsystemBase):
 
     def setWheelSpeed(self, speed: int) -> None:
         self.shootingMotor.setSpeed(speed)
-
-    def launchCargo(self) -> None:
-        print("launching mechanism activated!")
-        self.stagingMotor.setSpeed(1000)
-        # something something balls fire!
-
-    def stopLaunchingCargo(self) -> None:
-        self.stagingMotor.setSpeed(0)
 
     def setHoodAngle(self, angle: Rotation2d) -> None:
         """angle to fire the ball with

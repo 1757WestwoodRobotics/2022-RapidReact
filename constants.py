@@ -456,12 +456,10 @@ kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
 
 # shooter parameters
-kStagingMotorId = 18
 kTurretMotorId = 19
 kShootingMotorId = 20
 kHoodMotorId = 21
 
-kSimStagingMotorPort = 8
 kSimTurretMotorPort = 9
 kSimShootingMotorPort = 18
 kSimHoodMotorPort = 19
@@ -494,7 +492,6 @@ kHoodGearRatio = 1 / 3
 
 kHoodMappingFunction = lambda x: 20 / x  # TODO: a real tested algorithm
 
-kStagingMotorName = "shooter_staging"
 kTurretMotorName = "shooting_turret"
 kShootingMotorName = "shooting_shooting"
 kHoodMotorName = "shooting_hood"
