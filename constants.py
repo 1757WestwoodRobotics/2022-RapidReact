@@ -472,6 +472,9 @@ kCameraServoPGain = 0.15
 kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
 
+# Core CAN ID's
+kPneumaticsHubCanID = 0
+
 # Intake Camera
 kIntakeCameraMaxVerticalFOV = Rotation2d.fromDegrees(25)
 kIntakeCameraMinVerticalFOV = Rotation2d.fromDegrees(-25)

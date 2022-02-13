@@ -13,7 +13,9 @@ class IntakeSubsystem(SubsystemBase):
 
         self.pneumaticsHub = PneumaticHub(1)
 
-        self.intakeSolenoid = Solenoid(PneumaticsModuleType.REVPH, 0)
+        self.intakeSolenoid = Solenoid(
+            PneumaticsModuleType.REVPH, constants.kPneumaticsHubCanID
+        )
         self.intakeSolenoid.set(False)
 
         self.intakeMotor = Falcon(
