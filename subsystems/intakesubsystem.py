@@ -1,6 +1,5 @@
 from commands2 import SubsystemBase
-from ctre import WPI_TalonFX
-from wpilib import PWMVictorSPX, PneumaticHub, PneumaticsModuleType, RobotBase, Solenoid
+from wpilib import PneumaticHub, PneumaticsModuleType, Solenoid
 import constants
 from util.helpfulIO import Falcon
 
@@ -37,7 +36,7 @@ class IntakeSubsystem(SubsystemBase):
     def reverseIntake(self) -> None:
         self.intakeReversed = True
 
-    def unrevertIntake(self) -> None:
+    def unreverseIntake(self) -> None:
         self.intakeReversed = False
 
     def isIntakeDeployed(self) -> bool:

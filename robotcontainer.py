@@ -13,10 +13,8 @@ from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.targetrelativedrive import TargetRelativeDrive
 from commands.resetdrive import ResetDrive
 from commands.toggleintake import ToggleIntake
-from commands.reverseintake import ReverseIntake
+from commands.togglereverseballpath import ReverseBallPath
 from commands.autoballintake import AutoBallIntake
-from commands.runindexer import RunIndexer
-from commands.reverseindexer import ReverseIndexer
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
@@ -93,15 +91,11 @@ class RobotContainer:
 
         commands2.button.JoystickButton(
             *self.operatorInterface.toggleIntakeControl
-        ).whenHeld(ToggleIntake(self.intake))
+        ).whenHeld(ToggleIntake(self.intake, self.indexer))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.reverseIntakeMotorControl
-        ).whenPressed(ReverseIntake(self.intake))
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.toggleIntakeControl
-        ).whenHeld(ToggleIntake(self.intake))
+            *self.operatorInterface.toggleReverseBallPath
+        ).whenPressed(ReverseBallPath(self.intake, self.indexer))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl

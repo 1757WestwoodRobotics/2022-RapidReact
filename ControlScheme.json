@@ -62,7 +62,7 @@
         },
         "Xbox Button (PS4)"
     ],
-    "reverseIntakeMotor": [
+    "toggleReverseBallPath": [
         0,
         {
             "Button": 8
@@ -83,18 +83,11 @@
         },
         "A (Xbox)"
     ],
-    "runIndexer": [
+    "shootBall": [
         0,
         {
             "Button": 10
         },
         "Left Thumb Button (Xbox)"
-    ],
-    "reverseIndexer": [
-        0,
-        {
-            "Button": 11
-        },
-        "Right Thumb Button (Xbox"
     ]
 }

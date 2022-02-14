@@ -161,8 +161,8 @@ class BallTrackingModule:
                 )
 
                 self.targetDistance = math.sqrt(
-                    constants.kIntakeCameraCenterOffsetInMeters**2
-                    + distanceToCamera**2
+                    constants.kIntakeCameraCenterOffsetInMeters ** 2
+                    + distanceToCamera ** 2
                     - 2
                     * constants.kIntakeCameraCenterOffsetInMeters
                     * distanceToCamera

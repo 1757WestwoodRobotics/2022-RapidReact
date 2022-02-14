@@ -409,9 +409,7 @@ kResetSwerveControlButtonName = "resetSwerveControl"
 kTargetRelativeCoordinateModeControlButtonName = "targetRelativeCoordinateModeControl"
 kDriveToTargetControlButtonName = "driveToTargetControl"
 kToggleIntakeButtonName = "toggleIntake"
-kReverseIntakeMotorButtonName = "reverseIntakeMotor"
-kRunIndexerButtonName = "runIndexer"
-kReverseIndexerButtonName = "reverseIndexer"
+kReverseBallPathName = "toggleReverseBallPath"
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
