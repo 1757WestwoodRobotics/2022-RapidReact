@@ -475,7 +475,7 @@ kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
 
 # Core CAN ID's
-kPneumaticsHubCanID = 0
+kPneumaticsHubCanID = 1
 
 # Intake Camera
 kIntakeCameraMaxVerticalFOV = Rotation2d.fromDegrees(25)
@@ -486,6 +486,8 @@ kIntakeCameraTiltAngle = Rotation2d.fromDegrees(90 - 25)
 kIntakeCameraHeightInMeters = 0.5
 kIntakeCameraCenterOffsetInMeters = 0.2
 kIsIntakeCameraCentered = False
+
+kIntakeSolenoidChannelId = 1
 
 kSimIntakeCameraObjectName = "Intake Camera"
 

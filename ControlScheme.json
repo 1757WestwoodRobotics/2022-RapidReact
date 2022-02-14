@@ -51,23 +51,23 @@
     "launchCargo": [
         0,
         {
-            "Button": 7
+            "Button": 9
         },
-        "Select (Xbox)"
+        "Left Thumb Button (Xbox)"
     ],
     "toggleIntake": [
         0,
         {
-            "Button": 9
+            "Button": 7
         },
-        "Xbox Button (PS4)"
+        "Select (Xbox)"
     ],
     "toggleReverseBallPath": [
         0,
         {
             "Button": 8
         },
-        "Right Bumper (Xbox)"
+        "Select Button (Xbox)"
     ],
     "toggleClimber": [
         0,
@@ -88,6 +88,6 @@
         {
             "Button": 10
         },
-        "Left Thumb Button (Xbox)"
+        "Right Thumb Button (Xbox)"
     ]
 }

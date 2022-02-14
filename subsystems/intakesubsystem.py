@@ -1,5 +1,6 @@
 from commands2 import SubsystemBase
-from wpilib import PneumaticHub, PneumaticsModuleType, Solenoid
+from wpilib import PneumaticHub, PneumaticsModuleType, Solenoid, PWMVictorSPX, RobotBase
+from ctre import WPI_TalonFX
 import constants
 from util.helpfulIO import Falcon
 
@@ -11,18 +12,22 @@ class IntakeSubsystem(SubsystemBase):
         self.intakeDeployed = False  # default to intake retracted and not reversed
         self.intakeReversed = False
 
-        self.pneumaticsHub = PneumaticHub(1)
+        self.pneumaticsHub = PneumaticHub(constants.kPneumaticsHubCanID)
 
         self.intakeSolenoid = Solenoid(
-            PneumaticsModuleType.REVPH, constants.kPneumaticsHubCanID
+            PneumaticsModuleType.REVPH, constants.kIntakeSolenoidChannelId
         )
         self.intakeSolenoid.set(False)
 
         self.intakeMotor = Falcon(
             constants.kIntakeMotorName,
-            constants.kIndexerMotorId,
+            constants.kIntakeMotorId,
             constants.kSimIntakeMotorPort,
         )
+        # if RobotBase.isReal():
+        #     self.intakeMotor = WPI_TalonFX(constants.kIntakeMotorId)
+        # else:
+        #     self.intakeMotor = PWMVictorSPX(constants.kSimIntakeMotorPort)
 
     def toggleIntake(self) -> None:
         if self.intakeDeployed:
@@ -52,15 +57,27 @@ class IntakeSubsystem(SubsystemBase):
         self.intakeDeployed = False
         self.intakeSolenoid.set(False)
         self.stopIntake()
+        print(
+            f"Stopping. Variables: reverse is {self.intakeReversed} and running is {self.intakeDeployed}"
+        )
 
     def runIntake(self, reverse: bool) -> None:
         if reverse:
-            self.intakeMotor.setSpeed(-1000)
+            self.intakeMotor.setSpeed(-0.1)
+            # self.intakeMotor.set(-0.1)
+            print(
+                f"Reversing intake. Variables: reverse is {self.intakeReversed} and running is {self.intakeDeployed}",
+            )
         else:
-            self.intakeMotor.setSpeed(1000)
+            self.intakeMotor.setSpeed(0.1)
+            # self.intakeMotor.set(0.1)
+            print(
+                f"Running intake. Variables: reverse is {self.intakeReversed} and running is {self.intakeDeployed}",
+            )
 
     def stopIntake(self) -> None:
         self.intakeMotor.setSpeed(0)
+        # self.intakeMotor.set(0)
 
     def debugDeploy(self) -> None:
         self.intakeDeployed = True
