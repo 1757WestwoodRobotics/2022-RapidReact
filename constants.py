@@ -190,19 +190,19 @@ kLimelightTrackerModuleName = "limelight_target_tracker"
 # Limelight
 kLimelightTargetInvalidValue = 0.0
 kLimelightTargetValidValue = 1.0
-kLimelightMinHorizontalFoV = Rotation2d.fromDegrees(-27)
-kLimelightMaxHorizontalFoV = Rotation2d.fromDegrees(27)
+kLimelightMinHorizontalFoV = Rotation2d.fromDegrees(-29.8)
+kLimelightMaxHorizontalFoV = Rotation2d.fromDegrees(29.8)
+kLimelightMinVerticalFoV = Rotation2d.fromDegrees(-22.85)
+kLimelightMaxVerticalFoV = Rotation2d.fromDegrees(22.85)
 kLimelightNetworkTableName = "limelight"
 kLimelightTargetValidKey = "tv"
 kLimelightTargetHorizontalAngleKey = "tx"
+kLimelightTargetVerticalAngleKey = "ty"
 
-# Photonvision
-kPhotonvisionNetworkTableName = "photonvision"
-kPhotonvisionTargetValidKey = "hasTarget"
-kPhotonvisionTargetHorizontalAngleKey = "targetYaw"
-kPhotonvisionTargetVerticalAngleKey = "targetPitch"
 
-kPhotonvisionTargetSimDistanceKey = "simDistance"
+# Limelight (cargo)
+kLimelightCargoNetworkTableName = "limelight-cargo"
+
 # Motors
 kFrontLeftDriveMotorId = 10
 kFrontLeftSteerMotorId = 11
@@ -478,10 +478,6 @@ kCameraServoDGain = 0.0
 kPneumaticsHubCanID = 1
 
 # Intake Camera
-kIntakeCameraMaxVerticalFOV = Rotation2d.fromDegrees(25)
-kIntakeCameraMinVerticalFOV = Rotation2d.fromDegrees(-25)
-kIntakeCameraMaxHorizontalFOV = Rotation2d.fromDegrees(35)
-kIntakeCameraMinHorizontalFOV = Rotation2d.fromDegrees(-35)
 kIntakeCameraTiltAngle = Rotation2d.fromDegrees(90 - 25)
 kIntakeCameraHeightInMeters = 0.5
 kIntakeCameraCenterOffsetInMeters = 0.2
