@@ -1,4 +1,11 @@
 {
+    "fieldRelativeCoordinateModeControl": [
+        0,
+        {
+            "Button": 6
+        },
+        "Right Bumper (Xbox)"
+    ],
     "chassisForwardsBackwards": [
         0,
         {
@@ -26,13 +33,6 @@
             "Button": 3
         },
         "X (Xbox)"
-    ],
-    "fieldRelativeCoordinateModeControl": [
-        0,
-        {
-            "Button": 6
-        },
-        "Right Bumper (Xbox)"
     ],
     "targetRelativeCoordinateModeControl": [
         0,

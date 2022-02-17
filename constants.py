@@ -203,6 +203,13 @@ kLimelightTargetVerticalAngleKey = "ty"
 # Limelight (cargo)
 kLimelightCargoNetworkTableName = "limelight-cargo"
 
+# Photonvision
+kPhotonvisionNetworkTableName = "photonvision"
+kPhotonvisionTargetValidKey = "hasTarget"
+kPhotonvisionTargetHorizontalAngleKey = "targetYaw"
+kPhotonvisionTargetVerticalAngleKey = "targetPitch"
+
+kPhotonvisionTargetSimDistanceKey = "simDistance"
 # Motors
 kFrontLeftDriveMotorId = 10
 kFrontLeftSteerMotorId = 11
@@ -478,6 +485,11 @@ kCameraServoDGain = 0.0
 kPneumaticsHubCanID = 1
 
 # Intake Camera
+kIntakeCameraMaxVerticalFOV = Rotation2d.fromDegrees(25)
+kIntakeCameraMinVerticalFOV = Rotation2d.fromDegrees(-25)
+kIntakeCameraMaxHorizontalFOV = Rotation2d.fromDegrees(35)
+kIntakeCameraMinHorizontalFOV = Rotation2d.fromDegrees(-35)
+
 kIntakeCameraTiltAngle = Rotation2d.fromDegrees(90 - 25)
 kIntakeCameraHeightInMeters = 0.5
 kIntakeCameraCenterOffsetInMeters = 0.2

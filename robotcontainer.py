@@ -42,6 +42,7 @@ class RobotContainer:
         self.vision = VisionSubsystem()
         self.intake = IntakeSubsystem()
         self.indexer = IndexerSubsystem()
+        
         # Autonomous routines
 
         # A simple auto routine that drives forward a specified distance, and then stops.
