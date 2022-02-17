@@ -1,9 +1,7 @@
 from commands2 import SubsystemBase
-from wpilib import PneumaticHub, PneumaticsModuleType, Solenoid, PWMVictorSPX, RobotBase
-from ctre import WPI_TalonFX
+from wpilib import PneumaticHub, PneumaticsModuleType, Solenoid
 import constants
 from util.helpfulIO import Falcon
-
 
 
 class IntakeSubsystem(SubsystemBase):
