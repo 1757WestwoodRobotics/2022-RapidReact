@@ -17,6 +17,7 @@ class ToggleIntake(CommandBase):
         self.intake.toggleIntake()
         self.indexer.toggleIndexerSystem()
 
+    # pylint: disable=unused-argument,no-self-use
     def end(self, _interrupted: bool) -> None:
         pass
 
