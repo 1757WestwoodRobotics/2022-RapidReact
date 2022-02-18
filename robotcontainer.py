@@ -92,7 +92,7 @@ class RobotContainer:
 
         commands2.button.JoystickButton(
             *self.operatorInterface.toggleIntakeControl
-        ).whenHeld(ToggleIntake(self.intake, self.indexer))
+        ).whenPressed(ToggleIntake(self.intake, self.indexer))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.toggleReverseBallPath

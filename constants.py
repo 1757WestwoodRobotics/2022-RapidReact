@@ -446,8 +446,9 @@ kSimBackLeftSteerMotorPort = 5
 kSimBackRightDriveMotorPort = 6
 kSimBackRightSteerMotorPort = 7
 kSimIntakeMotorPort = 8
-kSimIndexerMotorPort = 19
 kSimStagingMotorPort = 18
+kSimIndexerMotorPort = 19
+
 
 kSimFrontLeftDriveEncoderPorts = (0, 1)
 kSimFrontLeftSteerEncoderPorts = (2, 3)

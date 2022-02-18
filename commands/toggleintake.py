@@ -16,3 +16,9 @@ class ToggleIntake(CommandBase):
         print(f"Command: {self.getName()}")
         self.intake.toggleIntake()
         self.indexer.toggleIndexerSystem()
+
+    def end(self, _interrupted: bool) -> None:
+        pass
+
+    def isFinished(self) -> bool:
+        return True
