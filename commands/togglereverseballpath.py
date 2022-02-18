@@ -10,8 +10,7 @@ class ReverseBallPath(CommandBase):
         self.setName(__class__.__name__)
         self.intake = intake
         self.indexer = indexer
-        self.addRequirements(intake)
-        self.addRequirements(indexer)
+        self.addRequirements([self.intake, self.indexer])
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
@@ -23,9 +22,6 @@ class ReverseBallPath(CommandBase):
             self.indexer.runIndexer(self.indexer.indexerReversed)
             self.indexer.runStaging(self.indexer.stagingReversed)
 
-    # pylint: disable=unused-argument,no-self-use
-    def end(self, _interrupted: bool) -> None:
-        pass
-
+    # pylint: disable-next=no-self-use
     def isFinished(self) -> bool:
         return True

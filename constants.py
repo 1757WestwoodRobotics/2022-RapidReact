@@ -495,6 +495,8 @@ kIntakeCameraTiltAngle = Rotation2d.fromDegrees(90 - 25)
 kIntakeCameraHeightInMeters = 0.5
 kIntakeCameraCenterOffsetInMeters = 0.2
 kIsIntakeCameraCentered = False
+kIntakeSpeed = 1000
+"""rpm"""
 
 kIntakeSolenoidChannelId = 1
 

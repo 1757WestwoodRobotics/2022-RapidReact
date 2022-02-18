@@ -23,10 +23,6 @@ class IntakeSubsystem(SubsystemBase):
             constants.kIntakeMotorId,
             constants.kSimIntakeMotorPort,
         )
-        # if RobotBase.isReal():
-        #     self.intakeMotor = WPI_TalonFX(constants.kIntakeMotorId)
-        # else:
-        #     self.intakeMotor = PWMVictorSPX(constants.kSimIntakeMotorPort)
 
     def toggleIntake(self) -> None:
         if self.intakeDeployed:
@@ -62,21 +58,18 @@ class IntakeSubsystem(SubsystemBase):
 
     def runIntake(self, reverse: bool) -> None:
         if reverse:
-            self.intakeMotor.setSpeed(-0.1)
-            # self.intakeMotor.set(-0.1)
+            self.intakeMotor.setSpeed(-1 * constants.kIntakeSpeed)
             print(
                 f"Reversing intake. Variables: reverse is {self.intakeReversed} and running is {self.intakeDeployed}",
             )
         else:
-            self.intakeMotor.setSpeed(0.1)
-            # self.intakeMotor.set(0.1)
+            self.intakeMotor.setSpeed(constants.kIntakeSpeed)
             print(
                 f"Running intake. Variables: reverse is {self.intakeReversed} and running is {self.intakeDeployed}",
             )
 
     def stopIntake(self) -> None:
         self.intakeMotor.setSpeed(0)
-        # self.intakeMotor.set(0)
 
     def debugDeploy(self) -> None:
         self.intakeDeployed = True
