@@ -32,7 +32,7 @@ class AutoBallIntake(CommandBase):
             constants.kDriveToTargetLinearVelocityTolerance,
         )
         self.ballDistance = 0
-        self.addRequirements([self.drive])
+        self.addRequirements([self.drive, self.intake])
 
         self.angleController = ProfiledPIDControllerRadians(
             constants.kDriveToTargetAnglePGain,
@@ -84,7 +84,9 @@ class AutoBallIntake(CommandBase):
         self.angleController.reset(self.ballAngle.radians())
 
     def execute(self) -> None:
-        if NetworkTables.getTable("photonvision").getBoolean("hasTarget", False):
+        if NetworkTables.getTable(constants.kLimelightCargoNetworkTableName).getBoolean(
+            constants.kLimelightTargetValidKey, False
+        ):
             self.updateDistanceToGoal()
 
             distanceControllerOutput = self.distanceController.calculate(
