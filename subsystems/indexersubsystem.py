@@ -51,9 +51,9 @@ class IndexerSubsystem(SubsystemBase):
     def runIndexer(self) -> None:
         self.indexerRunning = True
         if self.indexerReversed:
-            self.indexerMotor.setSpeed(-1000)
+            self.indexerMotor.setSpeed(-1 * constants.kIndexerSpeed)
         else:
-            self.indexerMotor.setSpeed(1000)
+            self.indexerMotor.setSpeed(constants.kIndexerSpeed)
 
     def stopIndexer(self) -> None:
         self.indexerRunning = False
@@ -61,9 +61,9 @@ class IndexerSubsystem(SubsystemBase):
 
     def runStaging(self) -> None:
         if self.stagingReversed:
-            self.stagingMotor.setSpeed(-1000)
+            self.stagingMotor.setSpeed(-1 * constants.kStagingSpeed)
         else:
-            self.stagingMotor.setSpeed(1000)
+            self.stagingMotor.setSpeed(constants.kStagingSpeed)
         self.stagingRunning = True
 
     def stopStaging(self) -> None:
