@@ -51,23 +51,23 @@
     "launchCargo": [
         0,
         {
-            "Button": 3
+            "Button": 9
         },
-        "X (Xbox)"
+        "Left Thumb Button (Xbox)"
     ],
     "toggleIntake": [
-        1,
+        0,
         {
-            "Button": 10
+            "Button": 7
         },
-        "Right Stick (Xbox)"
+        "Select (Xbox)"
     ],
-    "reverseIntakeMotor": [
-        1,
+    "toggleReverseBallPath": [
+        0,
         {
             "Button": 8
         },
-        "Right Bumper (Xbox)"
+        "Select Button (Xbox)"
     ],
     "toggleClimber": [
         0,
@@ -82,5 +82,12 @@
             "Button": 1
         },
         "A (Xbox)"
+    ],
+    "shootBall": [
+        0,
+        {
+            "Button": 10
+        },
+        "Right Thumb Button (Xbox)"
     ]
 }

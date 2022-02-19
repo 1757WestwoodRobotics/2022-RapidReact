@@ -147,6 +147,9 @@ kMaxWheelAngularVelocity = kMaxMotorAngularVelocity / kDriveGearingRatio
 kMaxWheelLinearVelocity = kWheelDistancePerRadian * kMaxWheelAngularVelocity
 """meters / second"""
 
+kMinWheelLinearVelocity = 0.002
+"""meters / second"""
+
 kMaxSteerAngularVelocity = kMaxMotorAngularVelocity / kSteerGearingRatio
 """radians / second"""
 
@@ -187,11 +190,18 @@ kLimelightTrackerModuleName = "limelight_target_tracker"
 # Limelight
 kLimelightTargetInvalidValue = 0.0
 kLimelightTargetValidValue = 1.0
-kLimelightMinHorizontalFoV = Rotation2d.fromDegrees(-27)
-kLimelightMaxHorizontalFoV = Rotation2d.fromDegrees(27)
+kLimelightMinHorizontalFoV = Rotation2d.fromDegrees(-29.8)
+kLimelightMaxHorizontalFoV = Rotation2d.fromDegrees(29.8)
+kLimelightMinVerticalFoV = Rotation2d.fromDegrees(-22.85)
+kLimelightMaxVerticalFoV = Rotation2d.fromDegrees(22.85)
 kLimelightNetworkTableName = "limelight"
 kLimelightTargetValidKey = "tv"
 kLimelightTargetHorizontalAngleKey = "tx"
+kLimelightTargetVerticalAngleKey = "ty"
+
+
+# Limelight (cargo)
+kLimelightCargoNetworkTableName = "limelight-cargo"
 
 # Photonvision
 kPhotonvisionNetworkTableName = "photonvision"
@@ -210,6 +220,11 @@ kBackLeftSteerMotorId = 15
 kBackRightDriveMotorId = 16
 kBackRightSteerMotorId = 17
 kIntakeMotorId = 18
+kIntakeMotorName = "IntakeMotor"
+kIndexerMotorId = 19
+kIndexerMotorName = "IndexerMotor"
+kStagingMotorId = 20
+kStagingMotorName = "StagingMotor"
 
 # Encoders
 kFrontLeftSteerEncoderId = 40
@@ -401,7 +416,7 @@ kResetSwerveControlButtonName = "resetSwerveControl"
 kTargetRelativeCoordinateModeControlButtonName = "targetRelativeCoordinateModeControl"
 kDriveToTargetControlButtonName = "driveToTargetControl"
 kToggleIntakeButtonName = "toggleIntake"
-kReverseIntakeMotorButtonName = "reverseIntakeMotor"
+kReverseBallPathName = "toggleReverseBallPath"
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
@@ -431,6 +446,9 @@ kSimBackLeftSteerMotorPort = 5
 kSimBackRightDriveMotorPort = 6
 kSimBackRightSteerMotorPort = 7
 kSimIntakeMotorPort = 8
+kSimStagingMotorPort = 18
+kSimIndexerMotorPort = 19
+
 
 kSimFrontLeftDriveEncoderPorts = (0, 1)
 kSimFrontLeftSteerEncoderPorts = (2, 3)
@@ -464,15 +482,23 @@ kCameraServoPGain = 0.15
 kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
 
+# Core CAN ID's
+kPneumaticsHubCanID = 1
+
 # Intake Camera
 kIntakeCameraMaxVerticalFOV = Rotation2d.fromDegrees(25)
 kIntakeCameraMinVerticalFOV = Rotation2d.fromDegrees(-25)
 kIntakeCameraMaxHorizontalFOV = Rotation2d.fromDegrees(35)
 kIntakeCameraMinHorizontalFOV = Rotation2d.fromDegrees(-35)
+
 kIntakeCameraTiltAngle = Rotation2d.fromDegrees(90 - 25)
 kIntakeCameraHeightInMeters = 0.5
 kIntakeCameraCenterOffsetInMeters = 0.2
 kIsIntakeCameraCentered = False
+kIntakeSpeed = 1000
+"""rpm"""
+
+kIntakeSolenoidChannelId = 1
 
 kSimIntakeCameraObjectName = "Intake Camera"
 

@@ -122,8 +122,8 @@ class BallTrackingModule:
     def __init__(self) -> None:
         self.targetAngle = None
         self.targetDistance = None
-        self.photonvisionNetworkTable = NetworkTables.getTable(
-            constants.kPhotonvisionNetworkTableName
+        self.limelightCargoNetworkTable = NetworkTables.getTable(
+            constants.kLimelightCargoNetworkTableName
         )
 
     def getTargetAngle(self) -> typing.Optional[Rotation2d]:
@@ -135,12 +135,12 @@ class BallTrackingModule:
     def update(self) -> None:
         NetworkTables.initialize()
 
-        if self.photonvisionNetworkTable.getBoolean(
-            constants.kPhotonvisionTargetValidKey, False
+        if self.limelightCargoNetworkTable.getBoolean(
+            constants.kLimelightTargetValidKey, False
         ):
             ballAngleYToCamera = Rotation2d.fromDegrees(
-                self.photonvisionNetworkTable.getValue(
-                    constants.kPhotonvisionTargetVerticalAngleKey, 0
+                self.limelightCargoNetworkTable.getValue(
+                    constants.kLimelightTargetVerticalAngleKey, 0
                 )
             )
 
@@ -153,8 +153,8 @@ class BallTrackingModule:
             )
 
             if not constants.kIsIntakeCameraCentered:
-                ballAngleXToCamera = self.photonvisionNetworkTable.getValue(
-                    constants.kPhotonvisionTargetHorizontalAngleKey, float("inf")
+                ballAngleXToCamera = self.limelightCargoNetworkTable.getValue(
+                    constants.kLimelightTargetHorizontalAngleKey, float("inf")
                 )
                 supplementaryAngleToCamera = Rotation2d.fromDegrees(
                     180 - ballAngleXToCamera
@@ -178,8 +178,8 @@ class BallTrackingModule:
             else:
                 self.targetDistance = distanceToCamera
                 self.targetAngle = Rotation2d.fromDegrees(
-                    self.photonvisionNetworkTable.getValue(
-                        constants.kPhotonvisionTargetHorizontalAngleKey
+                    self.limelightCargoNetworkTable.getValue(
+                        constants.kLimelightTargetHorizontalAngleKey
                     )
                 )
 

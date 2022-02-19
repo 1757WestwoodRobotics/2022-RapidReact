@@ -146,7 +146,7 @@ class IntakeCameraSim:
     def __init__(self) -> None:
         NetworkTables.initialize()
         self.photonvisionNetworkTable = NetworkTables.getTable(
-            constants.kPhotonvisionNetworkTableName
+            constants.kLimelightCargoNetworkTableName
         )
 
     def update(self, intakeCameraPose: Pose2d, ballPose: Pose2d) -> None:
@@ -163,26 +163,26 @@ class IntakeCameraSim:
         )
         ballValid = False
         if (
-            constants.kIntakeCameraMinHorizontalFOV.radians()
+            constants.kLimelightMinHorizontalFoV.radians()
             < ballHorizontalAngle.radians()
-            < constants.kIntakeCameraMaxHorizontalFOV.radians()
-            and constants.kIntakeCameraMinVerticalFOV.degrees()
+            < constants.kLimelightMaxHorizontalFoV.radians()
+            and constants.kLimelightMinVerticalFoV.degrees()
             < ballVerticalAngle
-            < constants.kIntakeCameraMaxVerticalFOV.degrees()
+            < constants.kLimelightMaxVerticalFoV.degrees()
         ):
             ballValid = True
 
             self.photonvisionNetworkTable.putNumber(
-                constants.kPhotonvisionTargetVerticalAngleKey,
+                constants.kLimelightTargetVerticalAngleKey,
                 ballVerticalAngle,
             )
             self.photonvisionNetworkTable.putNumber(
-                constants.kPhotonvisionTargetHorizontalAngleKey,
+                constants.kLimelightTargetHorizontalAngleKey,
                 ballHorizontalAngle.degrees(),
             )
 
         self.photonvisionNetworkTable.putBoolean(
-            constants.kPhotonvisionTargetValidKey, ballValid
+            constants.kLimelightTargetValidKey, ballValid
         )
 
 
@@ -263,7 +263,7 @@ class PhysicsEngine:
         self.limelightSim = LimelightSim()
         self.intakeCameraSim = IntakeCameraSim()
 
-    # pylint: disable=unused-argument
+    # pylint: disable-next=unused-argument
     def update_sim(self, now: float, tm_diff: float) -> None:
         """
         Called when the simulation parameters for the program need to be

@@ -103,10 +103,15 @@ py -3 -m venv ./.venv
      ```bash
      source <path-to-mentorbot-repo>/.venv/bin/activate
      ```
+1. **Update pip and wheel.  Old versions of pip can prevent binary wheels from being installed.  Installing wheel makes other installs faster**
+   (must have internet connection)
+   ```bash
+   python -m pip install --upgrade pip wheel
+   ```
 1. **Install / update robotpy**
    (must have internet connection)
    ```bash
-   python -m pip install --no-deps -r requirements.txt
+   python -m pip install -r requirements.txt
    ```
    (examples: `robotpy`, `robotpy[ctre,navx]`, `robotpy[all]`) (see: [robotpy on pypi](https://pypi.org/project/robotpy/))
 1. **Download python for roboRIO**
@@ -142,16 +147,3 @@ py -3 -m venv ./.venv
      ```bash
      python robot.py sim
      ```
-#### Update PIP requirements
-If there are RobotPy updates we want to upgrade our requirements.txt file to match after verifying it works.
-1. **Install latest version**
-    ```bash
-    pip install --upgrade -r requirements-upgrade.txt
-    ```
-1. **Verify on simulator and/or hardware**
-1. **Freeze versions**
-    ```bash
-    pip freeze -r requirements.txt > requirements-new.txt
-    Copy robotpy section from requirements-new.txt to requirements.txt
-    ```
-1. **Open PR with Updates**

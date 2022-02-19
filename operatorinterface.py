@@ -89,8 +89,8 @@ class OperatorInterface:
             constants.kToggleIntakeButtonName
         )
 
-        self.reverseIntakeMotorControl = getButtonBindingOfName(
-            constants.kReverseIntakeMotorButtonName
+        self.toggleReverseBallPath = getButtonBindingOfName(
+            constants.kReverseBallPathName
         )
 
         self.autoBallIntakeControl = getButtonBindingOfName(

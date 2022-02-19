@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+from math import tau, floor
 from commands2 import SubsystemBase
 from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
 from ctre import (
@@ -17,6 +18,7 @@ from wpimath.kinematics import (
     SwerveDrive4Kinematics,
     SwerveDrive4Odometry,
 )
+
 
 import constants
 from util import convenientmath
@@ -45,6 +47,28 @@ class SwerveModule:
     def reset(self) -> None:
         raise NotImplementedError("Must be implemented by subclass")
 
+    def optimizedAngle(self, targetAngle: Rotation2d) -> Rotation2d:
+        currentAngle = self.getSwerveAngle().radians()
+
+        closestFullRotation = (
+            floor(abs(currentAngle / tau)) * (-1 if currentAngle < 0 else 1) * tau
+        )
+
+        currentOptimalAngle = targetAngle.radians() + closestFullRotation - currentAngle
+
+        potentialNewAngles = [
+            currentOptimalAngle,
+            currentOptimalAngle - tau,
+            currentOptimalAngle + tau,
+        ]  # closest other options
+
+        deltaAngle = tau  # max possible error, a full rotation!
+        for potentialAngle in potentialNewAngles:
+            if abs(deltaAngle) > abs(potentialAngle):
+                deltaAngle = potentialAngle
+
+        return Rotation2d(deltaAngle + currentAngle)
+
     def getState(self) -> SwerveModuleState:
         return SwerveModuleState(
             self.getWheelLinearVelocity(),
@@ -53,12 +77,16 @@ class SwerveModule:
 
     def applyState(self, state: SwerveModuleState) -> None:
         optimizedState = SwerveModuleState.optimize(state, self.getSwerveAngle())
-        # optimizedState = state
+
         self.setWheelLinearVelocityTarget(optimizedState.speed)
-        self.setSwerveAngleTarget(optimizedState.angle)
+        if (
+            abs(optimizedState.speed) >= constants.kMinWheelLinearVelocity
+        ):  # prevent unneccisary movement for what would otherwise not move the robot
+            optimizedAngle = self.optimizedAngle(optimizedState.angle)
+            self.setSwerveAngleTarget(optimizedAngle)
 
 
-# pylint: disable=abstract-method
+# pylint: disable-next=abstract-method
 class PWMSwerveModule(SwerveModule):
     """
     Implementation of SwerveModule designed for ease of simulation:
@@ -276,8 +304,8 @@ class CTRESwerveModule(SwerveModule):
 
     def setSwerveAngle(self, swerveAngle: Rotation2d) -> None:
         steerEncoderPulses = (
-            swerveAngle.radians() * constants.kSwerveEncoderPulsesPerRadian
-        )
+            swerveAngle.radians()
+        ) * constants.kSwerveEncoderPulsesPerRadian
         self.steerMotor.setSelectedSensorPosition(steerEncoderPulses)
 
     def setSwerveAngleTarget(self, swerveAngleTarget: Rotation2d) -> None:
@@ -441,8 +469,8 @@ class DriveSubsystem(SubsystemBase):
         SmartDashboard.putBoolean(constants.kRobotPoseArrayKeys.validKey, True)
 
         if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
-            # pylint:disable=consider-using-f-string
             print(
+                # pylint:disable-next=consider-using-f-string
                 "r: {:.1f}, {:.1f}, {:.0f}* fl: {:.0f}* {:.1f} fr: {:.0f}* {:.1f} bl: {:.0f}* {:.1f} br: {:.0f}* {:.1f}".format(
                     robotPose.X(),
                     robotPose.Y(),
