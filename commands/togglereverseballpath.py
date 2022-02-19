@@ -18,9 +18,9 @@ class ReverseBallPath(CommandBase):
         self.indexer.toggleReverseBallPath()
 
         if self.intake.isIntakeDeployed():
-            self.intake.runIntake(self.intake.intakeReversed)
-            self.indexer.runIndexer(self.indexer.indexerReversed)
-            self.indexer.runStaging(self.indexer.stagingReversed)
+            self.intake.runIntake()
+            self.indexer.runIndexer()
+            self.indexer.runStaging()
 
     # pylint: disable-next=no-self-use
     def isFinished(self) -> bool:

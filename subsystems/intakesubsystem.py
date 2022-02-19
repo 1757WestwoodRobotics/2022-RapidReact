@@ -46,7 +46,10 @@ class IntakeSubsystem(SubsystemBase):
         self.intakeDeployed = True
         self.intakeReversed = False
         self.intakeSolenoid.set(True)
-        self.runIntake(self.intakeReversed)
+        self.runIntake()
+
+    def isReversed(self) -> bool:
+        return self.intakeReversed
 
     def retractIntake(self) -> None:
         self.intakeDeployed = False
@@ -56,8 +59,8 @@ class IntakeSubsystem(SubsystemBase):
             f"Stopping. Variables: reverse is {self.intakeReversed} and running is {self.intakeDeployed}"
         )
 
-    def runIntake(self, reverse: bool) -> None:
-        if reverse:
+    def runIntake(self) -> None:
+        if self.isReversed():
             self.intakeMotor.setSpeed(-1 * constants.kIntakeSpeed)
             print(
                 f"Reversing intake. Variables: reverse is {self.intakeReversed} and running is {self.intakeDeployed}",

@@ -48,9 +48,9 @@ class IndexerSubsystem(SubsystemBase):
         self.stagingReversed = True
 
     # Basic run and stop using the reverse as a boolean for direction
-    def runIndexer(self, reverse: bool) -> None:
+    def runIndexer(self) -> None:
         self.indexerRunning = True
-        if reverse:
+        if self.indexerReversed:
             self.indexerMotor.setSpeed(-1000)
         else:
             self.indexerMotor.setSpeed(1000)
@@ -59,8 +59,8 @@ class IndexerSubsystem(SubsystemBase):
         self.indexerRunning = False
         self.indexerMotor.setSpeed(0)
 
-    def runStaging(self, reverse: bool) -> None:
-        if reverse:
+    def runStaging(self) -> None:
+        if self.stagingReversed:
             self.stagingMotor.setSpeed(-1000)
         else:
             self.stagingMotor.setSpeed(1000)
@@ -76,5 +76,5 @@ class IndexerSubsystem(SubsystemBase):
             self.stopStaging()
         else:
             self.indexerReversed = False
-            self.runIndexer(self.indexerReversed)
-            self.runStaging(self.stagingReversed)
+            self.runIndexer()
+            self.runStaging()
