@@ -154,6 +154,8 @@ class OperatorInterface:
 
         self.tarmacShot = getButtonBindingOfName(constants.kTarmacShotButtonName)
 
+        self.defenseStateControl = getButtonBindingOfName("defenseStateControl")
+
         self.chassisControls = HolonomicInput(
             Multiply(
                 Invert(

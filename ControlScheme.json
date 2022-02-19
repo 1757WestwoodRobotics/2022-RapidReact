@@ -41,6 +41,13 @@
     },
     "Right Stick Y (Xbox)"
   ],
+  "defenseStateControl": [
+    0,
+    {
+      "Button": 4
+    },
+    "Y (Xbox)"
+  ],
   "deployIntake": [
     0,
     {
