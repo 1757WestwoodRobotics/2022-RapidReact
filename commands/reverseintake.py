@@ -8,7 +8,7 @@ class ReverseIntake(CommandBase):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
         self.intake = intake
-        self.addRequirements(intake)
+        self.addRequirements([self.intake])
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
@@ -17,9 +17,10 @@ class ReverseIntake(CommandBase):
         if self.intake.isIntakeDeployed():
             self.intake.runIntake()
 
-    # pylint: disable=unused-argument,no-self-use
+    # pylint: disable-next=no-self-use
     def end(self, _interrupted: bool) -> None:
-        pass
+        print("... DONE")
 
+    # pylint: disable-next=no-self-use
     def isFinished(self) -> bool:
         return True

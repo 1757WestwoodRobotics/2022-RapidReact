@@ -16,10 +16,10 @@ class ResetDrive(CommandBase):
     def execute(self) -> None:
         self.drive.resetSwerveModules()
 
-    # pylint: disable-next=unused-argument,no-self-use
+    # pylint: disable-next=no-self-use
     def end(self, interrupted: bool) -> None:
         print("... DONE")
 
-    # pylint: disable-next=unused-argument,no-self-use
+    # pylint: disable-next=no-self-use
     def isFinished(self) -> bool:
         return True
