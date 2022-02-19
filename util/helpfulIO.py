@@ -43,7 +43,7 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
                 return
             if not ctreCheckError(
                 "config_kI",
-                self.motor.config_kP(
+                self.motor.config_kI(
                     PIDSlot,
                     IGain,
                     constants.kConfigurationTimeoutLimit,
