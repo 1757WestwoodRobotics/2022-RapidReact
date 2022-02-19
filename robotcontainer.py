@@ -81,8 +81,6 @@ class RobotContainer:
             )
         )
 
-        self.autoBallIntake = AutoBallIntake(self.drive, self.intake)
-
     def configureButtonBindings(self):
         """
         Use this method to define your button->command mappings. Buttons can be created by
