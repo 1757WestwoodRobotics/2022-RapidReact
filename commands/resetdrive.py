@@ -17,7 +17,7 @@ class ResetDrive(CommandBase):
         self.drive.resetSwerveModules()
 
     # pylint: disable-next=no-self-use
-    def end(self, interrupted: bool) -> None:
+    def end(self, _interrupted: bool) -> None:
         print("... DONE")
 
     # pylint: disable-next=no-self-use
