@@ -145,9 +145,9 @@ class LimelightSim:
 
         targetValid = constants.kLimelightTargetInvalidValue
         if (
-            constants.kLimelightMinHorizontalFoV.radians()
+            constants.kLimelightMinVerticalFoV.radians() # rotated 90 degrees, FOV increased
             < targetAngle.radians()
-            < constants.kLimelightMaxHorizontalFoV.radians()
+            < constants.kLimelightMaxVerticalFoV.radians()
         ):
             targetValid = constants.kLimelightTargetValidValue
             self.limelightNetworkTable.putNumber(
@@ -156,9 +156,9 @@ class LimelightSim:
             )
 
         if (
-            constants.kLimelightMinVerticalFoV.radians()
+            constants.kLimelightMinHorizontalFoV.radians()
             < targetVerticalAngle.radians()
-            < constants.kLimelightMaxVerticalFoV.radians()
+            < constants.kLimelightMaxHorizontalFoV.radians()
         ):
             self.limelightNetworkTable.putNumber(
                 constants.kLimelightTargetVerticalAngleKey,

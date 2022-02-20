@@ -187,9 +187,9 @@ kBackRightModuleName = "back_right"
 kLimelightMountingOffset = Translation2d(
     (kRobotLength / 2) - (4.125 * kMetersPerInch), 0.0
 )
-kLimelightVerticalOffset = 26 * kMetersPerInch
+kLimelightVerticalOffset = 25.833857 * kMetersPerInch
 """meters"""
-kLimelightAngleOffset = Rotation2d.fromDegrees(45)
+kLimelightAngleOffset = Rotation2d.fromDegrees(44.153) # derived from cad
 kTrackerPanAngleKey = "tracker/pan_angle"
 kLimelightTrackerModuleName = "limelight_target_tracker"
 
