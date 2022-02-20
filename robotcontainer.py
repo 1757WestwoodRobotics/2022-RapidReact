@@ -221,7 +221,6 @@ class RobotContainer:
             *self.operatorInterface.defenseStateControl
         ).whileHeld(DefenseState(self.drive))
 
-
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl
         ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))

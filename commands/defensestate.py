@@ -1,6 +1,6 @@
 from commands2 import CommandBase
-from subsystems.drivesubsystem import DriveSubsystem
 from wpimath.geometry import Rotation2d
+from subsystems.drivesubsystem import DriveSubsystem, SwerveModule
 
 
 class DefenseState(CommandBase):
@@ -15,17 +15,15 @@ class DefenseState(CommandBase):
         print(f"Command: {self.getName()}")
 
     def execute(self) -> None:
-        for module in self.drive.modules:
+        def setModuleTo(module: SwerveModule, angle: Rotation2d):
             module.setWheelLinearVelocityTarget(0)
-        self.drive.frontLeftModule.setSwerveAngleTarget(
-            self.drive.frontLeftModule.optimizedAngle(Rotation2d.fromDegrees(-45))
-        )
-        self.drive.frontRightModule.setSwerveAngleTarget(
-            self.drive.frontRightModule.optimizedAngle(Rotation2d.fromDegrees(45))
-        )
-        self.drive.backLeftModule.setSwerveAngleTarget(
-            self.drive.frontLeftModule.optimizedAngle(Rotation2d.fromDegrees(-135))
-        )
-        self.drive.backRightModule.setSwerveAngleTarget(
-            self.drive.frontLeftModule.optimizedAngle(Rotation2d.fromDegrees(135))
-        )
+            module.setSwerveAngleTarget(module.optimizedAngle(angle))
+
+        setModuleTo(self.drive.frontLeftModule, Rotation2d.fromDegrees(-45))
+        setModuleTo(self.drive.frontRightModule, Rotation2d.fromDegrees(45))
+        setModuleTo(self.drive.backLeftModule, Rotation2d.fromDegrees(135))
+        setModuleTo(self.drive.backRightModule, Rotation2d.fromDegrees(-135))
+
+    # pylint: disable-next=no-self-use
+    def end(self, _interrupted: bool) -> None:
+        print("... DONE")
