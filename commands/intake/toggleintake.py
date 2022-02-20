@@ -1,26 +1,24 @@
 from commands2 import CommandBase
-from subsystems.indexersubsystem import IndexerSubsystem
 
 from subsystems.intakesubsystem import IntakeSubsystem
+from subsystems.indexersubsystem import IndexerSubsystem
 
 
-class ReverseBallPath(CommandBase):
+class ToggleIntake(CommandBase):
     def __init__(self, intake: IntakeSubsystem, indexer: IndexerSubsystem) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
         self.intake = intake
         self.indexer = indexer
-        self.addRequirements([self.intake, self.indexer])
+        self.addRequirements([self.intake])
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
-        self.intake.toggleReverseIntake()
-        self.indexer.toggleReverseBallPath()
+        self.intake.toggleIntake()
 
-        if self.intake.isIntakeDeployed():
-            self.intake.runIntake()
-            self.indexer.runIndexer()
-            self.indexer.runStaging()
+    # pylint: disable-next=no-self-use
+    def end(self, _interrupted: bool) -> None:
+        print("... DONE")
 
     # pylint: disable-next=no-self-use
     def isFinished(self) -> bool:

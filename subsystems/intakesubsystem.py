@@ -78,3 +78,14 @@ class IntakeSubsystem(SubsystemBase):
         self.intakeDeployed = True
         self.intakeSolenoid.set(True)
         self.stopIntake()
+
+    def defaultIntake(self) -> None:
+        if self.intakeDeployed:
+            self.intakeSolenoid.set(True)
+            if self.intakeReversed:
+                self.intakeMotor.setSpeed(constants.kIntakeSpeed)
+            else:
+                self.intakeMotor.setSpeed(-constants.kIntakeSpeed)
+        else:
+            self.intakeSolenoid.set(False)
+            self.intakeMotor.setSpeed(0)

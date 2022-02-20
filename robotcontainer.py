@@ -12,9 +12,15 @@ from commands.defaultdrive import DefaultDrive
 from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.targetrelativedrive import TargetRelativeDrive
 from commands.resetdrive import ResetDrive
-from commands.toggleintake import ToggleIntake
-from commands.togglereverseballpath import ReverseBallPath
-from commands.autoballintake import AutoBallIntake
+from commands.reverseballpath import ReverseBallPath
+from commands.shootball import ShootBall
+from commands.normalballpath import NormalBallPath
+
+from commands.indexer.defaultindexer import DefaultIndexer
+from commands.indexer.holdball import HoldBall
+from commands.intake.defaultintake import DefaultIntake
+from commands.intake.autoballintake import AutoBallIntake
+from commands.intake.toggleintake import ToggleIntake
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
@@ -81,6 +87,9 @@ class RobotContainer:
             )
         )
 
+        self.intake.setDefaultCommand(DefaultIntake(self.intake))
+        self.indexer.setDefaultCommand(DefaultIndexer(self.indexer))
+
     def configureButtonBindings(self):
         """
         Use this method to define your button->command mappings. Buttons can be created by
@@ -94,7 +103,10 @@ class RobotContainer:
 
         commands2.button.JoystickButton(
             *self.operatorInterface.toggleReverseBallPath
-        ).whenPressed(ReverseBallPath(self.intake, self.indexer))
+        ).whenHeld(ReverseBallPath(self.intake, self.indexer))
+        commands2.button.JoystickButton(
+            *self.operatorInterface.toggleReverseBallPath
+        ).whenReleased(NormalBallPath(self.intake, self.indexer))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl
@@ -129,6 +141,13 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.autoBallIntakeControl
         ).whenHeld(AutoBallIntake(self.drive, self.intake))
+
+        commands2.button.JoystickButton(*self.operatorInterface.shootBall).whenHeld(
+            ShootBall(self.indexer)
+        )
+        commands2.button.JoystickButton(*self.operatorInterface.shootBall).whenReleased(
+            HoldBall(self.indexer)
+        )
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()

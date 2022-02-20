@@ -7,14 +7,14 @@ class IndexerSubsystem(SubsystemBase):
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
-        self.indexerRunning = False
+        self.indexerRunning = True
         self.indexerReversed = False
         self.indexerMotor = Falcon(
             constants.kIndexerMotorName,
             constants.kIndexerMotorId,
             constants.kSimIndexerMotorPort,
         )
-        self.stagingRunning = False
+        self.stagingRunning = True
         self.stagingReversed = True  # We want balls to stay in when collected
         self.stagingMotor = Falcon(
             constants.kStagingMotorName,
@@ -36,16 +36,31 @@ class IndexerSubsystem(SubsystemBase):
         return self.stagingReversed
 
     # Switches direction to reverse the ball path
-    def toggleReverseBallPath(self) -> None:
-        self.indexerReversed = not self.indexerReversed
+    def motorsOff(self) -> None:
+        self.indexerRunning = False
+        self.stagingRunning = False
+
+    def runMotors(self) -> None:
+        self.indexerRunning = True
+        self.stagingRunning = True
+
+    def feedBallForward(self) -> None:
         self.stagingReversed = False
-
-    def reverseStaging(self) -> None:
-        self.stagingReversed = True
-
-    def regularReverseSettings(self) -> None:
         self.indexerReversed = False
+        self.runMotors()
+
+    def holdBall(self) -> None:
         self.stagingReversed = True
+        self.indexerReversed = False
+        self.runMotors()
+
+    def reversePath(self) -> None:
+        self.stagingReversed = True
+        self.indexerReversed = True
+        self.runMotors()
+
+    def reverseIndexer(self) -> None:
+        self.indexerReversed = not self.indexerReversed
 
     # Basic run and stop using the reverse as a boolean for direction
     def runIndexer(self) -> None:
@@ -58,6 +73,23 @@ class IndexerSubsystem(SubsystemBase):
     def stopIndexer(self) -> None:
         self.indexerRunning = False
         self.indexerMotor.setSpeed(0)
+
+    def defaultIndexer(self) -> None:
+        if self.indexerRunning:
+            if self.indexerReversed:
+                self.indexerMotor.setSpeed(-constants.kIndexerSpeed)
+            else:
+                self.indexerMotor.setSpeed(constants.kIndexerSpeed)
+        else:
+            self.indexerMotor.setSpeed(0)
+
+        if self.stagingRunning:
+            if self.stagingReversed:
+                self.stagingMotor.setSpeed(-constants.kStagingSpeed)
+            else:
+                self.stagingMotor.setSpeed(constants.kStagingSpeed)
+        else:
+            self.stagingMotor.setSpeed(0)
 
     def runStaging(self) -> None:
         if self.stagingReversed:

@@ -1,21 +1,19 @@
 from commands2 import CommandBase
+from subsystems.indexersubsystem import IndexerSubsystem
 
-from subsystems.intakesubsystem import IntakeSubsystem
 
-
-class ReverseIntake(CommandBase):
-    def __init__(self, intake: IntakeSubsystem) -> None:
+class StopIndexer(CommandBase):
+    def __init__(self, indexer: IndexerSubsystem):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
-        self.intake = intake
-        self.addRequirements([self.intake])
+        self.indexer = indexer
+        self.addRequirements([self.indexer])
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
-        self.intake.toggleReverseIntake()
 
-        if self.intake.isIntakeDeployed():
-            self.intake.runIntake()
+    def execute(self) -> None:
+        self.indexer.motorsOff()
 
     # pylint: disable-next=no-self-use
     def end(self, _interrupted: bool) -> None:

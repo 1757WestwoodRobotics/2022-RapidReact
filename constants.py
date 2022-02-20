@@ -496,11 +496,11 @@ kIntakeCameraHeightInMeters = 0.5
 kIntakeCameraCenterOffsetInMeters = 0.2
 kIsIntakeCameraCentered = False
 
-kIntakeSpeed = 1000
+kIntakeSpeed = 100
 """rpm"""
-kStagingSpeed = 1000
+kStagingSpeed = 100
 """rpm"""
-kIndexerSpeed = 1000
+kIndexerSpeed = 100
 """rpm"""
 
 kIntakeSolenoidChannelId = 1
@@ -512,4 +512,6 @@ kDriveToBallPGain = 0.5
 kDriveToBallIGain = 0
 kDriveToBallDGain = 0.2
 kAutoBallIntakeName = "autoBallIntake"
+
+kShootBallButtonName = "shootBall"
 # Names are stored further up, about line 335
