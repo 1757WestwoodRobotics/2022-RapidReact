@@ -19,6 +19,7 @@ class ShootingSubsystem(SubsystemBase):
             constants.kTurretIGain,
             constants.kTurretDGain,
             constants.kTurretPIDSlot,
+            constants.kTurretMotorInverted
         )
         self.shootingMotor = Falcon(
             constants.kShootingMotorName,
@@ -60,9 +61,9 @@ class ShootingSubsystem(SubsystemBase):
             SmartDashboard.putNumber(
                 constants.kShootingHoodAngleKey, self.getHoodAngle().degrees()
             )
-        SmartDashboard.putNumber(
-            constants.kShootingTurretAngleKey, self.getTurretRotation().degrees()
-        )
+            SmartDashboard.putNumber(
+                constants.kShootingTurretAngleKey, self.getTurretRotation().degrees()
+            )
 
     def getWheelSpeed(self) -> int:
         """returns wheel speed in RPM"""

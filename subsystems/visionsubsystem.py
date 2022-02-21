@@ -165,16 +165,15 @@ class LimelightTrackingModule(TrackingModule):
                 constants.kSimDefaultTargetHeight - constants.kLimelightVerticalOffset
             ) / (
                 Rotation2d.fromDegrees(
-                    -1
-                    * self.limelightNetworkTable.getNumber(
+                   self.limelightNetworkTable.getNumber(
                         constants.kLimelightTargetHorizontalAngleKey, 0.0
                     )
                 )
                 + constants.kLimelightAngleOffset
             ).tan()
         else:
-            self.targetAngle = None
             self.targetDistance = None
+            self.targetAngle = None
 
         TrackingModule.update(self)
 

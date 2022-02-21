@@ -470,27 +470,28 @@ kSimHoodMinimumSwitchPort = 2
 kSimHoodMaximumSwitchPort = 3
 
 kShootingPIDSlot = 0
-kShootingPGain = 1
+kShootingPGain = 0.2
 kShootingIGain = 0
 kShootingDGain = 0
 
-kShootingMappingFunction = lambda x: 100 * x  # TODO: a real tested algorihm
+kShootingMappingFunction = lambda x: -100 * x  # TODO: a real tested algorihm
 
 kTurretPIDSlot = 0
-kTurretPGain = 0.15
+kTurretPGain = 0.06
 kTurretIGain = 0
-kTurretDGain = 0
+kTurretDGain = 0.02
+kTurretMotorInverted = False
 
-kTurretGearRatio = 1 / 3
+kTurretGearRatio = (1 / 5) * (24 / 200)
 
 kHoodPIDSlot = 0
 kHoodPGain = 0.15
 kHoodIGain = 0
 kHoodDGain = 0
 
-kHoodGearRatio = 1 / 3
+kHoodGearRatio = (1 / 5) * (18 / 478)
 
-kHoodMappingFunction = lambda x: 20 / x  # TODO: a real tested algorithm
+kHoodMappingFunction = lambda x: 0  # TODO: a real tested algorithm
 
 kTurretMotorName = "shooting_turret"
 kShootingMotorName = "shooting_shooting"
