@@ -514,4 +514,12 @@ kDriveToBallDGain = 0.2
 kAutoBallIntakeName = "autoBallIntake"
 
 kShootBallButtonName = "shootBall"
+
+kIntakeRunningKey = "intake/running"
+kIntakeReversedKey = "intake/reversed"
+
+kIndexerRunningKey = "indexer/indexerRunning"
+kIndexerReversedKey = "indexer/indexerReversed"
+kStagingRunningKey = "indexer/stagingRunning"
+kStagingReversedKey = "indexer/stagingReversed"
 # Names are stored further up, about line 335

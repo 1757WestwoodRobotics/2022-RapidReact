@@ -12,7 +12,7 @@ class ReverseIntake(CommandBase):
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
-        self.intake.toggleReverseIntake()
+        self.intake.reverseIntake()
 
     # pylint: disable-next=no-self-use
     def end(self, _interrupted: bool) -> None:

@@ -1,5 +1,5 @@
 from commands2 import SubsystemBase
-from wpilib import PneumaticHub, PneumaticsModuleType, Solenoid
+from wpilib import PneumaticHub, PneumaticsModuleType, Solenoid, SmartDashboard
 import constants
 from util.helpfulIO import Falcon
 
@@ -23,6 +23,10 @@ class IntakeSubsystem(SubsystemBase):
             constants.kIntakeMotorId,
             constants.kSimIntakeMotorPort,
         )
+
+    def periodic(self) -> None:
+        SmartDashboard.putBoolean(constants.kIntakeRunningKey, self.intakeDeployed)
+        SmartDashboard.putBoolean(constants.kIntakeReversedKey, self.intakeReversed)
 
     def toggleIntake(self) -> None:
         if self.intakeDeployed:

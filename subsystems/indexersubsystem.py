@@ -1,4 +1,5 @@
 from commands2 import SubsystemBase
+from wpilib import SmartDashboard
 import constants
 from util.helpfulIO import Falcon
 
@@ -21,6 +22,12 @@ class IndexerSubsystem(SubsystemBase):
             constants.kStagingMotorId,
             constants.kSimStagingMotorPort,
         )
+
+    def periodic(self) -> None:
+        SmartDashboard.putBoolean(constants.kIndexerRunningKey, self.indexerRunning)
+        SmartDashboard.putBoolean(constants.kIndexerReversedKey, self.indexerReversed)
+        SmartDashboard.putBoolean(constants.kStagingRunningKey, self.stagingRunning)
+        SmartDashboard.putBoolean(constants.kStagingReversedKey, self.stagingReversed)
 
     # Checks are accessible outside of the subsystem
     def isIndexerRunning(self) -> bool:
