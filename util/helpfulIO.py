@@ -17,10 +17,11 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
         name: str,
         realId: int,
         simId: int,
-        PGain: int = 1,
-        IGain: int = 0,
-        DGain: int = 0,
+        PGain: float = 0.01,
+        IGain: float = 0,
+        DGain: float = 0,
         PIDSlot: int = 0,
+        inverted: bool = False,
     ) -> None:  # depending on if its in simulation or the real motor, different motors will be used
         self.name = name
         self.motor = WPI_TalonFX(realId) if RobotBase.isReal() else PWMVictorSPX(simId)
@@ -58,6 +59,8 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
                     constants.kConfigurationTimeoutLimit,
                 ),
             ):
+                return
+            if not ctreCheckError("config_Invert", self.motor.setInverted(inverted)):
                 return
             print("Falcon Initialization Complete")
         else:

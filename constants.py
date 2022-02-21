@@ -221,6 +221,7 @@ kBackRightDriveMotorId = 16
 kBackRightSteerMotorId = 17
 kIntakeMotorId = 18
 kIntakeMotorName = "IntakeMotor"
+kIntakeMotorInverted = True
 kIndexerMotorId = 19
 kIndexerMotorName = "IndexerMotor"
 kStagingMotorId = 20

@@ -22,6 +22,7 @@ class IntakeSubsystem(SubsystemBase):
             constants.kIntakeMotorName,
             constants.kIntakeMotorId,
             constants.kSimIntakeMotorPort,
+            inverted=constants.kIntakeMotorInverted,
         )
 
     def periodic(self) -> None:
