@@ -28,14 +28,17 @@ class IntakeSubsystem(SubsystemBase):
         SmartDashboard.putBoolean(constants.kIntakeRunningKey, self.intakeDeployed)
         SmartDashboard.putBoolean(constants.kIntakeReversedKey, self.intakeReversed)
 
+    def isIntakeReversed(self) -> bool:
+        return self.intakeReversed
+
+    def isIntakeDeployed(self) -> bool:
+        return self.intakeDeployed
+
     def toggleIntake(self) -> None:
         if self.intakeDeployed:
             self.retractIntake()
         else:
             self.deployIntake()
-
-    def toggleReverseIntake(self) -> None:
-        self.intakeReversed = not self.intakeReversed
 
     def reverseIntake(self) -> None:
         self.intakeReversed = True
@@ -43,40 +46,17 @@ class IntakeSubsystem(SubsystemBase):
     def unreverseIntake(self) -> None:
         self.intakeReversed = False
 
-    def isIntakeDeployed(self) -> bool:
-        return self.intakeDeployed
-
     def deployIntake(self) -> None:
         self.intakeDeployed = True
         self.intakeReversed = False
         self.intakeSolenoid.set(True)
-        self.runIntake()
-
-    def isReversed(self) -> bool:
-        return self.intakeReversed
 
     def retractIntake(self) -> None:
         self.intakeDeployed = False
         self.intakeSolenoid.set(False)
-        self.stopIntake()
         print(
             f"Stopping. Variables: reverse is {self.intakeReversed} and running is {self.intakeDeployed}"
         )
-
-    def runIntake(self) -> None:
-        if self.isReversed():
-            self.intakeMotor.setSpeed(-1 * constants.kIntakeSpeed)
-            print(
-                f"Reversing intake. Variables: reverse is {self.intakeReversed} and running is {self.intakeDeployed}",
-            )
-        else:
-            self.intakeMotor.setSpeed(constants.kIntakeSpeed)
-            print(
-                f"Running intake. Variables: reverse is {self.intakeReversed} and running is {self.intakeDeployed}",
-            )
-
-    def stopIntake(self) -> None:
-        self.intakeMotor.setSpeed(0)
 
     def debugDeploy(self) -> None:
         self.intakeDeployed = True
