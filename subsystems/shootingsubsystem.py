@@ -19,7 +19,7 @@ class ShootingSubsystem(SubsystemBase):
             constants.kTurretIGain,
             constants.kTurretDGain,
             constants.kTurretPIDSlot,
-            constants.kTurretMotorInverted
+            constants.kTurretMotorInverted,
         )
         self.shootingMotor = Falcon(
             constants.kShootingMotorName,
@@ -29,6 +29,7 @@ class ShootingSubsystem(SubsystemBase):
             constants.kShootingIGain,
             constants.kShootingDGain,
             constants.kShootingPIDSlot,
+            constants.kShootingMotorInverted,
         )
         self.hoodMotor = Falcon(
             constants.kHoodMotorName,

@@ -473,8 +473,9 @@ kShootingPIDSlot = 0
 kShootingPGain = 0.2
 kShootingIGain = 0
 kShootingDGain = 0
+kShootingMotorInverted = True
 
-kShootingMappingFunction = lambda x: -100 * x  # TODO: a real tested algorihm
+kShootingMappingFunction = lambda x: 100 * x  # TODO: a real tested algorihm
 
 kTurretPIDSlot = 0
 kTurretPGain = 0.06
