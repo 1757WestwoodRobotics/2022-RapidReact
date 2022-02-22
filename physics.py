@@ -145,14 +145,14 @@ class LimelightSim:
 
         targetValid = constants.kLimelightTargetInvalidValue
         if (
-            constants.kLimelightMinVerticalFoV.radians() # rotated 90 degrees, FOV increased
+            constants.kLimelightMinVerticalFoV.radians()  # rotated 90 degrees, FOV increased
             < targetAngle.radians()
             < constants.kLimelightMaxVerticalFoV.radians()
         ):
             targetValid = constants.kLimelightTargetValidValue
             self.limelightNetworkTable.putNumber(
-                constants.kLimelightTargetHorizontalAngleKey,
-                -1 * targetAngle.degrees(),  # limelight uses reversed direction along x
+                constants.kLimelightTargetVerticalAngleKey,
+                targetAngle.degrees(),  # limelight uses reversed direction along x
             )
 
         if (
@@ -161,8 +161,8 @@ class LimelightSim:
             < constants.kLimelightMaxHorizontalFoV.radians()
         ):
             self.limelightNetworkTable.putNumber(
-                constants.kLimelightTargetVerticalAngleKey,
-                targetVerticalAngle.degrees(),
+                constants.kLimelightTargetHorizontalAngleKey,
+                -1 * targetVerticalAngle.degrees(),
             )
 
         self.limelightNetworkTable.putNumber(

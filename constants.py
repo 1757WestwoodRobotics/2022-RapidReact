@@ -189,7 +189,7 @@ kLimelightMountingOffset = Translation2d(
 )
 kLimelightVerticalOffset = 25.833857 * kMetersPerInch
 """meters"""
-kLimelightAngleOffset = Rotation2d.fromDegrees(44.153) # derived from cad
+kLimelightAngleOffset = Rotation2d.fromDegrees(44.153)  # derived from cad
 kTrackerPanAngleKey = "tracker/pan_angle"
 kLimelightTrackerModuleName = "limelight_target_tracker"
 
@@ -456,8 +456,8 @@ kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
 
 # shooter parameters
-kTurretMotorId = 19
-kShootingMotorId = 20
+kTurretMotorId = 22
+kShootingMotorId = 23
 kHoodMotorId = 21
 
 kSimTurretMotorPort = 9

@@ -155,22 +155,26 @@ class LimelightTrackingModule(TrackingModule):
             constants.kLimelightTargetValidKey, constants.kLimelightTargetInvalidValue
         )
         if targetValid:
+            # real model has limelight rotated 90 degrees
             self.targetAngle = Rotation2d.fromDegrees(
-                -1
-                * self.limelightNetworkTable.getNumber(
-                    constants.kLimelightTargetHorizontalAngleKey, 0.0
+                self.limelightNetworkTable.getNumber(
+                    constants.kLimelightTargetVerticalAngleKey, 0.0
                 )
             )
             self.targetDistance = (
                 constants.kSimDefaultTargetHeight - constants.kLimelightVerticalOffset
             ) / (
                 Rotation2d.fromDegrees(
-                    self.limelightNetworkTable.getNumber(
-                        constants.kLimelightTargetVerticalAngleKey, 0.0
+                    -1
+                    * self.limelightNetworkTable.getNumber(
+                        constants.kLimelightTargetHorizontalAngleKey, 0.0
                     )
                 )
                 + constants.kLimelightAngleOffset
             ).tan()
+        else:
+            self.targetAngle = None
+            self.targetDistance = None
 
         TrackingModule.update(self)
 
