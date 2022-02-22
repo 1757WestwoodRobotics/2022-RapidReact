@@ -145,7 +145,7 @@ class LimelightSim:
 class IntakeCameraSim:
     def __init__(self) -> None:
         NetworkTables.initialize()
-        self.photonvisionNetworkTable = NetworkTables.getTable(
+        self.limelightCargoNetworkTable = NetworkTables.getTable(
             constants.kLimelightCargoNetworkTableName
         )
 
@@ -172,16 +172,16 @@ class IntakeCameraSim:
         ):
             ballValid = True
 
-            self.photonvisionNetworkTable.putNumber(
+            self.limelightCargoNetworkTable.putNumber(
                 constants.kLimelightTargetVerticalAngleKey,
                 ballVerticalAngle,
             )
-            self.photonvisionNetworkTable.putNumber(
+            self.limelightCargoNetworkTable.putNumber(
                 constants.kLimelightTargetHorizontalAngleKey,
                 ballHorizontalAngle.degrees(),
             )
 
-        self.photonvisionNetworkTable.putBoolean(
+        self.limelightCargoNetworkTable.putBoolean(
             constants.kLimelightTargetValidKey, ballValid
         )
 
