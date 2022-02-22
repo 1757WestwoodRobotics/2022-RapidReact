@@ -76,8 +76,12 @@ class ShootingSubsystem(SubsystemBase):
     def setHoodAngle(self, angle: Rotation2d) -> None:
         """angle to fire the ball with
         absolute with 0 being straight and 90 degrees being direct to the sky"""
+        clampedAngle = min(
+            max(angle.radians(), 0.5 * constants.kRadiansPerDegree),
+            22.5 * constants.kRadiansPerDegree,
+        )
         encoderPulses = (
-            angle.radians()
+            clampedAngle
             * constants.kTalonEncoderPulsesPerRadian
             / constants.kHoodGearRatio
         )
