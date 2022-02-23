@@ -12,6 +12,9 @@ class TrackTurret(CommandBase):
         self.shoot = shoot
         self.addRequirements(shoot)
 
+    def initialize(self) -> None:
+        print(f"Command: {self.getName()}")
+
     def execute(self) -> None:
         if SmartDashboard.getBoolean(
             constants.kTargetAngleRelativeToRobotKeys.validKey, False
@@ -28,8 +31,6 @@ class TrackTurret(CommandBase):
         )
         print(self.shoot.getTurretRotation())
 
-    def initialize(self) -> None:
-        print(f"Command: {self.getName()}")
 
     def end(self, _interrupted: bool) -> None:
         print(f"... DONE {self.getName()}")
