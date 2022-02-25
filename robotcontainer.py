@@ -2,6 +2,7 @@ import wpilib
 
 import commands2
 import commands2.button
+from commands.trajectoryauto import TrajectoryAuto
 
 import constants
 
@@ -52,6 +53,9 @@ class RobotContainer:
         # A routine that drives to the target with a given offset
         self.driveToTarget = DriveToTarget(self.drive, constants.kAutoTargetOffset)
 
+        # A routine that follows a set trajectory
+        self.trajectoryAuto = TrajectoryAuto(self.drive)
+
         # Chooser
         self.chooser = wpilib.SendableChooser()
 
@@ -59,6 +63,7 @@ class RobotContainer:
         self.chooser.setDefaultOption("Complex Auto", self.complexAuto)
         self.chooser.addOption("Simple Auto", self.simpleAuto)
         self.chooser.addOption("Target Auto", self.driveToTarget)
+        self.chooser.addOption("Trajectory Auto", self.trajectoryAuto)
 
         # Put the chooser on the dashboard
         wpilib.SmartDashboard.putData("Autonomous", self.chooser)

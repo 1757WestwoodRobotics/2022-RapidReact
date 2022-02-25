@@ -55,7 +55,7 @@ class SwerveDriveSim:
         self.kinematics = wpimath.kinematics.SwerveDrive4Kinematics(
             *(module.position for module in swerveModuleSims)
         )
-        self.pose = Pose2d()
+        self.pose = constants.kSimDefaultRobotLocation
         self.outputs = None
 
     def getPose(self) -> Pose2d:

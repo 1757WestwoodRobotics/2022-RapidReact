@@ -24,6 +24,7 @@ Swerve Module Layout:
 """
 
 import math
+from wpimath._controls._controls.trajectory import TrajectoryGenerator
 from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.system.plant import DCMotor
 
@@ -373,6 +374,15 @@ kDriveToTargetAngleTolerance = 5 * kRadiansPerDegree
 kDriveToTargetAngularVelocityTolerance = 5 * kRadiansPerDegree / 1
 """radians / second"""
 
+# Trajectory Following
+kTrajectoryPositionPGain = 3.0
+kTrajectoryPositionIGain = 0
+kTrajectoryPositionDGain = 0
+
+kTrajectoryAnglePGain = 1.5
+kTrajectoryAngleIGain = 0
+kTrajectoryAngleDGain = 0
+
 # Operator Interface
 kXboxJoystickDeadband = 0.1
 """dimensionless"""
@@ -397,6 +407,8 @@ kSimDefaultTargetLocation = Pose2d(
     kFieldLength * 3 / 4, kFieldWidth / 2, 180 * kRadiansPerDegree
 )
 """[meters, meters, radians]"""
+
+kSimDefaultRobotLocation = Pose2d(kFieldLength / 2, kFieldWidth / 2, 0)
 
 kSimDefaultTargetHeight = 10
 """meters"""

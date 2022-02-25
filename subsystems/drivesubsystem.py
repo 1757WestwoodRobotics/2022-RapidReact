@@ -1,6 +1,7 @@
 from enum import Enum, auto
 
 from math import tau, floor
+from typing import List, Tuple
 from commands2 import SubsystemBase
 from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
 from ctre import (
@@ -448,6 +449,25 @@ class DriveSubsystem(SubsystemBase):
             module.reset()
         self.odometry.resetPosition(Pose2d(), self.gyro.getRotation2d())
 
+    def getPose(self) -> Pose2d:
+        return self.odometry.getPose()
+
+    def applyStates(
+        self, moduleStates: List[SwerveModuleState] | Tuple[SwerveModuleState]
+    ) -> None:
+        (
+            frontLeftState,
+            frontRightState,
+            backLeftState,
+            backRightState,
+        ) = SwerveDrive4Kinematics.desaturateWheelSpeeds(
+            moduleStates, constants.kMaxWheelLinearVelocity
+        )
+        self.frontLeftModule.applyState(frontLeftState)
+        self.frontRightModule.applyState(frontRightState)
+        self.backLeftModule.applyState(backLeftState)
+        self.backRightModule.applyState(backRightState)
+
     def periodic(self):
         """
         Called periodically when it can be called. Updates the robot's
@@ -561,15 +581,4 @@ class DriveSubsystem(SubsystemBase):
                 robotChassisSpeeds = ChassisSpeeds()
 
         moduleStates = self.kinematics.toSwerveModuleStates(robotChassisSpeeds)
-        (
-            frontLeftState,
-            frontRightState,
-            backLeftState,
-            backRightState,
-        ) = SwerveDrive4Kinematics.desaturateWheelSpeeds(
-            moduleStates, constants.kMaxWheelLinearVelocity
-        )
-        self.frontLeftModule.applyState(frontLeftState)
-        self.frontRightModule.applyState(frontRightState)
-        self.backLeftModule.applyState(backLeftState)
-        self.backRightModule.applyState(backRightState)
+        self.applyStates(moduleStates)
