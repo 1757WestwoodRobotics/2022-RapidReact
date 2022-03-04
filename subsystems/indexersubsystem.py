@@ -1,7 +1,7 @@
 from commands2 import SubsystemBase
 from wpilib import SmartDashboard
 import constants
-from util.helpfulIO import Falcon
+from util.helpfulIO import Falcon, limitSwitch
 
 
 class IndexerSubsystem(SubsystemBase):
@@ -21,6 +21,16 @@ class IndexerSubsystem(SubsystemBase):
             constants.kStagingMotorName,
             constants.kStagingMotorId,
             constants.kSimStagingMotorPort,
+        )
+        self.indexerSensor = limitSwitch(
+            self.indexerMotor,
+            constants.kForwardSensorIndexer,
+            constants.kSimIndexerSensorId,
+        )
+        self.stagingSensor = limitSwitch(
+            self.stagingMotor,
+            constants.kForwardSensorStaging,
+            constants.kSimStagingSensorId,
         )
 
     def periodic(self) -> None:

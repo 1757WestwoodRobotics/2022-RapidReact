@@ -476,9 +476,6 @@ kCameraServoPGain = 0.15
 kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
 
-# Core CAN ID's
-kPneumaticsHubCanID = 1
-
 # Intake Camera
 kIntakeCameraTiltAngle = Rotation2d.fromDegrees(90 - 25)
 kIntakeCameraHeightInMeters = 0.5
@@ -512,3 +509,10 @@ kIndexerReversedKey = "indexer/indexerReversed"
 kStagingRunningKey = "indexer/stagingRunning"
 kStagingReversedKey = "indexer/stagingReversed"
 # Names are stored further up, about line 335
+
+# Intake Sensors
+kForwardSensorIndexer = True
+kForwardSensorStaging = True
+
+kSimIndexerSensorId = 4
+kSimStagingSensorId = 5
