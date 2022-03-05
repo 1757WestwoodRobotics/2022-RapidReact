@@ -89,10 +89,13 @@ class IndexerSubsystem(SubsystemBase):
 
     def defaultIndexer(self) -> None:
         if self.indexerRunning:
-            if self.indexerReversed:
-                self.indexerMotor.setSpeed(-constants.kIndexerSpeed)
+            if self.indexerSensor:
+                self.indexerMotor.setSpeed(0)
             else:
-                self.indexerMotor.setSpeed(constants.kIndexerSpeed)
+                if self.indexerReversed:
+                    self.indexerMotor.setSpeed(-constants.kIndexerSpeed)
+                else:
+                    self.indexerMotor.setSpeed(constants.kIndexerSpeed)
         else:
             self.indexerMotor.setSpeed(0)
 

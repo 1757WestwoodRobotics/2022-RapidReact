@@ -1,5 +1,5 @@
 from commands2 import SubsystemBase
-from wpilib import PneumaticHub, PneumaticsModuleType, Solenoid, SmartDashboard
+from wpilib import PneumaticsModuleType, Solenoid, SmartDashboard
 import constants
 from util.helpfulIO import Falcon
 
@@ -10,8 +10,6 @@ class IntakeSubsystem(SubsystemBase):
         self.setName(__class__.__name__)
         self.intakeDeployed = False  # default to intake retracted and not reversed
         self.intakeReversed = False
-
-        self.pneumaticsHub = PneumaticHub(constants.kPneumaticsHubCanID)
 
         self.intakeSolenoid = Solenoid(
             PneumaticsModuleType.REVPH, constants.kIntakeSolenoidChannelId
