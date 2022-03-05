@@ -62,12 +62,19 @@
     },
     "left button set, left top (ThrustmasterT16000M)"
   ],
-  "chassisRotation": [
-    1,
+  "chassisXRotation": [
+    0,
     {
-      "Axis": 5
+      "Axis": 3
     },
-    "Rudder (ThrustmasterTWCSThrottle)"
+    "X Right (ThrustmasterTWCSThrottle)"
+  ],
+  "chassisYRotation": [
+    0,
+    {
+      "Axis": 4
+    },
+    "Y right "
   ],
   "chassisForwardsBackwards": [
     0,
@@ -86,7 +93,7 @@
   "fieldRelativeCoordinateModeControl": [
     0,
     {
-      "Button": 3
+      "Button": 1
     },
     "left button on top of joystick (ThrustmasterT16000M)"
   ],

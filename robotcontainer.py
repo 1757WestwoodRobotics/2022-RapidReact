@@ -85,7 +85,7 @@ class RobotContainer:
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
-                self.operatorInterface.chassisControls.rotation,
+                self.operatorInterface.chassisControls.rotationX,
             )
         )
 
@@ -130,7 +130,8 @@ class RobotContainer:
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
-                self.operatorInterface.chassisControls.rotation,
+                self.operatorInterface.chassisControls.rotationX,
+                self.operatorInterface.chassisControls.rotationY,
             )
         )
 
@@ -141,7 +142,7 @@ class RobotContainer:
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
-                self.operatorInterface.chassisControls.rotation,
+                self.operatorInterface.chassisControls.rotationX,
             )
         )
 

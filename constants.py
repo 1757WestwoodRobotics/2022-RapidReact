@@ -371,6 +371,10 @@ kTargetRelativeDriveAnglePGain = 1
 kTargetRelativeDriveAngleIGain = 0
 kTargetRelativeDriveAngleDGain = 0
 
+kRotationPGain = 1.3
+kRotationIGain = 0
+kRotationDGain = 0
+
 # Drive to Target
 kDriveToTargetDistancePGain = 0.5
 kDriveToTargetDistanceIGain = 0
@@ -401,7 +405,8 @@ kKeyboardJoystickDeadband = 0.0
 
 kControllerMappingFilename = "ControlScheme.json"
 
-kChassisRotationAxisName = "chassisRotation"
+kChassisRotationXAxisName = "chassisXRotation"
+kChassisRotationYAxisName = "chassisYRotation"
 kChassisForwardsBackwardsAxisName = "chassisForwardsBackwards"
 kChassisSideToSideAxisName = "chassisSideToSide"
 
