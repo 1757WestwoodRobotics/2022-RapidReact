@@ -9,9 +9,9 @@ from commands.complexauto import ComplexAuto
 from commands.drivedistance import DriveDistance
 from commands.drivetotarget import DriveToTarget
 from commands.defaultdrive import DefaultDrive
+from commands.resetsystem import ResetSystem
 from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.targetrelativedrive import TargetRelativeDrive
-from commands.resetdrive import ResetDrive
 from commands.shooter.aimsystem import AimSystem
 
 from subsystems.drivesubsystem import DriveSubsystem
@@ -109,7 +109,7 @@ class RobotContainer:
 
         commands2.button.JoystickButton(
             *self.operatorInterface.resetSwerveControl
-        ).whenPressed(ResetDrive(self.drive))
+        ).whenPressed(ResetSystem(self.shooting, self.drive))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl

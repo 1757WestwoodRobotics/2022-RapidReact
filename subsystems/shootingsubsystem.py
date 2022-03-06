@@ -54,6 +54,10 @@ class ShootingSubsystem(SubsystemBase):
             self.hoodMotor, True, constants.kSimHoodMaximumSwitchPort
         )
 
+    def setAsStartingPosition(self) -> None:
+        self.hoodMotor.setCurrentEncoderPulseCount(constants.kHoodStartingAngle)
+        self.turretMotor.setCurrentEncoderPulseCount(constants.kTurretStartingAngle)
+
     def periodic(self) -> None:
         if not SmartDashboard.getBoolean(constants.kShootingManualModeKey, False):
             SmartDashboard.putNumber(

@@ -31,6 +31,5 @@ class TrackTurret(CommandBase):
         )
         print(self.shoot.getTurretRotation())
 
-
     def end(self, _interrupted: bool) -> None:
         print(f"... DONE {self.getName()}")

@@ -21,7 +21,7 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
         IGain: float = 0,
         DGain: float = 0,
         PIDSlot: int = 0,
-        inverted: bool = False
+        inverted: bool = False,
     ) -> None:  # depending on if its in simulation or the real motor, different motors will be used
         self.name = name
         self.motor = WPI_TalonFX(realId) if RobotBase.isReal() else PWMVictorSPX(simId)
@@ -82,6 +82,12 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
             )  # amount of free speed, free speed is in RPS, convert from revolutions to encodes ticks expected
         else:
             raise IndexError("Cannot Move A Simulated Motor On A Real Robot")
+
+    def setCurrentEncoderPulseCount(self, count: int) -> None:
+        if RobotBase.isReal():
+            self.motor.setSelectedSensorPosition(count)
+        else:
+            self.simEncoder = count
 
     def setPosition(self, pos: int) -> None:
         """set the position of the motor in encoder ticks"""

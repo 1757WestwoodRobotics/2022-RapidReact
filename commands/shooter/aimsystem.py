@@ -20,11 +20,10 @@ class AimSystem(CommandBase):
         else:
             self.normalMode()
 
-
     def manualMode(self) -> None:
         wheelSpeed = SmartDashboard.getNumber(constants.kShootingWheelSpeedKey, 0)
         hoodAngle = SmartDashboard.getNumber(constants.kShootingHoodAngleKey, 0)
-        turretPosition = SmartDashboard.getNumber(constants.kShootingTurretAngleKey,0)
+        turretPosition = SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 0)
         self.shoot.setWheelSpeed(wheelSpeed)
         self.shoot.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
         self.shoot.rotateTurret(Rotation2d.fromDegrees(turretPosition))

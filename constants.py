@@ -502,3 +502,12 @@ kShootingWheelSpeedKey = "shooting/wheelSpeed"
 kShootingHoodAngleKey = "shooting/hoodAngle"
 kShootingTurretAngleKey = "shooting/turretAngle"
 kShootingManualModeKey = "shooting/manualMode"
+
+kHoodStartingAngle = (
+    Rotation2d.fromDegrees(3).radians() / kHoodGearRatio * kTalonEncoderPulsesPerRadian
+)
+kTurretStartingAngle = (
+    Rotation2d.fromDegrees(202.5).radians()
+    / kTurretGearRatio
+    * kTalonEncoderPulsesPerRadian
+)
