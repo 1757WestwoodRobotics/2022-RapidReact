@@ -480,7 +480,7 @@ kShootingMappingFunction = lambda x: 100 * x  # TODO: a real tested algorihm
 kTurretPIDSlot = 0
 kTurretPGain = 0.06
 kTurretIGain = 0
-kTurretDGain = 0.02
+kTurretDGain = 0
 kTurretMotorInverted = False
 
 kTurretGearRatio = (1 / 5) * (24 / 200)
@@ -507,10 +507,12 @@ kHoodStartingAngle = (
     Rotation2d.fromDegrees(3).radians() / kHoodGearRatio * kTalonEncoderPulsesPerRadian
 )
 kTurretStartingAngle = (
-    Rotation2d.fromDegrees(202.5).radians()
+    Rotation2d.fromDegrees(45).radians()
     / kTurretGearRatio
     * kTalonEncoderPulsesPerRadian
 )
 
-kTurretMaximum = Rotation2d.fromDegrees(205)
-kTurretMinimum = Rotation2d.fromDegrees(-205)
+kTurretMaximum = Rotation2d.fromDegrees(130)
+kTurretMinimum = Rotation2d.fromDegrees(-130)
+
+kMotorBaseKey = "motors"

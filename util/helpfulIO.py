@@ -1,6 +1,6 @@
 from typing import Callable
 from ctre import WPI_TalonFX, ControlMode
-from wpilib import RobotBase, PWMVictorSPX, DigitalInput
+from wpilib import RobotBase, PWMVictorSPX, DigitalInput, SmartDashboard
 from wpimath.controller import PIDController
 from wpimath.system.plant import DCMotor
 from util.ctrecheck import ctreCheckError
@@ -80,6 +80,12 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
                 * 1
                 / 50  # 50 updates per second
             )  # amount of free speed, free speed is in RPS, convert from revolutions to encodes ticks expected
+            SmartDashboard.putNumber(
+                f"{constants.kMotorBaseKey}/{self.name}/encoder", self.simEncoder
+            )
+            SmartDashboard.putNumber(
+                f"{constants.kMotorBaseKey}/{self.name}/output", self.motor.get()
+            )
         else:
             raise IndexError("Cannot Move A Simulated Motor On A Real Robot")
 
