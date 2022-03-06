@@ -490,7 +490,7 @@ kHoodPGain = 0.15
 kHoodIGain = 0
 kHoodDGain = 0
 
-kHoodGearRatio = (1 / 5) * (18 / 478)
+kHoodGearRatio = (1 / 5) * (-13 / 180)
 
 kHoodMappingFunction = lambda x: 0  # TODO: a real tested algorithm
 
