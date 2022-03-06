@@ -402,7 +402,7 @@ kDriveToTargetControlButtonName = "driveToTargetControl"
 # Simulation Parameters
 kSimTargetName = "SimTarget"
 kSimDefaultTargetLocation = Pose2d(
-    kFieldLength * 3 / 4, kFieldWidth / 2, 180 * kRadiansPerDegree
+    kFieldLength / 2, kFieldWidth / 2, 180 * kRadiansPerDegree
 )
 """[meters, meters, radians]"""
 

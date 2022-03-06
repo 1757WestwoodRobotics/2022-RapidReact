@@ -1,6 +1,7 @@
+from math import atan2
 from commands2 import CommandBase
 from wpilib import SmartDashboard
-from wpimath.geometry import Rotation2d
+from wpimath.geometry import Pose2d, Transform2d, Rotation2d
 
 from subsystems.shootingsubsystem import ShootingSubsystem
 import constants
@@ -49,3 +50,12 @@ class AimSystem(CommandBase):
                 constants.kTargetAngleRelativeToRobotKeys.valueKey, 0.0
             )
             self.shoot.trackTurret(angle)  # always track the turret
+        else:
+            pose = Pose2d(
+                *SmartDashboard.getNumberArray(
+                    constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0]
+                )
+            )
+            difference = Transform2d(pose, constants.kSimDefaultTargetLocation)
+            rotation = Rotation2d(atan2(difference.Y(), difference.X()))
+            self.shoot.rotateTurret(rotation)
