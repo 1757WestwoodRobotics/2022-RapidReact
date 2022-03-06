@@ -511,3 +511,6 @@ kTurretStartingAngle = (
     / kTurretGearRatio
     * kTalonEncoderPulsesPerRadian
 )
+
+kTurretMaximum = Rotation2d.fromDegrees(205)
+kTurretMinimum = Rotation2d.fromDegrees(-205)

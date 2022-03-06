@@ -100,7 +100,10 @@ class ShootingSubsystem(SubsystemBase):
 
     def rotateTurret(self, angle: Rotation2d):
         encoderPulses = (
-            angle.radians()
+            max(
+                constants.kTurretMinimum.radians(),
+                min(angle.radians(), constants.kTurretMaximum.radians()),
+            )
             * constants.kTalonEncoderPulsesPerRadian
             / constants.kTurretGearRatio
         )
