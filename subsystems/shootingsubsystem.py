@@ -1,8 +1,9 @@
 from commands2 import SubsystemBase
-from wpilib import SmartDashboard
+from wpilib import SmartDashboard, RobotBase
 
 from wpimath.geometry import Rotation2d
-from util.helpfulIO import Falcon, limitSwitch
+from util.convenientmath import map_range
+from util.helpfulIO import Falcon
 
 import constants
 
@@ -40,25 +41,33 @@ class ShootingSubsystem(SubsystemBase):
             constants.kHoodDGain,
             constants.kHoodPIDSlot,
         )
-        self.turretMaximumSwitch = limitSwitch(
-            self.turretMotor, False, constants.kSimTurretMaximumLimitSwitchPort
-        )
-        self.turretMinimumSwitch = limitSwitch(
-            self.turretMotor, True, constants.kSimTurretMinimumLimitSwitchPort
-        )
 
-        self.hoodMinimumSwitch = limitSwitch(
-            self.hoodMotor, False, constants.kSimHoodMinimumSwitchPort
-        )
-        self.hoodMaximumSwitch = limitSwitch(
-            self.hoodMotor, True, constants.kSimHoodMaximumSwitchPort
-        )
+        self.initializationMinimum = 0
+        self.initializationMaximum = 0
 
     def setAsStartingPosition(self) -> None:
         self.hoodMotor.setCurrentEncoderPulseCount(constants.kHoodStartingAngle)
-        self.turretMotor.setCurrentEncoderPulseCount(constants.kTurretStartingAngle)
+        if (
+            RobotBase.isReal()
+        ):  # only possible to calibrate the real robot, sim is perfect by default
+            turretRealPosition = map_range(
+                self.turretMotor.getPosition(),
+                self.initializationMinimum,
+                self.initializationMaximum,
+                constants.kTurretMinimum.radians()
+                * constants.kTalonEncoderPulsesPerRadian,
+                constants.kTurretMaximum.radians()
+                * constants.kTalonEncoderPulsesPerRadian,
+            )
+            self.turretMotor.setCurrentEncoderPulseCount(turretRealPosition)
 
     def periodic(self) -> None:
+        self.initializationMinimum = min(
+            self.initializationMinimum, self.turretMotor.getPosition()
+        )
+        self.initializationMaximum = max(
+            self.initializationMaximum, self.turretMotor.getPosition()
+        )
         if not SmartDashboard.getBoolean(constants.kShootingManualModeKey, False):
             SmartDashboard.putNumber(
                 constants.kShootingWheelSpeedKey, self.getWheelSpeed()
@@ -101,8 +110,13 @@ class ShootingSubsystem(SubsystemBase):
     def rotateTurret(self, angle: Rotation2d):
         encoderPulses = (
             max(
-                constants.kTurretMinimum.radians(),
-                min(angle.radians(), constants.kTurretMaximum.radians()),
+                (constants.kTurretMinimum + constants.kTurretSoftLimitBuffer).radians(),
+                min(
+                    angle.radians(),
+                    (
+                        constants.kTurretMaximum - constants.kTurretSoftLimitBuffer
+                    ).radians(),
+                ),
             )
             * constants.kTalonEncoderPulsesPerRadian
             / constants.kTurretGearRatio

@@ -506,13 +506,9 @@ kShootingManualModeKey = "shooting/manualMode"
 kHoodStartingAngle = (
     Rotation2d.fromDegrees(3).radians() / kHoodGearRatio * kTalonEncoderPulsesPerRadian
 )
-kTurretStartingAngle = (
-    Rotation2d.fromDegrees(45).radians()
-    / kTurretGearRatio
-    * kTalonEncoderPulsesPerRadian
-)
 
 kTurretMaximum = Rotation2d.fromDegrees(130)
 kTurretMinimum = Rotation2d.fromDegrees(-130)
+kTurretSoftLimitBuffer = Rotation2d.fromDegrees(1)
 
 kMotorBaseKey = "motors"
