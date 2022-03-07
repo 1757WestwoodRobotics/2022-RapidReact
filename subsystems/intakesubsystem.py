@@ -48,19 +48,9 @@ class IntakeSubsystem(SubsystemBase):
     def deployIntake(self) -> None:
         self.intakeDeployed = True
         self.intakeReversed = False
-        self.intakeSolenoid.set(True)
 
     def retractIntake(self) -> None:
         self.intakeDeployed = False
-        self.intakeSolenoid.set(False)
-        print(
-            f"Stopping. Variables: reverse is {self.intakeReversed} and running is {self.intakeDeployed}"
-        )
-
-    def debugDeploy(self) -> None:
-        self.intakeDeployed = True
-        self.intakeSolenoid.set(True)
-        self.stopIntake()
 
     def defaultIntake(self) -> None:
         if self.intakeDeployed:
