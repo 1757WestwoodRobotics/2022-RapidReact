@@ -40,7 +40,9 @@ class AimSystem(CommandBase):
             targetSpeed = constants.kShootingMappingFunction(distance)
             self.shoot.setWheelSpeed(targetSpeed)
 
-            targetAngle = Rotation2d(constants.kHoodMappingFunction(distance))
+            targetAngle = Rotation2d.fromDegrees(
+                constants.kHoodMappingFunction(distance)
+            )
             self.shoot.setHoodAngle(targetAngle)
 
         if SmartDashboard.getBoolean(

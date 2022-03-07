@@ -120,7 +120,12 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
                 / constants.k100MillisecondsPerSecond
                 / constants.kTalonEncoderPulsesPerRevolution
             )
-        return self.motor.get() * DCMotor.falcon500().freeSpeed
+        return (
+            self.motor.get()
+            * DCMotor.falcon500().freeSpeed
+            / constants.kRadiansPerRevolution
+            * constants.kSecondsPerMinute
+        )
 
     def setSpeed(self, rpm: int):
         """set the speed of the motor in Revolutions Per Minute"""

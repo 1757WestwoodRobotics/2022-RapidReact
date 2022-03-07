@@ -470,7 +470,7 @@ kSimHoodMinimumSwitchPort = 2
 kSimHoodMaximumSwitchPort = 3
 
 kShootingPIDSlot = 0
-kShootingPGain = 0.2
+kShootingPGain = 0.6
 kShootingIGain = 0
 kShootingDGain = 0
 kShootingMotorInverted = True
@@ -492,7 +492,7 @@ kHoodDGain = 0
 
 kHoodGearRatio = (1 / 5) * (-13 / 180)
 
-kHoodMappingFunction = lambda x: 5  # needs real algorihm
+kHoodMappingFunction = lambda x: 13  # needs real algorihm
 
 kTurretMotorName = "shooting_turret"
 kShootingMotorName = "shooting_shooting"
@@ -502,6 +502,7 @@ kShootingWheelSpeedKey = "shooting/wheelSpeed"
 kShootingHoodAngleKey = "shooting/hoodAngle"
 kShootingTurretAngleKey = "shooting/turretAngle"
 kShootingManualModeKey = "shooting/manualMode"
+kShootingOnTargetKey = "shooting/onTarget"
 
 kHoodStartingAngle = (
     Rotation2d.fromDegrees(3).radians() / kHoodGearRatio * kTalonEncoderPulsesPerRadian
@@ -510,5 +511,9 @@ kHoodStartingAngle = (
 kTurretMaximum = Rotation2d.fromDegrees(130)
 kTurretMinimum = Rotation2d.fromDegrees(-130)
 kTurretSoftLimitBuffer = Rotation2d.fromDegrees(1)
+
+kTurretAngleTolerence = Rotation2d.fromDegrees(2)
+kHoodAngleTolerence = Rotation2d.fromDegrees(1)
+kWheelSpeedTolerence = 20
 
 kMotorBaseKey = "motors"

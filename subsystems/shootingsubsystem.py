@@ -45,6 +45,10 @@ class ShootingSubsystem(SubsystemBase):
         self.initializationMinimum = 0
         self.initializationMaximum = 0
 
+        self.targetTurretAngle = Rotation2d()
+        self.targetHoodAngle = Rotation2d()
+        self.targetWheelSpeed = 0
+
     def setAsStartingPosition(self) -> None:
         self.hoodMotor.setCurrentEncoderPulseCount(constants.kHoodStartingAngle)
         if (
@@ -78,20 +82,38 @@ class ShootingSubsystem(SubsystemBase):
             SmartDashboard.putNumber(
                 constants.kShootingTurretAngleKey, self.getTurretRotation().degrees()
             )
+        SmartDashboard.putBoolean(constants.kShootingOnTargetKey, self.onTarget())
+
+    def onTarget(self) -> bool:
+        if (
+            abs(self.getWheelSpeed() - self.targetWheelSpeed)
+            <= constants.kWheelSpeedTolerence
+            and abs((self.getHoodAngle() - self.targetHoodAngle).radians())
+            <= constants.kHoodAngleTolerence.radians()
+            and abs((self.getTurretRotation() - self.targetTurretAngle).radians())
+            <= constants.kTurretAngleTolerence.radians()
+        ):
+            return True
+        return False
 
     def getWheelSpeed(self) -> int:
         """returns wheel speed in RPM"""
         return self.shootingMotor.getSpeed()
 
     def setWheelSpeed(self, speed: int) -> None:
+        self.targetWheelSpeed = speed
         self.shootingMotor.setSpeed(speed)
 
     def setHoodAngle(self, angle: Rotation2d) -> None:
         """angle to fire the ball with
         absolute with 0 being straight and 90 degrees being direct to the sky"""
-        clampedAngle = min(
-            max(angle.radians(), 0.5 * constants.kRadiansPerDegree),
-            22.5 * constants.kRadiansPerDegree,
+        self.targetHoodAngle = angle
+        clampedAngle = (
+            min(
+                max(angle.degrees(), 0.5),
+                22.5,
+            )
+            * constants.kRadiansPerDegree
         )
         encoderPulses = (
             clampedAngle
@@ -108,6 +130,7 @@ class ShootingSubsystem(SubsystemBase):
         )
 
     def rotateTurret(self, angle: Rotation2d):
+        self.targetTurretAngle = angle
         encoderPulses = (
             max(
                 (constants.kTurretMinimum + constants.kTurretSoftLimitBuffer).radians(),
