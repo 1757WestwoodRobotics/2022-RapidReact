@@ -504,15 +504,12 @@ kShootBallButtonName = "shootBall"
 kIntakeRunningKey = "intake/running"
 kIntakeReversedKey = "intake/reversed"
 
-kIndexerRunningKey = "indexer/indexerRunning"
-kIndexerReversedKey = "indexer/indexerReversed"
-kStagingRunningKey = "indexer/stagingRunning"
-kStagingReversedKey = "indexer/stagingReversed"
+kIndexerSystemStateKey = "indexerState"
 # Names are stored further up, about line 335
 
 # Intake Sensors
 kForwardSensorIndexer = True
 kForwardSensorStaging = True
 
-kSimIndexerSensorId = 4
-kSimStagingSensorId = 5
+kSimIndexerSensorId = 16
+kSimStagingSensorId = 17
