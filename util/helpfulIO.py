@@ -1,4 +1,3 @@
-from typing import Callable
 from ctre import WPI_TalonFX, ControlMode
 from wpilib import RobotBase, PWMVictorSPX, DigitalInput
 from wpimath.controller import PIDController
@@ -7,8 +6,6 @@ from util.ctrecheck import ctreCheckError
 from util.convenientmath import clamp
 
 import constants
-
-LimitSwitch = Callable[[], bool]
 
 
 class Falcon:  # represents either a simulated motor or a real Falcon 500
@@ -113,14 +110,19 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
             )
 
 
-def limitSwitch(falcon: Falcon, isRealForwardSwitch: bool, simId: int) -> LimitSwitch:
-    def value() -> bool:
-        if RobotBase.isReal():
-            if isRealForwardSwitch:
-                return falcon.motor.isFwdLimitSwitchClosed()
-            else:
-                return falcon.motor.isRevLimitSwitchClosed()
+class LimitSwitch:
+    def __init__(self, falcon: Falcon, isRealForwardSwitch: bool, simId: int) -> None:
+        if not RobotBase.isReal():
+            self.simSwitch = DigitalInput(simId)
         else:
-            return DigitalInput(simId).get()
+            self.falcon = falcon
+            self.isFwd = isRealForwardSwitch
 
-    return value
+    def value(self) -> bool:
+        if RobotBase.isReal():
+            if self.isFwd:
+                return self.falcon.motor.isFwdLimitSwitchClosed()
+            else:
+                return self.falcon.motor.isRevLimitSwitchClosed()
+        else:
+            return self.simSwitch.get()

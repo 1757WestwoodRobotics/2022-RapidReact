@@ -2,7 +2,7 @@ from enum import Enum, auto
 from commands2 import SubsystemBase
 from wpilib import SmartDashboard
 import constants
-from util.helpfulIO import Falcon, limitSwitch
+from util.helpfulIO import Falcon, LimitSwitch
 
 
 class IndexerSubsystem(SubsystemBase):
@@ -34,12 +34,12 @@ class IndexerSubsystem(SubsystemBase):
             constants.kStagingMotorId,
             constants.kSimStagingMotorPort,
         )
-        self.indexerSensor = limitSwitch(
+        self.indexerSensor = LimitSwitch(
             self.indexerMotor,
             constants.kForwardSensorIndexer,
             constants.kSimIndexerSensorId,
         )
-        self.stagingSensor = limitSwitch(
+        self.stagingSensor = LimitSwitch(
             self.stagingMotor,
             constants.kForwardSensorStaging,
             constants.kSimStagingSensorId,
@@ -69,12 +69,12 @@ class IndexerSubsystem(SubsystemBase):
             self.indexerMotor.setSpeed(constants.kIndexerSpeed)
             self.stagingMotor.setSpeed(constants.kStagingSpeed)
         elif self.state == self.Mode.Holding:
-            if self.indexerSensor() and self.stagingSensor():
-                self.indexerMotor.setSpeed(constants.kIndexerSpeed)
-                self.stagingMotor.setSpeed(-constants.kStagingSpeed)
-            else:
+            if self.indexerSensor.value() and self.stagingSensor.value():
                 self.indexerMotor.setSpeed(0)
                 self.stagingMotor.setSpeed(0)
+            else:
+                self.indexerMotor.setSpeed(constants.kIndexerSpeed)
+                self.stagingMotor.setSpeed(-constants.kStagingSpeed)
         elif self.state == self.Mode.Reversed:
             self.indexerMotor.setSpeed(-constants.kIndexerSpeed)
             self.stagingMotor.setSpeed(-constants.kStagingSpeed)
