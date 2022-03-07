@@ -162,7 +162,7 @@ class LimelightSim:
         ):
             self.limelightNetworkTable.putNumber(
                 constants.kLimelightTargetHorizontalAngleKey,
-                -1 * targetVerticalAngle.degrees(),
+                targetVerticalAngle.degrees(),
             )
 
         self.limelightNetworkTable.putNumber(
