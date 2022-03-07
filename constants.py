@@ -508,9 +508,11 @@ kHoodStartingAngle = (
     Rotation2d.fromDegrees(3).radians() / kHoodGearRatio * kTalonEncoderPulsesPerRadian
 )
 
-kTurretMaximum = Rotation2d.fromDegrees(130)
-kTurretMinimum = Rotation2d.fromDegrees(-130)
+kTurretMaximum = Rotation2d.fromDegrees(340)
+kTurretMinimum = Rotation2d.fromDegrees(20)
 kTurretSoftLimitBuffer = Rotation2d.fromDegrees(1)
+
+kTurretForwardAngle = Rotation2d.fromDegrees(180)
 
 kHoodMaximum = Rotation2d.fromDegrees(13)
 kHoodMinimum = Rotation2d.fromDegrees(0)

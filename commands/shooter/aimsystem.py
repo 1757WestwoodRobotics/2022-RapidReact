@@ -5,6 +5,7 @@ from wpimath.geometry import Pose2d, Transform2d, Rotation2d
 
 from subsystems.shootingsubsystem import ShootingSubsystem
 import constants
+from util.angleoptimize import optimizeAngle
 
 
 class AimSystem(CommandBase):
@@ -60,4 +61,6 @@ class AimSystem(CommandBase):
             )
             difference = Transform2d(pose, constants.kSimDefaultTargetLocation)
             rotation = Rotation2d(atan2(difference.Y(), difference.X()))
-            self.shoot.rotateTurret(rotation)
+            self.shoot.rotateTurret(
+                optimizeAngle(constants.kTurretForwardAngle, rotation)
+            )

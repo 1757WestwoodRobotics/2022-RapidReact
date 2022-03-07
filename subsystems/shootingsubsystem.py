@@ -2,6 +2,7 @@ from commands2 import SubsystemBase
 from wpilib import SmartDashboard, RobotBase
 
 from wpimath.geometry import Rotation2d
+from util.angleoptimize import optimizeAngle
 from util.convenientmath import map_range
 from util.helpfulIO import Falcon
 
@@ -136,9 +137,8 @@ class ShootingSubsystem(SubsystemBase):
                 (constants.kTurretMinimum + constants.kTurretSoftLimitBuffer).radians(),
                 min(
                     angle.radians(),
-                    (
-                        constants.kTurretMaximum - constants.kTurretSoftLimitBuffer
-                    ).radians(),
+                    constants.kTurretMaximum.radians()
+                    - constants.kTurretSoftLimitBuffer.radians(),
                 ),
             )
             * constants.kTalonEncoderPulsesPerRadian
@@ -156,4 +156,4 @@ class ShootingSubsystem(SubsystemBase):
     def trackTurret(self, relativeAngle: float):
         """relativeAngle: radians"""
         rotation = self.getTurretRotation() + Rotation2d(relativeAngle)
-        self.rotateTurret(rotation)
+        self.rotateTurret(optimizeAngle(constants.kTurretForwardAngle, rotation))

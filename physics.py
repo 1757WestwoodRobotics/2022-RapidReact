@@ -292,7 +292,7 @@ class PhysicsEngine:
             simLimelightPose.translation(),
             simLimelightPose.rotation()
             + Rotation2d.fromDegrees(
-                SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 0.0)
+                SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 180.0)
             ),
         )
         self.limelightSim.update(servoPose, simTargetPose)
