@@ -24,7 +24,6 @@ Swerve Module Layout:
 """
 
 import math
-from wpimath._controls._controls.trajectory import TrajectoryGenerator
 from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.system.plant import DCMotor
 

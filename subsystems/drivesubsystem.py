@@ -1,7 +1,7 @@
 from enum import Enum, auto
 
 from math import tau, floor
-from typing import List, Tuple
+from typing import Tuple
 from commands2 import SubsystemBase
 from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
 from ctre import (
@@ -452,9 +452,7 @@ class DriveSubsystem(SubsystemBase):
     def getPose(self) -> Pose2d:
         return self.odometry.getPose()
 
-    def applyStates(
-        self, moduleStates: List[SwerveModuleState] | Tuple[SwerveModuleState]
-    ) -> None:
+    def applyStates(self, moduleStates: Tuple[SwerveModuleState]) -> None:
         (
             frontLeftState,
             frontRightState,

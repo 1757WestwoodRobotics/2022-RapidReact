@@ -4,7 +4,7 @@ from wpimath.controller import (
     PIDController,
     ProfiledPIDControllerRadians,
 )
-from wpimath.trajectory import Trajectory, TrajectoryConfig, TrapezoidProfileRadians
+from wpimath.trajectory import Trajectory, TrapezoidProfileRadians
 
 from subsystems.drivesubsystem import DriveSubsystem
 import constants

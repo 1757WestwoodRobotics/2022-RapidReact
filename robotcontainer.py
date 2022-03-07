@@ -2,7 +2,6 @@ import wpilib
 
 import commands2
 import commands2.button
-from commands.trajectoryauto import TrajectoryAuto
 
 import constants
 
@@ -13,6 +12,7 @@ from commands.defaultdrive import DefaultDrive
 from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.targetrelativedrive import TargetRelativeDrive
 from commands.resetdrive import ResetDrive
+from commands.trajectoryauto import TrajectoryAuto
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
