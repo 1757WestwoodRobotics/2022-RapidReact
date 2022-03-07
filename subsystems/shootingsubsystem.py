@@ -130,7 +130,13 @@ class ShootingSubsystem(SubsystemBase):
             * constants.kHoodGearRatio
         )
 
-    def rotateTurret(self, angle: Rotation2d):
+    def rotateTurret(self, angle: Rotation2d) -> None:
+        if (
+            angle.radians() > constants.kTurretMaximum.radians()
+            or angle.radians() < constants.kTurretMinimum.radians()
+        ):
+            return
+
         self.targetTurretAngle = angle
         encoderPulses = (
             max(
