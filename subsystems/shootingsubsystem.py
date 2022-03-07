@@ -108,12 +108,12 @@ class ShootingSubsystem(SubsystemBase):
         """angle to fire the ball with
         absolute with 0 being straight and 90 degrees being direct to the sky"""
         self.targetHoodAngle = angle
-        clampedAngle = (
-            min(
-                max(angle.degrees(), 0.5),
-                22.5,
-            )
-            * constants.kRadiansPerDegree
+        clampedAngle = min(
+            max(
+                angle.radians(),
+                (constants.kHoodMinimum + constants.kHoodSoftLimitBuffer).radians(),
+            ),
+            (constants.kHoodMaximum - constants.kHoodSoftLimitBuffer).radians(),
         )
         encoderPulses = (
             clampedAngle

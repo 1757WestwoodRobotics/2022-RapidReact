@@ -512,6 +512,10 @@ kTurretMaximum = Rotation2d.fromDegrees(130)
 kTurretMinimum = Rotation2d.fromDegrees(-130)
 kTurretSoftLimitBuffer = Rotation2d.fromDegrees(1)
 
+kHoodMaximum = Rotation2d.fromDegrees(13)
+kHoodMinimum = Rotation2d.fromDegrees(0)
+kHoodSoftLimitBuffer = Rotation2d.fromDegrees(0.5)
+
 kTurretAngleTolerence = Rotation2d.fromDegrees(2)
 kHoodAngleTolerence = Rotation2d.fromDegrees(1)
 kWheelSpeedTolerence = 20
