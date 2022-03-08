@@ -48,7 +48,7 @@ class HolonomicInput:
         forwardsBackwards: AnalogInput,
         sideToSide: AnalogInput,
         rotationX: AnalogInput,
-        rotationY: AnalogInput
+        rotationY: AnalogInput,
     ) -> None:
         self.forwardsBackwards = forwardsBackwards
         self.sideToSide = sideToSide
@@ -137,15 +137,15 @@ class OperatorInterface:
                 )
             ),
             Invert(
-                    Deadband(
-                        getAxisBindingOfName(constants.kChassisRotationXAxisName),
-                        constants.kXboxJoystickDeadband,
-                    ),
+                Deadband(
+                    getAxisBindingOfName(constants.kChassisRotationXAxisName),
+                    constants.kXboxJoystickDeadband,
+                ),
             ),
             Invert(
                 Deadband(
                     getAxisBindingOfName(constants.kChassisRotationYAxisName),
-                    constants.kXboxJoystickDeadband
+                    constants.kXboxJoystickDeadband,
                 )
-            )
+            ),
         )

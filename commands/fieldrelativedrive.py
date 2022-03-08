@@ -41,7 +41,7 @@ class FieldRelativeDrive(CommandBase):
             self.drive.getRotation().radians(),
             optimizeAngle(
                 self.drive.getRotation(), Rotation2d(targetRotation)
-            ).radians()
+            ).radians(),
         )
 
     def execute(self) -> None:
