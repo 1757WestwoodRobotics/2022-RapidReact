@@ -3,7 +3,7 @@ from commands2 import CommandBase
 from subsystems.intakesubsystem import IntakeSubsystem
 
 
-class NormalIntake(CommandBase):
+class RetractIntake(CommandBase):
     def __init__(self, intake: IntakeSubsystem) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
@@ -12,7 +12,7 @@ class NormalIntake(CommandBase):
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
-        self.intake.unreverseIntake()
+        self.intake.retractIntake()
 
     # pylint: disable-next=no-self-use
     def end(self, _interrupted: bool) -> None:

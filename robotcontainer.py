@@ -14,13 +14,14 @@ from commands.targetrelativedrive import TargetRelativeDrive
 from commands.resetdrive import ResetDrive
 from commands.reverseballpath import ReverseBallPath
 from commands.shootball import ShootBall
-from commands.normalballpath import NormalBallPath
 
 from commands.indexer.defaultindexer import DefaultIndexer
 from commands.indexer.holdball import HoldBall
 from commands.intake.defaultintake import DefaultIntake
 from commands.intake.autoballintake import AutoBallIntake
-from commands.intake.toggleintake import ToggleIntake
+from commands.intake.deployintake import DeployIntake
+from commands.intake.retractintake import RetractIntake
+
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
@@ -99,14 +100,18 @@ class RobotContainer:
 
         commands2.button.JoystickButton(
             *self.operatorInterface.toggleIntakeControl
-        ).whenPressed(ToggleIntake(self.intake, self.indexer))
+        ).whenHeld(DeployIntake(self.intake))
+        commands2.button.JoystickButton(
+            *self.operatorInterface.toggleIntakeControl
+        ).whenReleased(RetractIntake(self.intake))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.toggleReverseBallPath
+            *self.operatorInterface.reverseBallPath
         ).whenHeld(ReverseBallPath(self.intake, self.indexer))
         commands2.button.JoystickButton(
-            *self.operatorInterface.toggleReverseBallPath
-        ).whenReleased(NormalBallPath(self.intake, self.indexer))
+            *self.operatorInterface.reverseBallPath
+        ).whenReleased(RetractIntake(self.intake))
+        # These controls are kinda weird but for now they'll do I guess
 
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl

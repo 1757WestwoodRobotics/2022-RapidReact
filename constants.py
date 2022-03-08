@@ -410,7 +410,7 @@ kResetSwerveControlButtonName = "resetSwerveControl"
 kTargetRelativeCoordinateModeControlButtonName = "targetRelativeCoordinateModeControl"
 kDriveToTargetControlButtonName = "driveToTargetControl"
 kToggleIntakeButtonName = "toggleIntake"
-kReverseBallPathName = "toggleReverseBallPath"
+kReverseBallPathName = "reverseBallPath"
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
@@ -504,6 +504,7 @@ kShootBallButtonName = "shootBall"
 kIntakeRunningKey = "intake/running"
 kIntakeReversedKey = "intake/reversed"
 
+kIntakeSystemStateKey = "intakeState"
 kIndexerSystemStateKey = "indexerState"
 # Names are stored further up, about line 335
 

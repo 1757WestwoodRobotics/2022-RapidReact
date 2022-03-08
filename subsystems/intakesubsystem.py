@@ -1,3 +1,4 @@
+from enum import Enum, auto
 from commands2 import SubsystemBase
 from wpilib import PneumaticsModuleType, Solenoid, SmartDashboard
 import constants
@@ -5,16 +6,26 @@ from util.helpfulIO import Falcon
 
 
 class IntakeSubsystem(SubsystemBase):
+    class Mode(Enum):
+        Deployed = auto()
+        Retracted = auto()
+        Reversed = auto()
+
+        def asString(self) -> str:
+            mapping = {
+                self.Deployed: "Deployed",
+                self.Retracted: "Retracted",
+                self.Reversed: "Reversed",
+            }
+            return mapping[self]
+
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
-        self.intakeDeployed = False  # default to intake retracted and not reversed
-        self.intakeReversed = False
 
         self.intakeSolenoid = Solenoid(
             PneumaticsModuleType.REVPH, constants.kIntakeSolenoidChannelId
         )
-        self.intakeSolenoid.set(False)
 
         self.intakeMotor = Falcon(
             constants.kIntakeMotorName,
@@ -22,43 +33,27 @@ class IntakeSubsystem(SubsystemBase):
             constants.kSimIntakeMotorPort,
             inverted=constants.kIntakeMotorInverted,
         )
+        self.state = self.Mode.Retracted
 
     def periodic(self) -> None:
-        SmartDashboard.putBoolean(constants.kIntakeRunningKey, self.intakeDeployed)
-        SmartDashboard.putBoolean(constants.kIntakeReversedKey, self.intakeReversed)
-
-    def isIntakeReversed(self) -> bool:
-        return self.intakeReversed
-
-    def isIntakeDeployed(self) -> bool:
-        return self.intakeDeployed
-
-    def toggleIntake(self) -> None:
-        if self.intakeDeployed:
-            self.retractIntake()
-        else:
-            self.deployIntake()
+        SmartDashboard.putString(constants.kIntakeSystemStateKey, self.state.asString())
 
     def reverseIntake(self) -> None:
-        self.intakeReversed = True
-
-    def unreverseIntake(self) -> None:
-        self.intakeReversed = False
+        self.state = self.Mode.Reversed
 
     def deployIntake(self) -> None:
-        self.intakeDeployed = True
-        self.intakeReversed = False
+        self.state = self.Mode.Deployed
 
     def retractIntake(self) -> None:
-        self.intakeDeployed = False
+        self.state = self.Mode.Retracted
 
     def defaultIntake(self) -> None:
-        if self.intakeDeployed:
+        if self.state == self.Mode.Deployed:
             self.intakeSolenoid.set(True)
-            if self.intakeReversed:
-                self.intakeMotor.setSpeed(constants.kIntakeSpeed)
-            else:
-                self.intakeMotor.setSpeed(-constants.kIntakeSpeed)
-        else:
+            self.intakeMotor.setSpeed(constants.kIntakeSpeed)
+        elif self.state == self.Mode.Reversed:
+            self.intakeSolenoid.set(True)
+            self.intakeMotor.setSpeed(-constants.kIntakeSpeed)
+        elif self.state == self.Mode.Retracted:
             self.intakeSolenoid.set(False)
             self.intakeMotor.setSpeed(0)

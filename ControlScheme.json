@@ -42,7 +42,7 @@
     },
     "Select (Xbox)"
   ],
-  "toggleReverseBallPath": [
+  "reverseBallPath": [
     0,
     {
       "Button": 8
