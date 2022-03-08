@@ -159,10 +159,7 @@ class RobotContainer:
 
         commands2.button.JoystickButton(*self.operatorInterface.shootBall).whenHeld(
             ShootBall(self.indexer)
-        )
-        commands2.button.JoystickButton(*self.operatorInterface.shootBall).whenReleased(
-            HoldBall(self.indexer)
-        )
+        ).whenReleased(HoldBall(self.indexer))
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()
