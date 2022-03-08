@@ -100,10 +100,7 @@ class RobotContainer:
 
         commands2.button.JoystickButton(
             *self.operatorInterface.toggleIntakeControl
-        ).whenHeld(DeployIntake(self.intake))
-        commands2.button.JoystickButton(
-            *self.operatorInterface.toggleIntakeControl
-        ).whenReleased(RetractIntake(self.intake))
+        ).whenHeld(DeployIntake(self.intake)).whenReleased(RetractIntake(self.intake))
 
         (
             commands2.button.JoystickButton(*self.operatorInterface.toggleIntakeControl)
