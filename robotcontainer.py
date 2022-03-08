@@ -105,13 +105,10 @@ class RobotContainer:
             *self.operatorInterface.toggleIntakeControl
         ).whenReleased(RetractIntake(self.intake))
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.reverseBallPath
-        ).whenHeld(ReverseBallPath(self.intake, self.indexer))
-        commands2.button.JoystickButton(
-            *self.operatorInterface.reverseBallPath
-        ).whenReleased(RetractIntake(self.intake))
-        # These controls are kinda weird but for now they'll do I guess
+        (
+            commands2.button.JoystickButton(*self.operatorInterface.toggleIntakeControl)
+            and commands2.button.JoystickButton(*self.operatorInterface.reverseBallPath)
+        ).whenPressed(ReverseBallPath(self.intake, self.indexer))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl
