@@ -13,6 +13,7 @@ from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.targetrelativedrive import TargetRelativeDrive
 from commands.resetdrive import ResetDrive
 from commands.reverseballpath import ReverseBallPath
+from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
 
 from commands.indexer.defaultindexer import DefaultIndexer
@@ -103,9 +104,24 @@ class RobotContainer:
         ).whenHeld(DeployIntake(self.intake)).whenReleased(RetractIntake(self.intake))
 
         (
-            commands2.button.JoystickButton(*self.operatorInterface.toggleIntakeControl)
-            and commands2.button.JoystickButton(*self.operatorInterface.reverseBallPath)
-        ).whenPressed(ReverseBallPath(self.intake, self.indexer))
+            commands2.button.JoystickButton(
+                *self.operatorInterface.toggleIntakeControl
+            ).and_(
+                commands2.button.JoystickButton(*self.operatorInterface.reverseBallPath)
+            )
+        ).whenActive(ReverseBallPath(self.intake, self.indexer))
+
+        (
+            commands2.button.JoystickButton(
+                *self.operatorInterface.toggleIntakeControl
+            ).and_(
+                commands2.button.JoystickButton(
+                    *self.operatorInterface.reverseBallPath
+                ).not_()
+            )
+        ).whenActive(
+            NormalBallPath(self.intake, self.indexer)
+        )  # when let go of just the reverse button, go back to normal ball path
 
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl
