@@ -67,24 +67,59 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
             self.pidController = PIDController(PGain, IGain, DGain)
             self.simEncoder = 0
 
+            SmartDashboard.putNumber(
+                f"{constants.kMotorBaseKey}/{self.name}/encoder/value", 0
+            )
+            SmartDashboard.putNumber(
+                f"{constants.kMotorBaseKey}/{self.name}/output/value", 0
+            )
+
+            SmartDashboard.putBoolean(
+                f"{constants.kMotorBaseKey}/{self.name}/encoder/overwritten", False
+            )
+            SmartDashboard.putBoolean(
+                f"{constants.kMotorBaseKey}/{self.name}/output/overwritten", False
+            )
+
     def _setSimMotor(self, amount: float) -> None:
         """moves just the simulated motor [-1,1]"""
         if not RobotBase.isReal():
+
+            if SmartDashboard.getBoolean(
+                f"{constants.kMotorBaseKey}/{self.name}/output/overwritten", False
+            ):
+                clampedAmount = clamp(
+                    SmartDashboard.getNumber(
+                        f"{constants.kMotorBaseKey}/{self.name}/output/value", 0
+                    ),
+                    -1,
+                    1,
+                )
             clampedAmount = clamp(amount, -1, 1)
             self.motor.set(clampedAmount)
-            self.simEncoder += (
-                clampedAmount
-                # * 2 * tau # radians per second
-                * DCMotor.falcon500().freeSpeed  # radians per second
-                * constants.kTalonEncoderPulsesPerRadian  # encoder ticks per radian
-                * 1
-                / 50  # 50 updates per second
-            )  # amount of free speed, free speed is in RPS, convert from revolutions to encodes ticks expected
+
+            if SmartDashboard.getBoolean(
+                f"{constants.kMotorBaseKey}/{self.name}/encoder/overwritten", False
+            ):
+                self.simEncoder = SmartDashboard.getNumber(
+                    f"{constants.kMotorBaseKey}/{self.name}/encoder/value",
+                    0,
+                )
+            else:
+                self.simEncoder += (
+                    clampedAmount
+                    # * 2 * tau # radians per second
+                    * DCMotor.falcon500().freeSpeed  # radians per second
+                    * constants.kTalonEncoderPulsesPerRadian  # encoder ticks per radian
+                    * 1
+                    / 50  # 50 updates per second
+                )  # amount of free speed, free speed is in RPS, convert from revolutions to encodes ticks expected
+
             SmartDashboard.putNumber(
-                f"{constants.kMotorBaseKey}/{self.name}/encoder", self.simEncoder
+                f"{constants.kMotorBaseKey}/{self.name}/encoder/value", self.simEncoder
             )
             SmartDashboard.putNumber(
-                f"{constants.kMotorBaseKey}/{self.name}/output", self.motor.get()
+                f"{constants.kMotorBaseKey}/{self.name}/output/value", self.motor.get()
             )
         else:
             raise IndexError("Cannot Move A Simulated Motor On A Real Robot")
