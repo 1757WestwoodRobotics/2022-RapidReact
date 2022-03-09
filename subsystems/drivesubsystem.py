@@ -1,6 +1,5 @@
 from enum import Enum, auto
 
-from math import tau, floor
 from commands2 import SubsystemBase
 from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
 from ctre import (

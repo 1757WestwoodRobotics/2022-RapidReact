@@ -1,5 +1,5 @@
-from wpimath.geometry import Rotation2d
 from math import tau, floor
+from wpimath.geometry import Rotation2d
 
 
 def optimizeAngle(currentAngle: Rotation2d, targetAngle: Rotation2d) -> Rotation2d:
