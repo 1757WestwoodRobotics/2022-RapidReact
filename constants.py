@@ -487,8 +487,8 @@ kShootingMotorId = 23
 kHoodMotorId = 21
 
 kSimTurretMotorPort = 9
-kSimShootingMotorPort = 18
-kSimHoodMotorPort = 19
+kSimShootingMotorPort = 15
+kSimHoodMotorPort = 16
 
 kSimTurretMinimumLimitSwitchPort = 0
 kSimTurretMaximumLimitSwitchPort = 1
