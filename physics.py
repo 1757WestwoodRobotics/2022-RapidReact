@@ -9,6 +9,7 @@
 # of your robot code without too much extra effort.
 #
 
+import math
 import typing
 from wpilib import RobotController, SmartDashboard
 from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim
@@ -141,6 +142,50 @@ class LimelightSim:
         )
 
 
+class IntakeCameraSim:
+    def __init__(self) -> None:
+        NetworkTables.initialize()
+        self.limelightCargoNetworkTable = NetworkTables.getTable(
+            constants.kLimelightCargoNetworkTableName
+        )
+
+    def update(self, intakeCameraPose: Pose2d, ballPose: Pose2d) -> None:
+        ballInCamera = Transform2d(intakeCameraPose, ballPose)
+        ballHorizontalAngle = convenientmath.rotationFromTranslation(
+            ballInCamera.translation()
+        )
+        ballDistance = intakeCameraPose.translation().distance(ballPose.translation())
+        ballVerticalAngle = (
+            Rotation2d(
+                math.atan(ballDistance / constants.kIntakeCameraHeightInMeters)
+            ).degrees()
+            - constants.kIntakeCameraTiltAngle.degrees()
+        )
+        ballValid = False
+        if (
+            constants.kLimelightMinHorizontalFoV.radians()
+            < ballHorizontalAngle.radians()
+            < constants.kLimelightMaxHorizontalFoV.radians()
+            and constants.kLimelightMinVerticalFoV.degrees()
+            < ballVerticalAngle
+            < constants.kLimelightMaxVerticalFoV.degrees()
+        ):
+            ballValid = True
+
+            self.limelightCargoNetworkTable.putNumber(
+                constants.kLimelightTargetVerticalAngleKey,
+                ballVerticalAngle,
+            )
+            self.limelightCargoNetworkTable.putNumber(
+                constants.kLimelightTargetHorizontalAngleKey,
+                ballHorizontalAngle.degrees(),
+            )
+
+        self.limelightCargoNetworkTable.putBoolean(
+            constants.kLimelightTargetValidKey, ballValid
+        )
+
+
 class PhysicsEngine:
     """
     Simulates a drivetrain
@@ -212,7 +257,11 @@ class PhysicsEngine:
         )
         simTargetObject.setPose(constants.kSimDefaultTargetLocation)
 
+        simBallObject = self.physics_controller.field.getObject(constants.kSimBallName)
+        simBallObject.setPose(constants.kSimDefaultBallLocation)
+
         self.limelightSim = LimelightSim()
+        self.intakeCameraSim = IntakeCameraSim()
 
     # pylint: disable-next=unused-argument
     def update_sim(self, now: float, tm_diff: float) -> None:
@@ -241,7 +290,7 @@ class PhysicsEngine:
             [simRobotPose.X(), simRobotPose.Y(), simRobotPose.rotation().radians()],
         )
 
-        # publish the simulated target pose to nt
+        # publish the simulated target and ball pose to nt
         simTargetObject = self.physics_controller.field.getObject(
             constants.kSimTargetName
         )
@@ -251,6 +300,25 @@ class PhysicsEngine:
             [simTargetPose.X(), simTargetPose.Y(), simTargetPose.rotation().radians()],
         )
 
+        simBallObject = self.physics_controller.field.getObject(constants.kSimBallName)
+        simBallPose = simBallObject.getPose()
+        SmartDashboard.putNumberArray(
+            constants.kSimBallPoseArrayKey,
+            [simBallPose.X(), simBallPose.Y(), simBallPose.rotation().radians()],
+        )
+
+        simIntakeCameraPose = simRobotPose.transformBy(
+            Transform2d(
+                Translation2d(constants.kIntakeCameraCenterOffsetInMeters, 0.0),
+                Rotation2d(),
+            )
+        )
+        simIntakeCameraObject = self.physics_controller.field.getObject(
+            constants.kSimIntakeCameraObjectName
+        )
+        simIntakeCameraObject.setPose(simIntakeCameraPose)
+
+        self.intakeCameraSim.update(simIntakeCameraPose, simBallPose)
         # publish the simulated limelight nt entries
         limelightPanAngle = SmartDashboard.getNumber(constants.kTrackerPanAngleKey, 0)
         robotToLimelightTransform = Transform2d(

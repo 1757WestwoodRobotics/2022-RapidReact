@@ -1,20 +1,19 @@
 from commands2 import CommandBase
+from subsystems.indexersubsystem import IndexerSubsystem
 
-from subsystems.drivesubsystem import DriveSubsystem
 
-
-class ResetDrive(CommandBase):
-    def __init__(self, drive: DriveSubsystem) -> None:
+class ReverseIndexer(CommandBase):
+    def __init__(self, indexer: IndexerSubsystem):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
-        self.drive = drive
-        self.addRequirements(drive)
+        self.indexer = indexer
+        self.addRequirements([self.indexer])
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
 
     def execute(self) -> None:
-        self.drive.resetSwerveModules()
+        self.indexer.reversePath()
 
     # pylint: disable-next=no-self-use
     def end(self, _interrupted: bool) -> None:

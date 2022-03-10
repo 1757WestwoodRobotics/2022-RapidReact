@@ -85,6 +85,18 @@ class OperatorInterface:
             constants.kDriveToTargetControlButtonName
         )
 
+        self.toggleIntakeControl = getButtonBindingOfName(
+            constants.kToggleIntakeButtonName
+        )
+
+        self.reverseBallPath = getButtonBindingOfName(constants.kReverseBallPathName)
+
+        self.autoBallIntakeControl = getButtonBindingOfName(
+            constants.kAutoBallIntakeName
+        )
+
+        self.shootBall = getButtonBindingOfName(constants.kShootBallButtonName)
+
         self.chassisControls = HolonomicInput(
             Invert(
                 Deadband(

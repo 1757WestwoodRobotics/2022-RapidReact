@@ -1,23 +1,73 @@
 {
-    "fieldRelativeCoordinateModeControl": [0, {
-        "Button": 6
-    }, "Right Bumper (Xbox)"],
-    "chassisForwardsBackwards": [0, {
-        "Axis": 1
-    }, "Left Stick Y (Xbox)"],
-    "chassisRotation": [0, {
-        "Axis": 3
-    }, "Right Stick X (Xbox)"],
-    "chassisSideToSide": [0, {
-        "Axis": 0
-    }, "Left Stick X (Xbox)"],
-    "resetSwerveControl": [0, {
-        "Button": 3
-    }, "X (Xbox)"],
-    "targetRelativeCoordinateModeControl": [0, {
-        "Button": 5
-    }, "Left Bumper (Xbox)"],
-    "driveToTargetControl": [0, {
-        "Button": 4
-    }, "Y (Xbox)"]
+  "fieldRelativeCoordinateModeControl": [
+    0,
+    { "Button": 6 },
+    "Right Bumper (Xbox)"
+  ],
+  "chassisForwardsBackwards": [0, { "Axis": 1 }, "Left Stick Y (Xbox)"],
+  "chassisRotation": [0, { "Axis": 3 }, "Right Stick X (Xbox)"],
+  "chassisSideToSide": [0, { "Axis": 0 }, "Left Stick X (Xbox)"],
+  "resetSwerveControl": [
+    0,
+    {
+      "Button": 3
+    },
+    "X (Xbox)"
+  ],
+  "targetRelativeCoordinateModeControl": [
+    0,
+    {
+      "Button": 5
+    },
+    "Left Bumper (Xbox)"
+  ],
+  "driveToTargetControl": [
+    0,
+    {
+      "Button": 4
+    },
+    "Y (Xbox)"
+  ],
+  "launchCargo": [
+    0,
+    {
+      "Button": 9
+    },
+    "Left Thumb Button (Xbox)"
+  ],
+  "toggleIntake": [
+    0,
+    {
+      "Button": 7
+    },
+    "Select (Xbox)"
+  ],
+  "reverseBallPath": [
+    0,
+    {
+      "Button": 8
+    },
+    "Select Button (Xbox)"
+  ],
+  "toggleClimber": [
+    0,
+    {
+      "Button": 2
+    },
+    "B (Xbox)"
+  ],
+  "autoBallIntake": [
+    0,
+    {
+      "Button": 1
+    },
+    "A (Xbox)"
+  ],
+  "shootBall": [
+    0,
+    {
+      "Button": 10
+    },
+    "Right Thumb Button (Xbox)"
+  ]
 }
