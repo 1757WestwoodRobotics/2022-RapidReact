@@ -1,4 +1,3 @@
-from typing import Callable
 from ctre import WPI_TalonFX, ControlMode
 from wpilib import RobotBase, PWMVictorSPX, DigitalInput, SmartDashboard
 from wpimath.controller import PIDController
@@ -8,8 +7,6 @@ from util.convenientmath import clamp
 
 import constants
 
-LimitSwitch = Callable[[], bool]
-
 
 class Falcon:  # represents either a simulated motor or a real Falcon 500
     def __init__(
@@ -17,7 +14,7 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
         name: str,
         realId: int,
         simId: int,
-        PGain: float = 1,
+        PGain: float = 0.01,
         IGain: float = 0,
         DGain: float = 0,
         PIDSlot: int = 0,
@@ -60,7 +57,7 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
                 ),
             ):
                 return
-            if not ctreCheckError("invert", self.motor.setInverted(inverted)):
+            if not ctreCheckError("config_Invert", self.motor.setInverted(inverted)):
                 return
             print("Falcon Initialization Complete")
         else:
@@ -186,14 +183,19 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
             )
 
 
-def limitSwitch(falcon: Falcon, isRealForwardSwitch: bool, simId: int) -> LimitSwitch:
-    def value() -> bool:
-        if RobotBase.isReal():
-            if isRealForwardSwitch:
-                return falcon.motor.isFwdLimitSwitchClosed()
-            else:
-                return falcon.motor.isRevLimitSwitchClosed()
+class LimitSwitch:
+    def __init__(self, falcon: Falcon, isRealForwardSwitch: bool, simId: int) -> None:
+        if not RobotBase.isReal():
+            self.simSwitch = DigitalInput(simId)
         else:
-            return DigitalInput(simId).get()
+            self.falcon = falcon
+            self.isFwd = isRealForwardSwitch
 
-    return value
+    def value(self) -> bool:
+        if RobotBase.isReal():
+            if self.isFwd:
+                return self.falcon.motor.isFwdLimitSwitchClosed()
+            else:
+                return self.falcon.motor.isRevLimitSwitchClosed()
+        else:
+            return self.simSwitch.get()
