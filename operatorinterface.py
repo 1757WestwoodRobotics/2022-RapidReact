@@ -113,28 +113,19 @@ class OperatorInterface:
         )
 
         self.shootBall = getButtonBindingOfName(constants.kShootBallButtonName)
-        self.scaler = MapRange(getAxisBindingOfName("scaler"), 1, -1, 0, 1)
 
         self.chassisControls = HolonomicInput(
             Invert(
-                Multiply(
-                    Deadband(
-                        getAxisBindingOfName(
-                            constants.kChassisForwardsBackwardsAxisName
-                        ),
-                        constants.kXboxJoystickDeadband,
-                    ),
-                    self.scaler,
-                )
+                Deadband(
+                    getAxisBindingOfName(constants.kChassisForwardsBackwardsAxisName),
+                    constants.kXboxJoystickDeadband,
+                ),
             ),
             Invert(
-                Multiply(
-                    Deadband(
-                        getAxisBindingOfName(constants.kChassisSideToSideAxisName),
-                        constants.kXboxJoystickDeadband,
-                    ),
-                    self.scaler,
-                )
+                Deadband(
+                    getAxisBindingOfName(constants.kChassisSideToSideAxisName),
+                    constants.kXboxJoystickDeadband,
+                ),
             ),
             Invert(
                 Deadband(

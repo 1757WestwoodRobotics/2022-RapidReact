@@ -104,13 +104,6 @@
     },
     "left button set, right top (ThrustmasterT16000M)"
   ],
-  "scaler": [
-    1,
-    {
-      "Axis": 2
-    },
-    "Throttle Slide (ThrustmasterTWCSThrottle)"
-  ],
   "driveToTargetControl": [
     0,
     {
