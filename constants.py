@@ -516,7 +516,7 @@ kHoodPGain = 0.15
 kHoodIGain = 0
 kHoodDGain = 0
 
-kHoodGearRatio = (1 / 5) * (-13 / 180)
+kHoodGearRatio = (1 / 5) * (-13 / 360)
 
 kHoodMappingFunction = lambda x: 13  # needs real algorihm
 
@@ -540,8 +540,8 @@ kTurretSoftLimitBuffer = Rotation2d.fromDegrees(1)
 
 kTurretForwardAngle = Rotation2d.fromDegrees(180)
 
-kHoodMaximum = Rotation2d.fromDegrees(13)
-kHoodMinimum = Rotation2d.fromDegrees(0)
+kHoodMaximum = Rotation2d.fromDegrees(18)
+kHoodMinimum = Rotation2d.fromDegrees(-5)
 kHoodSoftLimitBuffer = Rotation2d.fromDegrees(0.5)
 
 kTurretAngleTolerence = Rotation2d.fromDegrees(2)
