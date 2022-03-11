@@ -1,39 +1,4 @@
 {
-  "targetRelativeCoordinateModeControl": [
-    0,
-    {
-      "Button": 5
-    },
-    "Left Bumper (Xbox)"
-  ],
-  "launchCargo": [
-    0,
-    {
-      "Button": 9
-    },
-    "Left Thumb Button (Xbox)"
-  ],
-  "toggleIntake": [
-    0,
-    {
-      "Button": 7
-    },
-    "Select (Xbox)"
-  ],
-  "reverseBallPath": [
-    0,
-    {
-      "Button": 8
-    },
-    "Select Button (Xbox)"
-  ],
-  "toggleClimber": [
-    0,
-    {
-      "Button": 2
-    },
-    "B (Xbox)"
-  ],
   "autoBallIntake": [
     0,
     {
@@ -41,81 +6,81 @@
     },
     "A (Xbox)"
   ],
-  "shootBall": [
-    0,
-    {
-      "Button": 10
-    },
-    "Right Thumb Button (Xbox)"
-  ],
-  "resetSwerveControl": [
-    0,
-    {
-      "Button": 13
-    },
-    "left button set, right top (ThrustmasterT16000M)"
-  ],
-  "driveToTargetControl": [
-    0,
-    {
-      "Button": 11
-    },
-    "left button set, left top (ThrustmasterT16000M)"
-  ],
-  "chassisXRotation": [
-    0,
-    {
-      "Axis": 3
-    },
-    "X Right (ThrustmasterTWCSThrottle)"
-  ],
-  "chassisYRotation": [
-    0,
-    {
-      "Axis": 4
-    },
-    "Y right "
-  ],
   "chassisForwardsBackwards": [
     0,
     {
       "Axis": 1
     },
-    "Stick Y Axis (ThrustmasterT16000M)"
+    "Left Stick Y (Xbox)"
   ],
   "chassisSideToSide": [
     0,
     {
       "Axis": 0
     },
-    "Stick X Axis (ThrustmasterT16000M)"
+    "Left Stick X (Xbox)"
   ],
-  "fieldRelativeCoordinateModeControl": [
+  "chassisXRotation": [
     0,
     {
-      "Button": 1
+      "Axis": 3
     },
-    "left button on top of joystick (ThrustmasterT16000M)"
+    "Right Stick X (Xbox)"
   ],
-  "resetSwerveControl": [
+  "chassisYRotation": [
     0,
     {
-      "Button": 13
+      "Axis": 4
     },
-    "left button set, right top (ThrustmasterT16000M)"
+    "Right Stick Y (Xbox)"
+  ],
+  "deployIntake": [
+    0,
+    {
+      "Axis": 5
+    },
+    "Right Trigger (Xbox)"
   ],
   "driveToTargetControl": [
     0,
     {
-      "Button": 11
+      "Button": 2
     },
-    "left button set, left top (ThrustmasterT16000M)"
+    "B (Xbox)"
+  ],
+  "fieldRelativeCoordinateModeControl": [
+    0,
+    {
+      "Button": 5
+    },
+    "Left Bumper (Xbox)"
+  ],
+  "resetSwerveControl": [
+    0,
+    {
+      "Button": 3
+    },
+    "X (Xbox)"
+  ],
+  "reverseBallPath": [
+    0,
+    {
+      "Axis": 2
+    },
+    "Left Trigger (Xbox)"
+  ],
+  "shootBall": [
+    1,
+    {
+      "Button": 1
+    },
+    "A (Xbox)"
   ],
   "targetRelativeCoordinateModeControl": [
     0,
     {
-      "Button": 4
+      "Button": 6
     },
-    "right button on top of joystick (ThrustmasterT16000M)"
+    "Right Bumper (Xbox)"
   ]
 }

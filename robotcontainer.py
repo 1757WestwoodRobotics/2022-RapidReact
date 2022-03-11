@@ -30,6 +30,7 @@ from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
 
 from operatorinterface import OperatorInterface
+from util.helpfultriggerwrappers import AxisButton
 
 
 class RobotContainer:
@@ -100,24 +101,31 @@ class RobotContainer:
         and then passing it to a JoystickButton.
         """
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.toggleIntakeControl
+        AxisButton(
+            self.operatorInterface.deployIntakeControl,
+            constants.kXboxTriggerActivationThreshold,
         ).whenHeld(DeployIntake(self.intake)).whenReleased(RetractIntake(self.intake))
 
         (
-            commands2.button.JoystickButton(
-                *self.operatorInterface.toggleIntakeControl
+            AxisButton(
+                self.operatorInterface.deployIntakeControl,
+                constants.kXboxTriggerActivationThreshold,
             ).and_(
-                commands2.button.JoystickButton(*self.operatorInterface.reverseBallPath)
+                AxisButton(
+                    self.operatorInterface.reverseBallPath,
+                    constants.kXboxTriggerActivationThreshold,
+                )
             )
         ).whenActive(ReverseBallPath(self.intake, self.indexer))
 
         (
-            commands2.button.JoystickButton(
-                *self.operatorInterface.toggleIntakeControl
+            AxisButton(
+                self.operatorInterface.deployIntakeControl,
+                constants.kXboxTriggerActivationThreshold,
             ).and_(
-                commands2.button.JoystickButton(
-                    *self.operatorInterface.reverseBallPath
+                AxisButton(
+                    self.operatorInterface.reverseBallPath,
+                    constants.kXboxTriggerActivationThreshold,
                 ).not_()
             )
         ).whenActive(

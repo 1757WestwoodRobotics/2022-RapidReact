@@ -102,11 +102,11 @@ class OperatorInterface:
             constants.kDriveToTargetControlButtonName
         )
 
-        self.toggleIntakeControl = getButtonBindingOfName(
-            constants.kToggleIntakeButtonName
+        self.deployIntakeControl = getAxisBindingOfName(
+            constants.kDeployIntakeButtonName
         )
 
-        self.reverseBallPath = getButtonBindingOfName(constants.kReverseBallPathName)
+        self.reverseBallPath = getAxisBindingOfName(constants.kReverseBallPathName)
 
         self.autoBallIntakeControl = getButtonBindingOfName(
             constants.kAutoBallIntakeName

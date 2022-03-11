@@ -414,8 +414,9 @@ kFieldRelativeCoordinateModeControlButtonName = "fieldRelativeCoordinateModeCont
 kResetSwerveControlButtonName = "resetSwerveControl"
 kTargetRelativeCoordinateModeControlButtonName = "targetRelativeCoordinateModeControl"
 kDriveToTargetControlButtonName = "driveToTargetControl"
-kToggleIntakeButtonName = "toggleIntake"
+kDeployIntakeButtonName = "deployIntake"
 kReverseBallPathName = "reverseBallPath"
+kXboxTriggerActivationThreshold = 0.5
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
