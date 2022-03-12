@@ -531,7 +531,9 @@ kShootingManualModeKey = "shooting/manualMode"
 kShootingOnTargetKey = "shooting/onTarget"
 
 kHoodStartingAngle = (
-    Rotation2d.fromDegrees(3).radians() / kHoodGearRatio * kTalonEncoderPulsesPerRadian
+    Rotation2d.fromDegrees(1.5840).radians()
+    / kHoodGearRatio
+    * kTalonEncoderPulsesPerRadian
 )
 
 kTurretMaximum = Rotation2d.fromDegrees(340)
