@@ -501,7 +501,7 @@ kShootingIGain = 0
 kShootingDGain = 0
 kShootingMotorInverted = True
 
-kShootingMappingFunction = lambda x: 100 * x  # needs real algorihm
+kShootingMappingFunction = lambda x: 16.41 * math.e ^ (0.3662 * x) + 532
 
 kTurretPIDSlot = 0
 kTurretPGain = 0.06
@@ -518,7 +518,7 @@ kHoodDGain = 0
 
 kHoodGearRatio = (1 / 5) * (-13 / 360)
 
-kHoodMappingFunction = lambda x: 13  # needs real algorihm
+kHoodMappingFunction = lambda x: 11.04 * math.e ^ (0.1004 * x) + -11.06
 
 kTurretMotorName = "shooting_turret"
 kShootingMotorName = "shooting_shooting"
