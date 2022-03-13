@@ -65,6 +65,7 @@ class ShootingSubsystem(SubsystemBase):
                 * constants.kTalonEncoderPulsesPerRadian,
             )
             self.turretMotor.setCurrentEncoderPulseCount(turretRealPosition)
+            self.turretMotor.setBrakeMode()
 
     def periodic(self) -> None:
         self.initializationMinimum = min(

@@ -1,4 +1,4 @@
-from ctre import WPI_TalonFX, ControlMode
+from ctre import WPI_TalonFX, ControlMode, NeutralMode
 from wpilib import RobotBase, PWMVictorSPX, DigitalInput, SmartDashboard
 from wpimath.controller import PIDController
 from wpimath.system.plant import DCMotor
@@ -181,6 +181,20 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
                 ControlMode.Velocity,
                 driveEncoderPulsesPerSecond / constants.k100MillisecondsPerSecond,
             )
+
+    def setBrakeMode(self):
+        if RobotBase.isReal():
+            if not ctreCheckError(
+                "brake_set", self.motor.setNeutralMode(NeutralMode.Brake)
+            ):
+                return
+
+    def setCoastMode(self):
+        if RobotBase.isReal():
+            if not ctreCheckError(
+                "coast_set", self.motor.setNeutralMode(NeutralMode.Coast)
+            ):
+                return
 
 
 class LimitSwitch:
