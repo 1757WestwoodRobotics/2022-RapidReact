@@ -1,25 +1,31 @@
 {
-  "fieldRelativeCoordinateModeControl": [
-    0,
-    { "Button": 6 },
-    "Right Bumper (Xbox)"
-  ],
-  "chassisForwardsBackwards": [0, { "Axis": 1 }, "Left Stick Y (Xbox)"],
-  "chassisRotation": [0, { "Axis": 3 }, "Right Stick X (Xbox)"],
-  "chassisSideToSide": [0, { "Axis": 0 }, "Left Stick X (Xbox)"],
-  "resetSwerveControl": [
+  "autoBallIntake": [
     0,
     {
-      "Button": 3
+      "Button": 1
     },
-    "X (Xbox)"
+    "A (Xbox)"
   ],
-  "targetRelativeCoordinateModeControl": [
+  "chassisForwardsBackwards": [
     0,
     {
-      "Button": 5
+      "Axis": 1
     },
-    "Left Bumper (Xbox)"
+    "Left Stick Y (Xbox)"
+  ],
+  "chassisRotation": [
+    0,
+    {
+      "Axis": 3
+    },
+    "Right Stick X (Xbox)"
+  ],
+  "chassisSideToSide": [
+    0,
+    {
+      "Axis": 0
+    },
+    "Left Stick X (Xbox)"
   ],
   "driveToTargetControl": [
     0,
@@ -28,6 +34,20 @@
     },
     "Y (Xbox)"
   ],
+  "fenderShot": [
+    0,
+    {
+      "Button": 11
+    },
+    "Left Thumb Button (Xbox)"
+  ],
+  "fieldRelativeCoordinateModeControl": [
+    0,
+    {
+      "Button": 6
+    },
+    "Right Bumper (Xbox)"
+  ],
   "launchCargo": [
     0,
     {
@@ -35,12 +55,12 @@
     },
     "Left Thumb Button (Xbox)"
   ],
-  "toggleIntake": [
+  "resetSwerveControl": [
     0,
     {
-      "Button": 7
+      "Button": 3
     },
-    "Select (Xbox)"
+    "X (Xbox)"
   ],
   "reverseBallPath": [
     0,
@@ -49,6 +69,20 @@
     },
     "Select Button (Xbox)"
   ],
+  "shootBall": [
+    0,
+    {
+      "Button": 10
+    },
+    "Right Thumb Button (Xbox)"
+  ],
+  "targetRelativeCoordinateModeControl": [
+    0,
+    {
+      "Button": 5
+    },
+    "Left Bumper (Xbox)"
+  ],
   "toggleClimber": [
     0,
     {
@@ -56,18 +90,11 @@
     },
     "B (Xbox)"
   ],
-  "autoBallIntake": [
+  "toggleIntake": [
     0,
     {
-      "Button": 1
+      "Button": 7
     },
-    "A (Xbox)"
-  ],
-  "shootBall": [
-    0,
-    {
-      "Button": 10
-    },
-    "Right Thumb Button (Xbox)"
+    "Select (Xbox)"
   ]
 }

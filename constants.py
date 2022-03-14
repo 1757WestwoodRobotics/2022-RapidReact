@@ -551,6 +551,11 @@ kHoodAngleTolerence = Rotation2d.fromDegrees(1)
 kWheelSpeedTolerence = 20
 
 kMotorBaseKey = "motors"
+
+# Fender Shot
+kFenderHoodAngle = Rotation2d.fromDegrees(0)
+kFenderWheelSpeed = 600
+
 # Intake Camera
 kIntakeCameraTiltAngle = Rotation2d.fromDegrees(90 - 25)
 kIntakeCameraHeightInMeters = 0.5
@@ -575,6 +580,7 @@ kDriveToBallDGain = 0.2
 kAutoBallIntakeName = "autoBallIntake"
 
 kShootBallButtonName = "shootBall"
+kFenderShotButtonName = "fenderShot"
 
 kIntakeRunningKey = "intake/running"
 kIntakeReversedKey = "intake/reversed"
