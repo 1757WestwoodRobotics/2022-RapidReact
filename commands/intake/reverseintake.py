@@ -12,6 +12,8 @@ class ReverseIntake(CommandBase):
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
+
+    def execute(self) -> None:
         self.intake.reverseIntake()
 
     # pylint: disable-next=no-self-use
