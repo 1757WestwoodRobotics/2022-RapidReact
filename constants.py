@@ -550,6 +550,11 @@ kTurretAngleTolerence = Rotation2d.fromDegrees(2)
 kHoodAngleTolerence = Rotation2d.fromDegrees(1)
 kWheelSpeedTolerence = 20
 
+kOffsetDistanceRange = 1
+"""meters"""
+
+kOffsetAngleRange = Rotation2d.fromDegrees(3)
+
 kMotorBaseKey = "motors"
 
 # Fender Shot
@@ -581,6 +586,9 @@ kAutoBallIntakeName = "autoBallIntake"
 
 kShootBallButtonName = "shootBall"
 kFenderShotButtonName = "fenderShot"
+kTurretAngleOffsetAxisName = "turretOffset"
+kShootingDistanceOffsetAxisName = "distanceOffset"
+
 
 kIntakeRunningKey = "intake/running"
 kIntakeReversedKey = "intake/reversed"

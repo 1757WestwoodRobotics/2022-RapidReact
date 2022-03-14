@@ -92,7 +92,9 @@ class RobotContainer:
             )
         )
 
-        self.shooting.setDefaultCommand(AimSystem(self.shooting))
+        self.shooting.setDefaultCommand(
+            AimSystem(self.shooting, self.operatorInterface.shooterOffset)
+        )
         self.intake.setDefaultCommand(DefaultIntake(self.intake))
         self.indexer.setDefaultCommand(DefaultIndexer(self.indexer))
 

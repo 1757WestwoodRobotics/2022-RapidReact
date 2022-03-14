@@ -27,6 +27,13 @@
     },
     "Left Stick X (Xbox)"
   ],
+  "distanceOffset": [
+    1,
+    {
+      "Axis": 1
+    },
+    "Stick Y Axis (Thrustmaster)"
+  ],
   "driveToTargetControl": [
     0,
     {
@@ -96,5 +103,12 @@
       "Button": 7
     },
     "Select (Xbox)"
+  ],
+  "turretOffset": [
+    1,
+    {
+      "Axis": 0
+    },
+    "Stick X Axis (Thrustmaster)"
   ]
 }

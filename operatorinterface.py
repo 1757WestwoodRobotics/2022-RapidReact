@@ -39,6 +39,12 @@ class HolonomicInput:
         self.rotation = rotation
 
 
+class Control2D:
+    def __init__(self, forwardsBackwards: AnalogInput, sideToSide: AnalogInput) -> None:
+        self.forwardsBackwards = forwardsBackwards
+        self.sideToSide = sideToSide
+
+
 class OperatorInterface:
     """
     The controls that the operator(s)/driver(s) interact with
@@ -115,6 +121,21 @@ class OperatorInterface:
             Invert(
                 Deadband(
                     getAxisBindingOfName(constants.kChassisRotationAxisName),
+                    constants.kXboxJoystickDeadband,
+                )
+            ),
+        )
+
+        self.shooterOffset = Control2D(
+            Invert(
+                Deadband(
+                    getAxisBindingOfName(constants.kTurretAngleOffsetAxisName),
+                    constants.kXboxJoystickDeadband,
+                )
+            ),
+            Invert(
+                Deadband(
+                    getAxisBindingOfName(constants.kShootingDistanceOffsetAxisName),
                     constants.kXboxJoystickDeadband,
                 )
             ),
