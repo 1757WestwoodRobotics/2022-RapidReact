@@ -449,6 +449,10 @@ class DriveSubsystem(SubsystemBase):
             module.reset()
         self.odometry.resetPosition(Pose2d(), self.gyro.getRotation2d())
 
+    def setOdometryPosition(self, pose: Pose2d):
+        self.gyro.setAngleAdjustment(pose.rotation().degrees())
+        self.odometry.resetPosition(pose, self.gyro.getRotation2d())
+
     def getPose(self) -> Pose2d:
         return self.odometry.getPose()
 

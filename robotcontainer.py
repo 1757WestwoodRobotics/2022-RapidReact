@@ -54,7 +54,7 @@ class RobotContainer:
         self.driveToTarget = DriveToTarget(self.drive, constants.kAutoTargetOffset)
 
         # A routine that follows a set trajectory
-        self.trajectoryAuto = TrajectoryAuto(self.drive)
+        self.fiveBallAuto = TrajectoryAuto(self.drive, constants.kAuto5BallFilename)
 
         # Chooser
         self.chooser = wpilib.SendableChooser()
@@ -63,7 +63,7 @@ class RobotContainer:
         self.chooser.setDefaultOption("Complex Auto", self.complexAuto)
         self.chooser.addOption("Simple Auto", self.simpleAuto)
         self.chooser.addOption("Target Auto", self.driveToTarget)
-        self.chooser.addOption("Trajectory Auto", self.trajectoryAuto)
+        self.chooser.addOption("5 Ball Auto", self.fiveBallAuto)
 
         # Put the chooser on the dashboard
         wpilib.SmartDashboard.putData("Autonomous", self.chooser)

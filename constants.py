@@ -347,6 +347,8 @@ kAutoWaitDuration = 1
 kAutoTargetOffset = Translation2d(2, 0)
 """[meters, meters]"""
 
+kAuto5BallFilename = "5ba"
+
 # Target relative drive
 kTargetRelativeDriveAnglePGain = 1
 kTargetRelativeDriveAngleIGain = 0

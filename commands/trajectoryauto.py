@@ -1,6 +1,7 @@
+from os import path
+
 from commands2 import SequentialCommandGroup
-from wpimath.geometry import Pose2d, Rotation2d, Translation2d
-from wpimath.trajectory import TrajectoryGenerator, TrajectoryConfig
+from wpimath.trajectory import TrajectoryConfig, TrajectoryUtil
 from commands.followtrajectory import FollowTrajectory
 from commands.resetdrive import ResetDrive
 
@@ -9,20 +10,25 @@ import constants
 
 
 class TrajectoryAuto(SequentialCommandGroup):
-    def __init__(self, drive: DriveSubsystem) -> None:
+    def __init__(self, drive: DriveSubsystem, autoName: str) -> None:
         self.drive = drive
         trajectoryConfig = TrajectoryConfig(
             constants.kMaxForwardLinearVelocity, constants.kMaxForwardLinearAcceleration
         )
         trajectoryConfig.setKinematics(self.drive.kinematics)
 
-        trajectory = TrajectoryGenerator.generateTrajectory(
-            Pose2d(0, 0, Rotation2d(0)),
-            [Translation2d(1, 0), Translation2d(1, -1)],
-            Pose2d(2, -1, Rotation2d.fromDegrees(180)),
-            trajectoryConfig,
+        trajectory = TrajectoryUtil.fromPathweaverJson(
+            path.join(
+                path.dirname(path.realpath(__file__)),
+                "..",
+                "deploy",
+                "pathplanner",
+                "generatedJSON",
+                autoName + ".wpilib.json",
+            )
         )
 
         super().__init__(
-            ResetDrive(self.drive), FollowTrajectory(self.drive, trajectory)
+            ResetDrive(self.drive, trajectory.sample(0).pose),
+            FollowTrajectory(self.drive, trajectory),
         )
