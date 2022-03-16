@@ -14,7 +14,7 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
         name: str,
         realId: int,
         simId: int,
-        PGain: float = 0.3,
+        PGain: float = 0.1,
         IGain: float = 0,
         DGain: float = 0,
         PIDSlot: int = 0,

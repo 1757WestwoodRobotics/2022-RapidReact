@@ -282,7 +282,7 @@ kConfigurationTimeoutLimit = int(5 * kMillisecondsPerSecond)
 """milliseconds"""
 
 kDrivePIDSlot = 0
-kDrivePGain = 0.01
+kDrivePGain = 0.03
 kDriveIGain = 0.0
 kDriveDGain = 0.0
 
@@ -482,11 +482,11 @@ kIntakeCameraHeightInMeters = 0.5
 kIntakeCameraCenterOffsetInMeters = 0.2
 kIsIntakeCameraCentered = False
 
-kIntakeSpeed = 100
+kIntakeSpeed = 500
 """rpm"""
-kStagingSpeed = 100
+kStagingSpeed = 800
 """rpm"""
-kIndexerSpeed = 100
+kIndexerSpeed = 800
 """rpm"""
 
 kIntakeSolenoidChannelId = 1
