@@ -334,6 +334,10 @@ kBackRightAbsoluteEncoderOffset = 145.459
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
 
+kDriveVelocityKeys = "robotVelocity"
+kRobotUpdateRate = 1 / 50
+"""seconds"""
+
 # Vision parameters
 kTargetAngleRelativeToRobotKeys = OptionalValueKeys("TargetAngleRelativeToRobot")
 kTargetDistanceRelativeToRobotKeys = OptionalValueKeys("TargetDistanceRelativeToRobot")
@@ -556,6 +560,7 @@ kOffsetDistanceRange = 1
 kOffsetAngleRange = Rotation2d.fromDegrees(3)
 
 kMotorBaseKey = "motors"
+kPredictiveAimGain = 0.1
 
 # Fender Shot
 kFenderHoodAngle = Rotation2d.fromDegrees(0)

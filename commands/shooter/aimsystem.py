@@ -1,4 +1,3 @@
-from math import atan2
 from commands2 import CommandBase
 from wpilib import SmartDashboard
 from wpimath.geometry import Pose2d, Transform2d, Rotation2d
@@ -7,6 +6,7 @@ from operatorinterface import Control2D
 from subsystems.shootingsubsystem import ShootingSubsystem
 import constants
 from util.angleoptimize import optimizeAngle
+from util.convenientmath import rotationFromTranslation
 
 
 class AimSystem(CommandBase):
@@ -36,6 +36,34 @@ class AimSystem(CommandBase):
         )
 
     def normalMode(self) -> None:
+        deltaPos = Pose2d(
+            *[
+                constants.kRobotUpdateRate * i * constants.kPredictiveAimGain
+                for i in SmartDashboard.getNumberArray(
+                    constants.kDriveVelocityKeys, [0, 0, 0]
+                )
+            ]
+        )
+        currentPose = Pose2d(
+            *SmartDashboard.getNumberArray(
+                constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0]
+            )
+        )
+
+        staticDifference = Transform2d(currentPose, constants.kSimDefaultTargetLocation)
+        staticRotation = rotationFromTranslation(staticDifference.translation())
+
+        newPosition = Pose2d(
+            deltaPos.X() + currentPose.X(),
+            deltaPos.Y() + currentPose.Y(),
+            deltaPos.rotation() + currentPose.rotation(),
+        )
+
+        movingDifference = Transform2d(newPosition, constants.kSimDefaultTargetLocation)
+        movingRotation = rotationFromTranslation(movingDifference.translation())
+
+        deltaRotation = movingRotation - staticRotation
+
         if SmartDashboard.getBoolean(
             constants.kTargetDistanceRelativeToRobotKeys.validKey, False
         ):
@@ -64,19 +92,15 @@ class AimSystem(CommandBase):
                 + constants.kOffsetAngleRange.degrees() * self.offset.sideToSide()
             )
 
-            self.shoot.trackTurret(angle)  # always track the turret
+            self.shoot.trackTurret(
+                angle + deltaRotation.degrees()
+            )  # always track the turret
         else:
-            pose = Pose2d(
-                *SmartDashboard.getNumberArray(
-                    constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0]
-                )
-            )
-            difference = Transform2d(pose, constants.kSimDefaultTargetLocation)
-            rotation = Rotation2d(atan2(difference.Y(), difference.X()))
             self.shoot.rotateTurret(
                 optimizeAngle(
                     constants.kTurretForwardAngle,
-                    rotation + constants.kOffsetAngleRange * self.offset.sideToSide(),
+                    movingRotation
+                    + constants.kOffsetAngleRange * self.offset.sideToSide(),
                 )
                 + Rotation2d.fromDegrees(180)  # shooter 0 is robot 180
             )
