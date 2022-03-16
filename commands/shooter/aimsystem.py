@@ -78,4 +78,5 @@ class AimSystem(CommandBase):
                     constants.kTurretForwardAngle,
                     rotation + constants.kOffsetAngleRange * self.offset.sideToSide(),
                 )
+                + Rotation2d.fromDegrees(180)  # shooter 0 is robot 180
             )

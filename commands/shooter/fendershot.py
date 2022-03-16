@@ -15,6 +15,14 @@ class FenderShot(CommandBase):
         print(f"Command: {self.getName()}")
 
     def execute(self) -> None:
-        self.shoot.rotateTurret(Rotation2d.fromDegrees(180))
+        self.shoot.rotateTurret(Rotation2d.fromDegrees(0))
         self.shoot.setHoodAngle(constants.kFenderHoodAngle)
         self.shoot.setWheelSpeed(constants.kFenderWheelSpeed)
+
+    # pylint: disable-next=no-self-use
+    def end(self, _interrupted: bool) -> None:
+        print("... DONE")
+
+    # pylint: disable-next=no-self-use
+    def isFinished(self) -> bool:
+        return True

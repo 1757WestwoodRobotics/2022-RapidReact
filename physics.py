@@ -359,8 +359,9 @@ class PhysicsEngine:
             simLimelightPose.translation(),
             simLimelightPose.rotation()
             + Rotation2d.fromDegrees(
-                SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 180.0)
-            ),
+                SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 0.0)
+            )
+            + Rotation2d.fromDegrees(180),  # robot 180 is turret 0,
         )
         self.limelightSim.update(servoPose, simTargetPose)
 
@@ -374,8 +375,17 @@ class PhysicsEngine:
             targetPoseX, targetPoseY, targetAngle = SmartDashboard.getNumberArray(
                 constants.kTargetPoseArrayKeys.valueKey, [0, 0, 0]
             )
-            targetPose = Pose2d(targetPoseX, targetPoseY, targetAngle)
+
+            targetPose = Pose2d(
+                targetPoseX,
+                targetPoseY,
+                targetAngle,  # robot 0 is turret 180
+            )
             targetObject = self.physics_controller.field.getObject(
                 constants.kTargetName
             )
-            targetObject.setPose(targetPose)
+            targetObject.setPose(
+                convenientmath.rotateAroundPoint(
+                    targetPose, simRobotPose.translation(), Rotation2d.fromDegrees(180)
+                )
+            )

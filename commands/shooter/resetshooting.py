@@ -16,7 +16,7 @@ class ResetShooting(CommandBase):
 
     def execute(self) -> None:
         self.shooting.setAsStartingPosition()
-        self.shooting.rotateTurret(Rotation2d.fromDegrees(180))
+        self.shooting.rotateTurret(Rotation2d.fromDegrees(0))
 
     # pylint: disable-next=no-self-use
     def end(self, _interrupted: bool) -> None:
