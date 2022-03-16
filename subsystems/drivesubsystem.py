@@ -427,6 +427,7 @@ class DriveSubsystem(SubsystemBase):
     def resetSwerveModules(self):
         for module in self.modules:
             module.reset()
+        self.gyro.reset()
         self.odometry.resetPosition(Pose2d(), self.gyro.getRotation2d())
 
     def getRotation(self) -> Rotation2d:
