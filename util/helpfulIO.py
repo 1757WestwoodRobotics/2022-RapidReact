@@ -2,10 +2,9 @@ from ctre import WPI_TalonFX, ControlMode
 from wpilib import RobotBase, PWMVictorSPX, DigitalInput
 from wpimath.controller import PIDController
 from wpimath.system.plant import DCMotor
+import constants
 from util.ctrecheck import ctreCheckError
 from util.convenientmath import clamp
-
-import constants
 
 
 class Falcon:  # represents either a simulated motor or a real Falcon 500
