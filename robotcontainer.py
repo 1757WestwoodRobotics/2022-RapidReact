@@ -8,9 +8,9 @@ import constants
 from commands.complexauto import ComplexAuto
 from commands.drivedistance import DriveDistance
 from commands.drivetotarget import DriveToTarget
-from commands.defaultdrive import DefaultDrive
-from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.targetrelativedrive import TargetRelativeDrive
+from commands.robotrelativedrive import RobotRelativeDrive
+from commands.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.resetdrive import ResetDrive
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
@@ -30,6 +30,7 @@ from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
 
 from operatorinterface import OperatorInterface
+from util.helpfultriggerwrappers import AxisButton
 
 
 class RobotContainer:
@@ -81,11 +82,12 @@ class RobotContainer:
         self.configureButtonBindings()
 
         self.drive.setDefaultCommand(
-            DefaultDrive(
+            AbsoluteRelativeDrive(
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
-                self.operatorInterface.chassisControls.rotation,
+                self.operatorInterface.chassisControls.rotationX,
+                self.operatorInterface.chassisControls.rotationY,
             )
         )
 
@@ -99,24 +101,31 @@ class RobotContainer:
         and then passing it to a JoystickButton.
         """
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.toggleIntakeControl
+        AxisButton(
+            self.operatorInterface.deployIntakeControl,
+            constants.kXboxTriggerActivationThreshold,
         ).whenHeld(DeployIntake(self.intake)).whenReleased(RetractIntake(self.intake))
 
         (
-            commands2.button.JoystickButton(
-                *self.operatorInterface.toggleIntakeControl
+            AxisButton(
+                self.operatorInterface.deployIntakeControl,
+                constants.kXboxTriggerActivationThreshold,
             ).and_(
-                commands2.button.JoystickButton(*self.operatorInterface.reverseBallPath)
+                AxisButton(
+                    self.operatorInterface.reverseBallPath,
+                    constants.kXboxTriggerActivationThreshold,
+                )
             )
         ).whenActive(ReverseBallPath(self.intake, self.indexer))
 
         (
-            commands2.button.JoystickButton(
-                *self.operatorInterface.toggleIntakeControl
+            AxisButton(
+                self.operatorInterface.deployIntakeControl,
+                constants.kXboxTriggerActivationThreshold,
             ).and_(
-                commands2.button.JoystickButton(
-                    *self.operatorInterface.reverseBallPath
+                AxisButton(
+                    self.operatorInterface.reverseBallPath,
+                    constants.kXboxTriggerActivationThreshold,
                 ).not_()
             )
         ).whenActive(
@@ -126,11 +135,11 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl
         ).whileHeld(
-            FieldRelativeDrive(
+            RobotRelativeDrive(
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
-                self.operatorInterface.chassisControls.rotation,
+                self.operatorInterface.chassisControls.rotationX,
             )
         )
 
@@ -141,7 +150,7 @@ class RobotContainer:
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
-                self.operatorInterface.chassisControls.rotation,
+                self.operatorInterface.chassisControls.rotationX,
             )
         )
 

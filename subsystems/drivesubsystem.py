@@ -1,6 +1,5 @@
 from enum import Enum, auto
 
-from math import tau, floor
 from commands2 import SubsystemBase
 from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
 from ctre import (
@@ -22,6 +21,7 @@ from wpimath.kinematics import (
 
 import constants
 from util import convenientmath
+from util.angleoptimize import optimizeAngle
 from util.ctrecheck import ctreCheckError
 
 
@@ -48,26 +48,7 @@ class SwerveModule:
         raise NotImplementedError("Must be implemented by subclass")
 
     def optimizedAngle(self, targetAngle: Rotation2d) -> Rotation2d:
-        currentAngle = self.getSwerveAngle().radians()
-
-        closestFullRotation = (
-            floor(abs(currentAngle / tau)) * (-1 if currentAngle < 0 else 1) * tau
-        )
-
-        currentOptimalAngle = targetAngle.radians() + closestFullRotation - currentAngle
-
-        potentialNewAngles = [
-            currentOptimalAngle,
-            currentOptimalAngle - tau,
-            currentOptimalAngle + tau,
-        ]  # closest other options
-
-        deltaAngle = tau  # max possible error, a full rotation!
-        for potentialAngle in potentialNewAngles:
-            if abs(deltaAngle) > abs(potentialAngle):
-                deltaAngle = potentialAngle
-
-        return Rotation2d(deltaAngle + currentAngle)
+        return optimizeAngle(self.getSwerveAngle(), targetAngle)
 
     def getState(self) -> SwerveModuleState:
         return SwerveModuleState(
@@ -446,7 +427,11 @@ class DriveSubsystem(SubsystemBase):
     def resetSwerveModules(self):
         for module in self.modules:
             module.reset()
+        self.gyro.reset()
         self.odometry.resetPosition(Pose2d(), self.gyro.getRotation2d())
+
+    def getRotation(self) -> Rotation2d:
+        return self.gyro.getRotation2d()
 
     def periodic(self):
         """
