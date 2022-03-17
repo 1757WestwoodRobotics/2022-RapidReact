@@ -8,9 +8,9 @@ import constants
 from commands.complexauto import ComplexAuto
 from commands.drivedistance import DriveDistance
 from commands.drivetotarget import DriveToTarget
-from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.targetrelativedrive import TargetRelativeDrive
 from commands.robotrelativedrive import RobotRelativeDrive
+from commands.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.resetdrive import ResetDrive
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
@@ -82,7 +82,7 @@ class RobotContainer:
         self.configureButtonBindings()
 
         self.drive.setDefaultCommand(
-            FieldRelativeDrive(
+            AbsoluteRelativeDrive(
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
