@@ -203,6 +203,9 @@ kLimelightTargetVerticalAngleKey = "ty"
 # Limelight (cargo)
 kLimelightCargoNetworkTableName = "limelight-cargo"
 
+# CANivore
+kCANivoreName = "canivore"
+
 # Motors
 kFrontLeftDriveMotorId = 10
 kFrontLeftSteerMotorId = 11
