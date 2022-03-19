@@ -519,7 +519,7 @@ kIndexerSystemStateKey = "indexerState"
 
 # Intake Sensors
 kForwardSensorIndexer = True
-kForwardSensorStaging = True
+kForwardSensorStaging = False
 
 kSimIndexerSensorId = 16
 kSimStagingSensorId = 17
