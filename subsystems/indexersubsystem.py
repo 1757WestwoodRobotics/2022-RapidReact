@@ -35,7 +35,7 @@ class IndexerSubsystem(SubsystemBase):
             constants.kSimStagingMotorPort,
         )
         self.indexerSensor = LimitSwitch(
-            self.indexerMotor,
+            self.stagingMotor,
             constants.kForwardSensorIndexer,
             constants.kSimIndexerSensorId,
         )

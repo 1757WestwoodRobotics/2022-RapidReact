@@ -32,6 +32,7 @@ class IntakeSubsystem(SubsystemBase):
             constants.kIntakeMotorId,
             constants.kSimIntakeMotorPort,
             inverted=constants.kIntakeMotorInverted,
+            canbus=constants.kCANivoreName,
         )
         self.state = self.Mode.Retracted
 
