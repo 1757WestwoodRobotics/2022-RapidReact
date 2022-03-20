@@ -485,6 +485,31 @@ kCameraServoPGain = 0.15
 kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
 
+# Climber Constants
+kRightClimbMotorCanID = 25
+kSimRightClimbMotorID = 16
+kLeftClimbMotorCanID = 24
+kSimLeftClimbMotorID = 17
+kRightClimbBrakePCMID = 1
+kLeftClimbBrakePCMID = 0
+kLeftClimbInverted = True
+kLeftClimberFullExtensionName = "leftClimberFullExtension"
+kRightClimberFullExtensionName = "rightClimberFullExtension"
+kRightClimberMotorName = "climbing_right"
+kLeftClimberMotorName = "climbing_lefts"
+kToggleRightClimbPistonName = "toggleRightClimbPiston"
+kToggleLeftClimbPistonName = "toggleLeftClimbPiston"
+kLeftClimberEncoderTicksKey = "Left Encoder"
+kRightClimberEncoderTicksKey = "Right Encoder"
+kRightClimbForwardActuationID = 2
+kRightClimbBackwardActuationID = 13
+kLeftClimbForwardActuationID = 3
+kLeftClimbBackwardActuationID = 12
+kClimbMotorPGain = 0.025
+kClimbFullExtension = 344502
+kClimbHangingExtension = 95102
+kClimbRetractionMotorThreshold = 3500
+kClimbExtensionMotorThreshold = 2000
 # Intake Camera
 kIntakeCameraTiltAngle = Rotation2d.fromDegrees(90 - 25)
 kIntakeCameraHeightInMeters = 0.5
@@ -498,7 +523,7 @@ kStagingSpeed = 800
 kIndexerSpeed = 800
 """rpm"""
 
-kIntakeSolenoidChannelId = 1
+kIntakeSolenoidChannelId = 4
 
 kSimIntakeCameraObjectName = "Intake Camera"
 

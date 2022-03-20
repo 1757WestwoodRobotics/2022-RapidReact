@@ -69,6 +69,13 @@
     },
     "Left Trigger (Xbox)"
   ],
+  "rightClimberFullExtension": [
+    1,
+    {
+      "Button": 6
+    },
+    "Right set top middle"
+  ],
   "shootBall": [
     1,
     {
@@ -82,5 +89,19 @@
       "Button": 6
     },
     "Right Bumper (Xbox)"
+  ],
+  "toggleLeftClimbPiston": [
+    1,
+    {
+      "Button": 12
+    },
+    "Left set top middle"
+  ],
+  "toggleRightClimbPiston": [
+    1,
+    {
+      "Button": 13
+    },
+    "Left set top right"
   ]
 }

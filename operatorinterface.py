@@ -102,6 +102,21 @@ class OperatorInterface:
             constants.kDriveToTargetControlButtonName
         )
 
+        self.fullExtendLeftClimber = getButtonBindingOfName(
+            constants.kLeftClimberFullExtensionName
+        )
+
+        self.fullExtendRightClimber = getButtonBindingOfName(
+            constants.kRightClimberFullExtensionName
+        )
+
+        self.toggleRightClimbPiston = getButtonBindingOfName(
+            constants.kToggleRightClimbPistonName
+        )
+
+        self.toggleLeftClimbPiston = getButtonBindingOfName(
+            constants.kToggleLeftClimbPistonName
+        )
         self.deployIntakeControl = getAxisBindingOfName(
             constants.kDeployIntakeButtonName
         )
