@@ -12,7 +12,6 @@ from commands.targetrelativedrive import TargetRelativeDrive
 from commands.robotrelativedrive import RobotRelativeDrive
 from commands.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.resetdrive import ResetDrive
-from commands.trajectoryauto import TrajectoryAuto
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
@@ -24,6 +23,7 @@ from commands.intake.autoballintake import AutoBallIntake
 from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
 
+from commands.auto.fivebrstandard import FiveBRStandard
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
@@ -70,7 +70,7 @@ class RobotContainer:
         self.driveToTarget = DriveToTarget(self.drive, constants.kAutoTargetOffset)
 
         # A routine that follows a set trajectory
-        self.fiveBallAuto = TrajectoryAuto(self.drive, constants.kAuto5BallFilename)
+        self.fiveBRStandard = FiveBRStandard(self.drive, self.intake, self.indexer)
 
         # Chooser
         self.chooser = wpilib.SendableChooser()
@@ -79,7 +79,7 @@ class RobotContainer:
         self.chooser.setDefaultOption("Complex Auto", self.complexAuto)
         self.chooser.addOption("Simple Auto", self.simpleAuto)
         self.chooser.addOption("Target Auto", self.driveToTarget)
-        self.chooser.addOption("5 Ball Auto", self.fiveBallAuto)
+        self.chooser.addOption("5 Ball Right Standard Auto", self.fiveBRStandard)
 
         # Put the chooser on the dashboard
         wpilib.SmartDashboard.putData("Autonomous", self.chooser)
