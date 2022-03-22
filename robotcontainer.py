@@ -76,10 +76,10 @@ class RobotContainer:
         self.chooser = wpilib.SendableChooser()
 
         # Add commands to the autonomous command chooser
-        self.chooser.setDefaultOption("Complex Auto", self.complexAuto)
+        self.chooser.addOption("Complex Auto", self.complexAuto)
         self.chooser.addOption("Simple Auto", self.simpleAuto)
         self.chooser.addOption("Target Auto", self.driveToTarget)
-        self.chooser.addOption("5 Ball Right Standard Auto", self.fiveBRStandard)
+        self.chooser.setDefaultOption("5 Ball Right Standard Auto", self.fiveBRStandard)
 
         # Put the chooser on the dashboard
         wpilib.SmartDashboard.putData("Autonomous", self.chooser)

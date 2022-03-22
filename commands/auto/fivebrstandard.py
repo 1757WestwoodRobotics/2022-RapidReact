@@ -86,7 +86,7 @@ class FiveBRStandard(SequentialCommandGroup):
             DeployIntake(intake),
             HoldBall(indexer),
             FollowTrajectory(drive, pathC),
-            WaitCommand(3),
+            WaitCommand(2),
             FollowTrajectory(drive, pathD),
             RetractIntake(intake),
             FeedForward(indexer),
