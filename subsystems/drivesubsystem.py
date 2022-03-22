@@ -1,6 +1,5 @@
 from enum import Enum, auto
 
-from math import tau, floor
 from typing import Tuple
 from commands2 import SubsystemBase
 from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
@@ -452,6 +451,7 @@ class DriveSubsystem(SubsystemBase):
         self.frontRightModule.applyState(frontRightState)
         self.backLeftModule.applyState(backLeftState)
         self.backRightModule.applyState(backRightState)
+
     def getRotation(self) -> Rotation2d:
         return self.gyro.getRotation2d()
 
