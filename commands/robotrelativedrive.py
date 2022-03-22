@@ -3,7 +3,7 @@ from commands2 import CommandBase
 from subsystems.drivesubsystem import DriveSubsystem
 
 
-class DefaultDrive(CommandBase):
+class RobotRelativeDrive(CommandBase):
     def __init__(
         self,
         drive: DriveSubsystem,

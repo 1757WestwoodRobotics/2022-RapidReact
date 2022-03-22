@@ -1,23 +1,19 @@
 from commands2 import CommandBase
-from wpimath.geometry import Pose2d
-
-from subsystems.drivesubsystem import DriveSubsystem
+from subsystems.indexersubsystem import IndexerSubsystem
 
 
-class ResetDrive(CommandBase):
-    def __init__(self, drive: DriveSubsystem, position: Pose2d = Pose2d()) -> None:
+class FeedForward(CommandBase):
+    def __init__(self, indexer: IndexerSubsystem):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
-        self.drive = drive
-        self.position = position
-        self.addRequirements(drive)
+        self.indexer = indexer
+        self.addRequirements([self.indexer])
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
 
     def execute(self) -> None:
-        self.drive.resetSwerveModules()
-        self.drive.setOdometryPosition(self.position)
+        self.indexer.feedBallForward()
 
     # pylint: disable-next=no-self-use
     def end(self, _interrupted: bool) -> None:

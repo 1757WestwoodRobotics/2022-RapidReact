@@ -190,11 +190,21 @@ kLimelightTrackerModuleName = "limelight_target_tracker"
 # Limelight
 kLimelightTargetInvalidValue = 0.0
 kLimelightTargetValidValue = 1.0
-kLimelightMinHorizontalFoV = Rotation2d.fromDegrees(-27)
-kLimelightMaxHorizontalFoV = Rotation2d.fromDegrees(27)
+kLimelightMinHorizontalFoV = Rotation2d.fromDegrees(-29.8)
+kLimelightMaxHorizontalFoV = Rotation2d.fromDegrees(29.8)
+kLimelightMinVerticalFoV = Rotation2d.fromDegrees(-22.85)
+kLimelightMaxVerticalFoV = Rotation2d.fromDegrees(22.85)
 kLimelightNetworkTableName = "limelight"
 kLimelightTargetValidKey = "tv"
 kLimelightTargetHorizontalAngleKey = "tx"
+kLimelightTargetVerticalAngleKey = "ty"
+
+
+# Limelight (cargo)
+kLimelightCargoNetworkTableName = "limelight-cargo"
+
+# CANivore
+kCANivoreName = "canivore"
 
 # Motors
 kFrontLeftDriveMotorId = 10
@@ -205,6 +215,13 @@ kBackLeftDriveMotorId = 14
 kBackLeftSteerMotorId = 15
 kBackRightDriveMotorId = 16
 kBackRightSteerMotorId = 17
+kIntakeMotorId = 18
+kIntakeMotorName = "IntakeMotor"
+kIntakeMotorInverted = False
+kIndexerMotorId = 19
+kIndexerMotorName = "IndexerMotor"
+kStagingMotorId = 20
+kStagingMotorName = "StagingMotor"
 
 # Encoders
 kFrontLeftSteerEncoderId = 40
@@ -268,7 +285,7 @@ kConfigurationTimeoutLimit = int(5 * kMillisecondsPerSecond)
 """milliseconds"""
 
 kDrivePIDSlot = 0
-kDrivePGain = 0.01
+kDrivePGain = 0.03
 kDriveIGain = 0.0
 kDriveDGain = 0.0
 
@@ -301,16 +318,16 @@ To determine encoder offsets (with robot ON and DISABLED):
   7. Click "Self-Test Snapshot"
   8. Record value from line: "Absolute Position (unsigned):"
 """
-kFrontLeftAbsoluteEncoderOffset = 315.439
+kFrontLeftAbsoluteEncoderOffset = 247.324
 """degrees"""
 
-kFrontRightAbsoluteEncoderOffset = 5.186
+kFrontRightAbsoluteEncoderOffset = 239.678
 """degrees"""
 
-kBackLeftAbsoluteEncoderOffset = 20.566
+kBackLeftAbsoluteEncoderOffset = 12.217
 """degrees"""
 
-kBackRightAbsoluteEncoderOffset = 145.459
+kBackRightAbsoluteEncoderOffset = 287.402
 """degrees"""
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
@@ -324,6 +341,11 @@ kTargetFacingAngleRelativeToRobotKeys = OptionalValueKeys(
 kTargetPoseArrayKeys = OptionalValueKeys("TargetPoseArray")
 
 kTargetName = "Target"
+
+
+kBallAngleRelativeToRobotKeys = OptionalValueKeys("BallAngleRelativeToRobot")
+kBallDistanceRelativeToRobotKeys = OptionalValueKeys("BallDistanceRelativeToRobot")
+
 
 # Autonomous
 kAutoDriveDistance = 3 * kWheelCircumference
@@ -353,6 +375,10 @@ kAuto5BallFilename = "5ba"
 kTargetRelativeDriveAnglePGain = 1
 kTargetRelativeDriveAngleIGain = 0
 kTargetRelativeDriveAngleDGain = 0
+
+kRotationPGain = 1.3
+kRotationIGain = 0
+kRotationDGain = 0
 
 # Drive to Target
 kDriveToTargetDistancePGain = 0.5
@@ -393,7 +419,8 @@ kKeyboardJoystickDeadband = 0.0
 
 kControllerMappingFilename = "ControlScheme.json"
 
-kChassisRotationAxisName = "chassisRotation"
+kChassisRotationXAxisName = "chassisXRotation"
+kChassisRotationYAxisName = "chassisYRotation"
 kChassisForwardsBackwardsAxisName = "chassisForwardsBackwards"
 kChassisSideToSideAxisName = "chassisSideToSide"
 
@@ -401,21 +428,27 @@ kFieldRelativeCoordinateModeControlButtonName = "fieldRelativeCoordinateModeCont
 kResetSwerveControlButtonName = "resetSwerveControl"
 kTargetRelativeCoordinateModeControlButtonName = "targetRelativeCoordinateModeControl"
 kDriveToTargetControlButtonName = "driveToTargetControl"
+kDeployIntakeButtonName = "deployIntake"
+kReverseBallPathName = "reverseBallPath"
+kXboxTriggerActivationThreshold = 0.5
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
 kSimDefaultTargetLocation = Pose2d(
-    kFieldLength * 3 / 4, kFieldWidth / 2, 180 * kRadiansPerDegree
+    kFieldLength / 2, kFieldWidth / 2, 180 * kRadiansPerDegree
 )
 """[meters, meters, radians]"""
 
 kSimDefaultRobotLocation = Pose2d(kFieldLength / 2, kFieldWidth / 2, 0)
+kSimBallName = "SimBall"
+kSimDefaultBallLocation = Pose2d(kFieldLength / 4, kFieldWidth / 2, 0)
 
 kSimDefaultTargetHeight = 10
 """meters"""
 
 kSimRobotPoseArrayKey = "SimRobotPoseArray"
 kSimTargetPoseArrayKey = "SimTargetPoseArray"
+kSimBallPoseArrayKey = "SimBallPoseArray"
 kSimTargetHeightKey = "SimTargetHeight"
 kSimTargetTrackingModuleName = "sim_target_tracker"
 
@@ -427,6 +460,10 @@ kSimBackLeftDriveMotorPort = 4
 kSimBackLeftSteerMotorPort = 5
 kSimBackRightDriveMotorPort = 6
 kSimBackRightSteerMotorPort = 7
+kSimIntakeMotorPort = 8
+kSimStagingMotorPort = 18
+kSimIndexerMotorPort = 19
+
 
 kSimFrontLeftDriveEncoderPorts = (0, 1)
 kSimFrontLeftSteerEncoderPorts = (2, 3)
@@ -459,3 +496,42 @@ kCameraSimServoObjectName = "Camera Servo"
 kCameraServoPGain = 0.15
 kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
+
+# Intake Camera
+kIntakeCameraTiltAngle = Rotation2d.fromDegrees(90 - 25)
+kIntakeCameraHeightInMeters = 0.5
+kIntakeCameraCenterOffsetInMeters = 0.2
+kIsIntakeCameraCentered = False
+
+kIntakeSpeed = 500
+"""rpm"""
+kStagingSpeed = 800
+"""rpm"""
+kIndexerSpeed = 800
+"""rpm"""
+
+kIntakeSolenoidChannelId = 1
+
+kSimIntakeCameraObjectName = "Intake Camera"
+
+# Intake auto intake constants
+kDriveToBallPGain = 0.5
+kDriveToBallIGain = 0
+kDriveToBallDGain = 0.2
+kAutoBallIntakeName = "autoBallIntake"
+
+kShootBallButtonName = "shootBall"
+
+kIntakeRunningKey = "intake/running"
+kIntakeReversedKey = "intake/reversed"
+
+kIntakeSystemStateKey = "intakeState"
+kIndexerSystemStateKey = "indexerState"
+# Names are stored further up, about line 335
+
+# Intake Sensors
+kForwardSensorIndexer = True
+kForwardSensorStaging = False
+
+kSimIndexerSensorId = 16
+kSimStagingSensorId = 17

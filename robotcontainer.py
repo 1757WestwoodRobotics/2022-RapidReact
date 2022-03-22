@@ -8,16 +8,30 @@ import constants
 from commands.complexauto import ComplexAuto
 from commands.drivedistance import DriveDistance
 from commands.drivetotarget import DriveToTarget
-from commands.defaultdrive import DefaultDrive
-from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.targetrelativedrive import TargetRelativeDrive
+from commands.robotrelativedrive import RobotRelativeDrive
+from commands.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.resetdrive import ResetDrive
 from commands.trajectoryauto import TrajectoryAuto
+from commands.reverseballpath import ReverseBallPath
+from commands.normalballpath import NormalBallPath
+from commands.shootball import ShootBall
+
+from commands.indexer.defaultindexer import DefaultIndexer
+from commands.indexer.holdball import HoldBall
+from commands.intake.defaultintake import DefaultIntake
+from commands.intake.autoballintake import AutoBallIntake
+from commands.intake.deployintake import DeployIntake
+from commands.intake.retractintake import RetractIntake
+
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
+from subsystems.intakesubsystem import IntakeSubsystem
+from subsystems.indexersubsystem import IndexerSubsystem
 
 from operatorinterface import OperatorInterface
+from util.helpfultriggerwrappers import AxisButton
 
 
 class RobotContainer:
@@ -36,6 +50,8 @@ class RobotContainer:
         # The robot's subsystems
         self.drive = DriveSubsystem()
         self.vision = VisionSubsystem()
+        self.intake = IntakeSubsystem()
+        self.indexer = IndexerSubsystem()
 
         # Autonomous routines
 
@@ -71,13 +87,17 @@ class RobotContainer:
         self.configureButtonBindings()
 
         self.drive.setDefaultCommand(
-            DefaultDrive(
+            AbsoluteRelativeDrive(
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
-                self.operatorInterface.chassisControls.rotation,
+                self.operatorInterface.chassisControls.rotationX,
+                self.operatorInterface.chassisControls.rotationY,
             )
         )
+
+        self.intake.setDefaultCommand(DefaultIntake(self.intake))
+        self.indexer.setDefaultCommand(DefaultIndexer(self.indexer))
 
     def configureButtonBindings(self):
         """
@@ -85,14 +105,46 @@ class RobotContainer:
         instantiating a :GenericHID or one of its subclasses (Joystick or XboxController),
         and then passing it to a JoystickButton.
         """
+
+        AxisButton(
+            self.operatorInterface.deployIntakeControl,
+            constants.kXboxTriggerActivationThreshold,
+        ).whenHeld(DeployIntake(self.intake)).whenReleased(RetractIntake(self.intake))
+
+        (
+            AxisButton(
+                self.operatorInterface.deployIntakeControl,
+                constants.kXboxTriggerActivationThreshold,
+            ).and_(
+                AxisButton(
+                    self.operatorInterface.reverseBallPath,
+                    constants.kXboxTriggerActivationThreshold,
+                )
+            )
+        ).whenActive(ReverseBallPath(self.intake, self.indexer))
+
+        (
+            AxisButton(
+                self.operatorInterface.deployIntakeControl,
+                constants.kXboxTriggerActivationThreshold,
+            ).and_(
+                AxisButton(
+                    self.operatorInterface.reverseBallPath,
+                    constants.kXboxTriggerActivationThreshold,
+                ).not_()
+            )
+        ).whenActive(
+            NormalBallPath(self.intake, self.indexer)
+        )  # when let go of just the reverse button, go back to normal ball path
+
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl
         ).whileHeld(
-            FieldRelativeDrive(
+            RobotRelativeDrive(
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
-                self.operatorInterface.chassisControls.rotation,
+                self.operatorInterface.chassisControls.rotationX,
             )
         )
 
@@ -103,7 +155,7 @@ class RobotContainer:
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
-                self.operatorInterface.chassisControls.rotation,
+                self.operatorInterface.chassisControls.rotationX,
             )
         )
 
@@ -114,6 +166,14 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl
         ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.autoBallIntakeControl
+        ).whenHeld(AutoBallIntake(self.drive, self.intake))
+
+        commands2.button.JoystickButton(*self.operatorInterface.shootBall).whenHeld(
+            ShootBall(self.indexer)
+        ).whenReleased(HoldBall(self.indexer))
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()
