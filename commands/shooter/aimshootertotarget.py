@@ -20,23 +20,6 @@ class AimShooterToTarget(CommandBase):
         self.addRequirements([self.shooter])
 
     def execute(self) -> None:
-        if SmartDashboard.getBoolean(constants.kShootingManualModeKey, False):
-            self.manualMode()
-        else:
-            self.normalMode()
-
-    def manualMode(self) -> None:
-        wheelSpeed = SmartDashboard.getNumber(constants.kShootingWheelSpeedKey, 0)
-        hoodAngle = SmartDashboard.getNumber(constants.kShootingHoodAngleKey, 0)
-        turretPosition = SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 0)
-        self.shooter.setWheelSpeed(wheelSpeed)
-        self.shooter.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
-        self.shooter.rotateTurret(
-            Rotation2d.fromDegrees(turretPosition)
-            + constants.kOffsetAngleRange * self.distanceAndRotationOffset.sideToSide()
-        )
-
-    def normalMode(self) -> None:
         deltaPos = Pose2d(
             *[
                 constants.kRobotUpdateRate * element * constants.kPredictiveAimGain
