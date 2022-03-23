@@ -265,7 +265,7 @@ class LimelightTrackingModule(TrackingModule):
                         constants.kLimelightTargetHorizontalAngleKey, 0.0
                     )
                 )
-                + constants.kLimelightAngleOffset
+                + constants.kLimelightVerticalAngleOffset
             ).tan()
         else:
             self.targetDistance = None

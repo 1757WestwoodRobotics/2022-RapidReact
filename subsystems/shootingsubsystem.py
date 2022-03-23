@@ -41,6 +41,7 @@ class ShootingSubsystem(SubsystemBase):
             constants.kHoodIGain,
             constants.kHoodDGain,
             constants.kHoodPIDSlot,
+            constants.kHoodMotorInverted,
         )
 
         self.initializationMinimum = 0
@@ -59,9 +60,9 @@ class ShootingSubsystem(SubsystemBase):
                 self.turretMotor.getPosition(),
                 self.initializationMinimum,
                 self.initializationMaximum,
-                constants.kTurretMinimum.radians()
+                constants.kTurretMinimumAngle.radians()
                 * constants.kTalonEncoderPulsesPerRadian,
-                constants.kTurretMaximum.radians()
+                constants.kTurretMaximumAngle.radians()
                 * constants.kTalonEncoderPulsesPerRadian,
             )
             self.turretMotor.setCurrentEncoderPulseCount(turretRealPosition)
@@ -133,18 +134,20 @@ class ShootingSubsystem(SubsystemBase):
 
     def rotateTurret(self, angle: Rotation2d) -> None:
         if (
-            angle.radians() > constants.kTurretMaximum.radians()
-            or angle.radians() < constants.kTurretMinimum.radians()
+            angle.radians() > constants.kTurretMaximumAngle.radians()
+            or angle.radians() < constants.kTurretMinimumAngle.radians()
         ):
             return
 
         self.targetTurretAngle = angle
         encoderPulses = (
             max(
-                (constants.kTurretMinimum + constants.kTurretSoftLimitBuffer).radians(),
+                (
+                    constants.kTurretMinimumAngle + constants.kTurretSoftLimitBuffer
+                ).radians(),
                 min(
                     angle.radians(),
-                    constants.kTurretMaximum.radians()
+                    constants.kTurretMaximumAngle.radians()
                     - constants.kTurretSoftLimitBuffer.radians(),
                 ),
             )

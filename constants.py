@@ -187,9 +187,9 @@ kBackRightModuleName = "back_right"
 kLimelightMountingOffset = Translation2d(
     (kRobotLength / 2) - (4.125 * kMetersPerInch), 0.0
 )
-kLimelightVerticalOffset = 25.833857 * kMetersPerInch
+kLimelightVerticalOffset = 25.833857 * kMetersPerInch # derived from cad
 """meters"""
-kLimelightAngleOffset = Rotation2d.fromDegrees(44.153)  # derived from cad
+kLimelightVerticalAngleOffset = Rotation2d.fromDegrees(44.153)  # derived from cad
 kTrackerPanAngleKey = "tracker/pan_angle"
 kLimelightTrackerModuleName = "limelight_target_tracker"
 
@@ -335,7 +335,7 @@ kBackRightAbsoluteEncoderOffset = 145.459
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
 
 kDriveVelocityKeys = "robotVelocity"
-kRobotUpdateRate = 1 / 50
+kRobotUpdatePeriod = 1 / 50
 """seconds"""
 
 # Vision parameters
@@ -505,7 +505,7 @@ kShootingIGain = 0
 kShootingDGain = 0
 kShootingMotorInverted = True
 
-kShootingMappingFunction = lambda x: 16.41 * math.pow(math.e, 0.3662 * x) + 532
+kShootingMappingFunction = lambda x: 16.41 * math.pow(math.e, 0.3662 * x) + 532 # derived from testing at multiple points, distance is input variable and exponential curve of best fit
 
 kTurretPIDSlot = 0
 kTurretPGain = 0.06
@@ -519,10 +519,11 @@ kHoodPIDSlot = 0
 kHoodPGain = 0.15
 kHoodIGain = 0
 kHoodDGain = 0
+kHoodMotorInverted = True
 
-kHoodGearRatio = (1 / 5) * (-13 / 360)
+kHoodGearRatio = (1 / 5) * (13 / 360)
 
-kHoodMappingFunction = lambda x: 11.04 * math.pow(math.e, 0.1004 * x) + -11.06
+kHoodMappingFunction = lambda x: 11.04 * math.pow(math.e, 0.1004 * x) + -11.06 # see above for derivation method
 
 kTurretMotorName = "shooting_turret"
 kShootingMotorName = "shooting_shooting"
@@ -534,14 +535,10 @@ kShootingTurretAngleKey = "shooting/turretAngle"
 kShootingManualModeKey = "shooting/manualMode"
 kShootingOnTargetKey = "shooting/onTarget"
 
-kHoodStartingAngle = (
-    Rotation2d.fromDegrees(1.5840).radians()
-    / kHoodGearRatio
-    * kTalonEncoderPulsesPerRadian
-)
+kHoodStartingAngle = 0
 
-kTurretMaximum = Rotation2d.fromDegrees(160)
-kTurretMinimum = Rotation2d.fromDegrees(-160)
+kTurretMaximumAngle = Rotation2d.fromDegrees(160)
+kTurretMinimumAngle = Rotation2d.fromDegrees(-160)
 kTurretSoftLimitBuffer = Rotation2d.fromDegrees(1)
 
 kTurretRelativeForwardAngle = Rotation2d.fromDegrees(0)
@@ -566,6 +563,7 @@ kPredictiveAimGain = 0.1
 # Fender Shot
 kFenderHoodAngle = Rotation2d.fromDegrees(0)
 kFenderWheelSpeed = 600
+"""rotations / minute """
 
 # Intake Camera
 kIntakeCameraTiltAngle = Rotation2d.fromDegrees(90 - 25)
