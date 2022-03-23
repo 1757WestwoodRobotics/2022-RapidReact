@@ -6,7 +6,7 @@ from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.shootingsubsystem import ShootingSubsystem
 
 
-class ResetSystem(ParallelCommandGroup):
+class ResetRobot(ParallelCommandGroup):
     def __init__(self, shooting: ShootingSubsystem, drive: DriveSubsystem):
         super().__init__(ResetDrive(drive), ResetShooting(shooting))
         self.setName(__class__.__name__)
