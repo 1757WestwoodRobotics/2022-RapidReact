@@ -486,9 +486,9 @@ kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
 
 # shooter parameters
+kHoodMotorId = 21
 kTurretMotorId = 22
 kShootingMotorId = 23
-kHoodMotorId = 21
 
 kSimTurretMotorPort = 9
 kSimShootingMotorPort = 15
