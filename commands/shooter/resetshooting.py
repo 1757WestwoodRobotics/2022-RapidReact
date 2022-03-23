@@ -5,18 +5,18 @@ from subsystems.shootingsubsystem import ShootingSubsystem
 
 
 class ResetShooting(CommandBase):
-    def __init__(self, shooting: ShootingSubsystem) -> None:
+    def __init__(self, shooter: ShootingSubsystem) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
-        self.shooting = shooting
-        self.addRequirements([shooting])
+        self.shooter = shooter
+        self.addRequirements([self.shooter])
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
 
     def execute(self) -> None:
-        self.shooting.setAsStartingPosition()
-        self.shooting.rotateTurret(Rotation2d.fromDegrees(0))
+        self.shooter.setAsStartingPosition()
+        self.shooter.rotateTurret(Rotation2d.fromDegrees(0))
 
     # pylint: disable-next=no-self-use
     def end(self, _interrupted: bool) -> None:
