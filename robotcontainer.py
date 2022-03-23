@@ -11,7 +11,6 @@ from commands.drivetotarget import DriveToTarget
 from commands.defaultdrive import DefaultDrive
 from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.targetrelativedrive import TargetRelativeDrive
-from commands.shooter.aimsystem import AimSystem
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
@@ -23,6 +22,7 @@ from commands.intake.defaultintake import DefaultIntake
 from commands.intake.autoballintake import AutoBallIntake
 from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
+from commands.shooter.aimshootertotarget import AimShooterToTarget
 
 
 from subsystems.drivesubsystem import DriveSubsystem
@@ -93,7 +93,7 @@ class RobotContainer:
         )
 
         self.shooting.setDefaultCommand(
-            AimSystem(self.shooting, self.operatorInterface.shooterOffset)
+            AimShooterToTarget(self.shooting, self.operatorInterface.shooterOffset)
         )
         self.intake.setDefaultCommand(DefaultIntake(self.intake))
         self.indexer.setDefaultCommand(DefaultIndexer(self.indexer))

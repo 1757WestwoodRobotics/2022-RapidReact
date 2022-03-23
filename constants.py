@@ -544,7 +544,8 @@ kTurretMaximum = Rotation2d.fromDegrees(160)
 kTurretMinimum = Rotation2d.fromDegrees(-160)
 kTurretSoftLimitBuffer = Rotation2d.fromDegrees(1)
 
-kTurretForwardAngle = Rotation2d.fromDegrees(0)
+kTurretRelativeForwardAngle = Rotation2d.fromDegrees(0)
+kTurretOffsetFromRobotAngle = Rotation2d.fromDegrees(180)  # shooter 0 is robot 180
 
 kHoodMaximum = Rotation2d.fromDegrees(18)
 kHoodMinimum = Rotation2d.fromDegrees(-5)

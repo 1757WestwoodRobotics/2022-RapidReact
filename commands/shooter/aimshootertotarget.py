@@ -1,3 +1,4 @@
+from enum import Enum, auto
 from commands2 import CommandBase
 from wpilib import SmartDashboard
 from wpimath.geometry import Pose2d, Transform2d, Rotation2d
@@ -9,14 +10,14 @@ from util.angleoptimize import optimizeAngle
 from util.convenientmath import rotationFromTranslation
 
 
-class AimSystem(CommandBase):
-    def __init__(self, shoot: ShootingSubsystem, shooterOffset: Control2D) -> None:
+class AimShooterToTarget(CommandBase):
+    def __init__(self, shooter: ShootingSubsystem, shooterOffset: Control2D) -> None:
         SmartDashboard.putBoolean(constants.kShootingManualModeKey, False)
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
-        self.shoot = shoot
-        self.offset = shooterOffset
-        self.addRequirements([self.shoot])
+        self.shooter = shooter
+        self.distanceAndRotationOffset = shooterOffset
+        self.addRequirements([self.shooter])
 
     def execute(self) -> None:
         if SmartDashboard.getBoolean(constants.kShootingManualModeKey, False):
@@ -28,18 +29,18 @@ class AimSystem(CommandBase):
         wheelSpeed = SmartDashboard.getNumber(constants.kShootingWheelSpeedKey, 0)
         hoodAngle = SmartDashboard.getNumber(constants.kShootingHoodAngleKey, 0)
         turretPosition = SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 0)
-        self.shoot.setWheelSpeed(wheelSpeed)
-        self.shoot.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
-        self.shoot.rotateTurret(
+        self.shooter.setWheelSpeed(wheelSpeed)
+        self.shooter.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
+        self.shooter.rotateTurret(
             Rotation2d.fromDegrees(turretPosition)
-            + constants.kOffsetAngleRange * self.offset.sideToSide()
+            + constants.kOffsetAngleRange * self.distanceAndRotationOffset.sideToSide()
         )
 
     def normalMode(self) -> None:
         deltaPos = Pose2d(
             *[
-                constants.kRobotUpdateRate * i * constants.kPredictiveAimGain
-                for i in SmartDashboard.getNumberArray(
+                constants.kRobotUpdateRate * element * constants.kPredictiveAimGain
+                for element in SmartDashboard.getNumberArray(
                     constants.kDriveVelocityKeys, [0, 0, 0]
                 )
             ]
@@ -53,6 +54,7 @@ class AimSystem(CommandBase):
         staticDifference = Transform2d(currentPose, constants.kSimDefaultTargetLocation)
         staticRotation = rotationFromTranslation(staticDifference.translation())
 
+        ## NOTE: untested moving code, currently not in use
         newPosition = Pose2d(
             deltaPos.X() + currentPose.X(),
             deltaPos.Y() + currentPose.Y(),
@@ -66,41 +68,44 @@ class AimSystem(CommandBase):
 
         if SmartDashboard.getBoolean(
             constants.kTargetDistanceRelativeToRobotKeys.validKey, False
-        ):
+        ):  # if we can obtain a distance, use that information
             distance = (
                 SmartDashboard.getNumber(
                     constants.kTargetDistanceRelativeToRobotKeys.valueKey, 0.0
                 )
-                + constants.kOffsetDistanceRange * self.offset.forwardsBackwards()
+                + constants.kOffsetDistanceRange
+                * self.distanceAndRotationOffset.forwardsBackwards()
             )
 
             targetSpeed = constants.kShootingMappingFunction(distance)
-            self.shoot.setWheelSpeed(targetSpeed)
+            self.shooter.setWheelSpeed(targetSpeed)
 
             targetAngle = Rotation2d.fromDegrees(
                 constants.kHoodMappingFunction(distance)
             )
-            self.shoot.setHoodAngle(targetAngle)
+            self.shooter.setHoodAngle(targetAngle)
 
         if SmartDashboard.getBoolean(
             constants.kTargetAngleRelativeToRobotKeys.validKey, False
-        ):
+        ):  # if we have an angle, use the relative angle to adjust the turret for precision
             angle = (
                 SmartDashboard.getNumber(
                     constants.kTargetAngleRelativeToRobotKeys.valueKey, 0.0
                 )
-                + constants.kOffsetAngleRange.degrees() * self.offset.sideToSide()
+                + constants.kOffsetAngleRange.degrees()
+                * self.distanceAndRotationOffset.sideToSide()
             )
 
-            self.shoot.trackTurret(
+            self.shooter.trackTurret(
                 angle + deltaRotation.degrees()
             )  # always track the turret
-        else:
-            self.shoot.rotateTurret(
+        else:  # ...otherwise use odometry to estimate where the target SHOULD be
+            self.shooter.rotateTurret(
                 optimizeAngle(
-                    constants.kTurretForwardAngle,
-                    movingRotation
-                    + constants.kOffsetAngleRange * self.offset.sideToSide(),
+                    constants.kTurretRelativeForwardAngle,
+                    staticRotation
+                    + constants.kOffsetAngleRange
+                    * self.distanceAndRotationOffset.sideToSide(),
                 )
-                + Rotation2d.fromDegrees(180)  # shooter 0 is robot 180
+                + constants.kTurretOffsetFromRobotAngle  # shooter 0 is robot 180
             )

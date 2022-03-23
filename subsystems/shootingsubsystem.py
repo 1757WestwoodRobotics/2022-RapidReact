@@ -163,4 +163,6 @@ class ShootingSubsystem(SubsystemBase):
     def trackTurret(self, relativeAngle: float):
         """relativeAngle: radians"""
         rotation = self.getTurretRotation() + Rotation2d(relativeAngle)
-        self.rotateTurret(optimizeAngle(constants.kTurretForwardAngle, rotation))
+        self.rotateTurret(
+            optimizeAngle(constants.kTurretRelativeForwardAngle, rotation)
+        )
