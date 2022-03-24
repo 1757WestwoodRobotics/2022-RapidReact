@@ -29,7 +29,7 @@ from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
 from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
-from subsystems.shootingsubsystem import ShootingSubsystem
+from subsystems.shootersubsystem import ShooterSubsystem
 
 from operatorinterface import OperatorInterface
 
@@ -50,7 +50,7 @@ class RobotContainer:
         # The robot's subsystems
         self.drive = DriveSubsystem()
         self.vision = VisionSubsystem()
-        self.shooting = ShootingSubsystem()
+        self.shooter = ShooterSubsystem()
         self.intake = IntakeSubsystem()
         self.indexer = IndexerSubsystem()
 
@@ -92,8 +92,8 @@ class RobotContainer:
             )
         )
 
-        self.shooting.setDefaultCommand(
-            AimShooterToTarget(self.shooting, self.operatorInterface.shooterOffset)
+        self.shooter.setDefaultCommand(
+            AimShooterToTarget(self.shooter, self.operatorInterface.shooterOffset)
         )
         self.intake.setDefaultCommand(DefaultIntake(self.intake))
         self.indexer.setDefaultCommand(DefaultIndexer(self.indexer))
@@ -153,7 +153,7 @@ class RobotContainer:
 
         commands2.button.JoystickButton(
             *self.operatorInterface.resetSwerveControl
-        ).whenPressed(ResetRobot(self.shooting, self.drive))
+        ).whenPressed(ResetRobot(self.shooter, self.drive))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl

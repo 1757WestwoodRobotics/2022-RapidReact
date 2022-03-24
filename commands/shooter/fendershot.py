@@ -1,12 +1,12 @@
 from commands2 import CommandBase
 from wpimath.geometry import Rotation2d
 
-from subsystems.shootingsubsystem import ShootingSubsystem
+from subsystems.shootersubsystem import ShooterSubsystem
 import constants
 
 
 class FenderShot(CommandBase):
-    def __init__(self, shoot: ShootingSubsystem):
+    def __init__(self, shoot: ShooterSubsystem):
         self.shoot = shoot
         self.setName(__class__.__name__)
         self.addRequirements([self.shoot])

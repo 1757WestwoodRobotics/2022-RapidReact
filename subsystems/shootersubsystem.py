@@ -9,7 +9,7 @@ from util.helpfulIO import Falcon
 import constants
 
 
-class ShootingSubsystem(SubsystemBase):
+class ShooterSubsystem(SubsystemBase):
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
         # actuators

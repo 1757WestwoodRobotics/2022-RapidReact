@@ -1,17 +1,16 @@
-from enum import Enum, auto
 from commands2 import CommandBase
 from wpilib import SmartDashboard
 from wpimath.geometry import Pose2d, Transform2d, Rotation2d
 from operatorinterface import Control2D
 
-from subsystems.shootingsubsystem import ShootingSubsystem
+from subsystems.shootersubsystem import ShooterSubsystem
 import constants
 from util.angleoptimize import optimizeAngle
 from util.convenientmath import rotationFromTranslation
 
 
 class AimShooterToTarget(CommandBase):
-    def __init__(self, shooter: ShootingSubsystem, shooterOffset: Control2D) -> None:
+    def __init__(self, shooter: ShooterSubsystem, shooterOffset: Control2D) -> None:
         SmartDashboard.putBoolean(constants.kShootingManualModeKey, False)
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
@@ -22,7 +21,7 @@ class AimShooterToTarget(CommandBase):
     def execute(self) -> None:
         deltaPos = Pose2d(
             *[
-                constants.kRobotUpdateRate * element * constants.kPredictiveAimGain
+                constants.kRobotUpdatePeriod * element * constants.kPredictiveAimGain
                 for element in SmartDashboard.getNumberArray(
                     constants.kDriveVelocityKeys, [0, 0, 0]
                 )

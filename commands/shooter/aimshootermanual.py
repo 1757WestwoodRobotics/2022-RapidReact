@@ -3,12 +3,13 @@ from wpilib import SmartDashboard
 from wpimath.geometry import Rotation2d
 from operatorinterface import Control2D
 
-from subsystems.shootingsubsystem import ShootingSubsystem
+from subsystems.shootersubsystem import ShooterSubsystem
+
 import constants
 
 
 class AimShooterManually(CommandBase):
-    def __init__(self, shooter: ShootingSubsystem, shooterOffset: Control2D) -> None:
+    def __init__(self, shooter: ShooterSubsystem, shooterOffset: Control2D) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
         self.shooter = shooter
