@@ -12,6 +12,8 @@ class RetractIntake(CommandBase):
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
+
+    def execute(self) -> None:
         self.intake.retractIntake()
 
     # pylint: disable-next=no-self-use

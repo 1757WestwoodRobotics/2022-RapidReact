@@ -19,9 +19,10 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
         DGain: float = 0,
         PIDSlot: int = 0,
         inverted: bool = False,
+        canbus: str = "",
     ) -> None:  # depending on if its in simulation or the real motor, different motors will be used
         self.name = name
-        self.motor = WPI_TalonFX(realId) if RobotBase.isReal() else PWMVictorSPX(simId)
+        self.motor = WPI_TalonFX(realId, canbus) if RobotBase.isReal() else PWMVictorSPX(simId)
 
         if RobotBase.isReal():
             print(f"Initializing Falcon: {self.name}")

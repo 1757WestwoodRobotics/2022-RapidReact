@@ -106,7 +106,7 @@ py -3 -m venv ./.venv
      ```bash
      source <path-to-mentorbot-repo>/.venv/bin/activate
      ```
-1. **Update pip and wheel.  Old versions of pip can prevent binary wheels from being installed.  Installing wheel makes other installs faster**
+1. **Update pip and wheel. Old versions of pip can prevent binary wheels from being installed. Installing wheel makes other installs faster**
    (must have internet connection)
    ```bash
    python -m pip install --upgrade pip wheel
@@ -150,3 +150,8 @@ py -3 -m venv ./.venv
      ```bash
      python robot.py sim
      ```
+
+1. **CODE FORMATTING PRACTICES**
+   - for python we are using [black](https://github.com/psf/black)
+   - for json we are using [prettier](https://prettier.io)
+   - all JSON files must be alphabetized, you can use the [following extension for prettier](https://www.npmjs.com/package/prettier-plugin-sort-json)

@@ -5,6 +5,7 @@ from os import path
 from wpilib import Joystick
 
 import constants
+from util.convenientmath import map_range, number
 
 AnalogInput = typing.Callable[[], float]
 
@@ -27,16 +28,32 @@ def Invert(inputFn: AnalogInput) -> AnalogInput:
     return invert
 
 
+def MapRange(
+    inputFn: AnalogInput,
+    inputMin: number,
+    inputMax: number,
+    outputMin: number,
+    outputMax: number,
+) -> AnalogInput:
+    return lambda: map_range(inputFn(), inputMin, inputMax, outputMin, outputMax)
+
+
+def Multiply(a: AnalogInput, b: AnalogInput) -> AnalogInput:
+    return lambda: a() * b()
+
+
 class HolonomicInput:
     def __init__(
         self,
         forwardsBackwards: AnalogInput,
         sideToSide: AnalogInput,
-        rotation: AnalogInput,
+        rotationX: AnalogInput,
+        rotationY: AnalogInput,
     ) -> None:
         self.forwardsBackwards = forwardsBackwards
         self.sideToSide = sideToSide
-        self.rotation = rotation
+        self.rotationX = rotationX
+        self.rotationY = rotationY
 
 
 class Control2D:
@@ -91,11 +108,11 @@ class OperatorInterface:
             constants.kDriveToTargetControlButtonName
         )
 
-        self.toggleIntakeControl = getButtonBindingOfName(
-            constants.kToggleIntakeButtonName
+        self.deployIntakeControl = getAxisBindingOfName(
+            constants.kDeployIntakeButtonName
         )
 
-        self.reverseBallPath = getButtonBindingOfName(constants.kReverseBallPathName)
+        self.reverseBallPath = getAxisBindingOfName(constants.kReverseBallPathName)
 
         self.autoBallIntakeControl = getButtonBindingOfName(
             constants.kAutoBallIntakeName
@@ -110,17 +127,23 @@ class OperatorInterface:
                 Deadband(
                     getAxisBindingOfName(constants.kChassisForwardsBackwardsAxisName),
                     constants.kXboxJoystickDeadband,
-                )
+                ),
             ),
             Invert(
                 Deadband(
                     getAxisBindingOfName(constants.kChassisSideToSideAxisName),
                     constants.kXboxJoystickDeadband,
-                )
+                ),
             ),
             Invert(
                 Deadband(
-                    getAxisBindingOfName(constants.kChassisRotationAxisName),
+                    getAxisBindingOfName(constants.kChassisRotationXAxisName),
+                    constants.kXboxJoystickDeadband,
+                ),
+            ),
+            Invert(
+                Deadband(
+                    getAxisBindingOfName(constants.kChassisRotationYAxisName),
                     constants.kXboxJoystickDeadband,
                 )
             ),

@@ -335,38 +335,38 @@ class DriveSubsystem(SubsystemBase):
         if RobotBase.isReal():
             self.frontLeftModule = CTRESwerveModule(
                 constants.kFrontLeftModuleName,
-                WPI_TalonFX(constants.kFrontLeftDriveMotorId),
+                WPI_TalonFX(constants.kFrontLeftDriveMotorId, constants.kCANivoreName),
                 constants.kFrontLeftDriveInverted,
-                WPI_TalonFX(constants.kFrontLeftSteerMotorId),
+                WPI_TalonFX(constants.kFrontLeftSteerMotorId, constants.kCANivoreName),
                 constants.kFrontLeftSteerInverted,
-                CANCoder(constants.kFrontLeftSteerEncoderId),
+                CANCoder(constants.kFrontLeftSteerEncoderId, constants.kCANivoreName),
                 constants.kFrontLeftAbsoluteEncoderOffset,
             )
             self.frontRightModule = CTRESwerveModule(
                 constants.kFrontRightModuleName,
-                WPI_TalonFX(constants.kFrontRightDriveMotorId),
+                WPI_TalonFX(constants.kFrontRightDriveMotorId, constants.kCANivoreName),
                 constants.kFrontRightDriveInverted,
-                WPI_TalonFX(constants.kFrontRightSteerMotorId),
+                WPI_TalonFX(constants.kFrontRightSteerMotorId, constants.kCANivoreName),
                 constants.kFrontRightSteerInverted,
-                CANCoder(constants.kFrontRightSteerEncoderId),
+                CANCoder(constants.kFrontRightSteerEncoderId, constants.kCANivoreName),
                 constants.kFrontRightAbsoluteEncoderOffset,
             )
             self.backLeftModule = CTRESwerveModule(
                 constants.kBackLeftModuleName,
-                WPI_TalonFX(constants.kBackLeftDriveMotorId),
+                WPI_TalonFX(constants.kBackLeftDriveMotorId, constants.kCANivoreName),
                 constants.kBackLeftDriveInverted,
-                WPI_TalonFX(constants.kBackLeftSteerMotorId),
+                WPI_TalonFX(constants.kBackLeftSteerMotorId, constants.kCANivoreName),
                 constants.kBackLeftSteerInverted,
-                CANCoder(constants.kBackLeftSteerEncoderId),
+                CANCoder(constants.kBackLeftSteerEncoderId, constants.kCANivoreName),
                 constants.kBackLeftAbsoluteEncoderOffset,
             )
             self.backRightModule = CTRESwerveModule(
                 constants.kBackRightModuleName,
-                WPI_TalonFX(constants.kBackRightDriveMotorId),
+                WPI_TalonFX(constants.kBackRightDriveMotorId, constants.kCANivoreName),
                 constants.kBackRightDriveInverted,
-                WPI_TalonFX(constants.kBackRightSteerMotorId),
+                WPI_TalonFX(constants.kBackRightSteerMotorId, constants.kCANivoreName),
                 constants.kBackRightSteerInverted,
-                CANCoder(constants.kBackRightSteerEncoderId),
+                CANCoder(constants.kBackRightSteerEncoderId, constants.kCANivoreName),
                 constants.kBackRightAbsoluteEncoderOffset,
             )
         else:
@@ -427,7 +427,11 @@ class DriveSubsystem(SubsystemBase):
     def resetSwerveModules(self):
         for module in self.modules:
             module.reset()
+        self.gyro.reset()
         self.odometry.resetPosition(Pose2d(), self.gyro.getRotation2d())
+
+    def getRotation(self) -> Rotation2d:
+        return self.gyro.getRotation2d()
 
     def periodic(self):
         """

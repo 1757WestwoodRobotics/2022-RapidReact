@@ -209,6 +209,9 @@ kLimelightTargetVerticalAngleKey = "ty"
 # Limelight (cargo)
 kLimelightCargoNetworkTableName = "limelight-cargo"
 
+# CANivore
+kCANivoreName = "canivore"
+
 # Motors
 kFrontLeftDriveMotorId = 10
 kFrontLeftSteerMotorId = 11
@@ -320,16 +323,16 @@ To determine encoder offsets (with robot ON and DISABLED):
   7. Click "Self-Test Snapshot"
   8. Record value from line: "Absolute Position (unsigned):"
 """
-kFrontLeftAbsoluteEncoderOffset = 315.439
+kFrontLeftAbsoluteEncoderOffset = 247.324
 """degrees"""
 
-kFrontRightAbsoluteEncoderOffset = 5.186
+kFrontRightAbsoluteEncoderOffset = 239.678
 """degrees"""
 
-kBackLeftAbsoluteEncoderOffset = 20.566
+kBackLeftAbsoluteEncoderOffset = 12.217
 """degrees"""
 
-kBackRightAbsoluteEncoderOffset = 145.459
+kBackRightAbsoluteEncoderOffset = 287.402
 """degrees"""
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
@@ -380,6 +383,10 @@ kTargetRelativeDriveAnglePGain = 1
 kTargetRelativeDriveAngleIGain = 0
 kTargetRelativeDriveAngleDGain = 0
 
+kRotationPGain = 1.3
+kRotationIGain = 0
+kRotationDGain = 0
+
 # Drive to Target
 kDriveToTargetDistancePGain = 0.5
 kDriveToTargetDistanceIGain = 0
@@ -410,7 +417,8 @@ kKeyboardJoystickDeadband = 0.0
 
 kControllerMappingFilename = "ControlScheme.json"
 
-kChassisRotationAxisName = "chassisRotation"
+kChassisRotationXAxisName = "chassisXRotation"
+kChassisRotationYAxisName = "chassisYRotation"
 kChassisForwardsBackwardsAxisName = "chassisForwardsBackwards"
 kChassisSideToSideAxisName = "chassisSideToSide"
 
@@ -418,8 +426,9 @@ kFieldRelativeCoordinateModeControlButtonName = "fieldRelativeCoordinateModeCont
 kResetSwerveControlButtonName = "resetSwerveControl"
 kTargetRelativeCoordinateModeControlButtonName = "targetRelativeCoordinateModeControl"
 kDriveToTargetControlButtonName = "driveToTargetControl"
-kToggleIntakeButtonName = "toggleIntake"
+kDeployIntakeButtonName = "deployIntake"
 kReverseBallPathName = "reverseBallPath"
+kXboxTriggerActivationThreshold = 0.5
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
@@ -609,7 +618,7 @@ kIndexerSystemStateKey = "indexerState"
 
 # Intake Sensors
 kForwardSensorIndexer = True
-kForwardSensorStaging = True
+kForwardSensorStaging = False
 
 kSimIndexerSensorId = 16
 kSimStagingSensorId = 17
