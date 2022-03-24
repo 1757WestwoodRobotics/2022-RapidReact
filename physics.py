@@ -9,7 +9,6 @@
 # of your robot code without too much extra effort.
 #
 
-from math import atan
 import typing
 from wpilib import RobotController, SmartDashboard
 from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim
@@ -131,16 +130,14 @@ class LimelightSim:
         )
         targetDistance = limelightPose.translation().distance(targetPose.translation())
         targetVerticalAngle = (
-            Rotation2d(
-                atan(
-                    (
-                        constants.kSimDefaultTargetHeight
-                        - constants.kLimelightVerticalOffset
-                    )
-                    / targetDistance
+            convenientmath.rotationFromTranslation(
+                Translation2d(
+                    targetDistance,
+                    constants.kSimDefaultTargetHeight
+                    - constants.kLimelightVerticalOffset,
                 )
             )
-            - constants.kLimelightAngleOffset
+            - constants.kLimelightVerticalAngleOffset
         )
 
         targetValid = constants.kLimelightTargetInvalidValue
@@ -184,8 +181,8 @@ class IntakeCameraSim:
         )
         ballDistance = intakeCameraPose.translation().distance(ballPose.translation())
         ballVerticalAngle = (
-            Rotation2d(
-                atan(ballDistance / constants.kIntakeCameraHeightInMeters)
+            convenientmath.rotationFromTranslation(
+                Translation2d(constants.kIntakeCameraHeightInMeters, ballDistance)
             ).degrees()
             - constants.kIntakeCameraTiltAngle.degrees()
         )
@@ -361,7 +358,7 @@ class PhysicsEngine:
             + Rotation2d.fromDegrees(
                 SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 0.0)
             )
-            + Rotation2d.fromDegrees(180),  # robot 180 is turret 0,
+            + constants.kTurretOffsetFromRobotAngle,  # robot 180 is turret 0,
         )
         self.limelightSim.update(servoPose, simTargetPose)
 
@@ -386,6 +383,8 @@ class PhysicsEngine:
             )
             targetObject.setPose(
                 convenientmath.rotateAroundPoint(
-                    targetPose, simRobotPose.translation(), Rotation2d.fromDegrees(180)
+                    targetPose,
+                    simRobotPose.translation(),
+                    constants.kTurretOffsetFromRobotAngle,
                 )
             )
