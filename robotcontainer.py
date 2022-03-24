@@ -35,7 +35,7 @@ from subsystems.indexersubsystem import IndexerSubsystem
 from subsystems.shootersubsystem import ShooterSubsystem
 
 from operatorinterface import OperatorInterface
-from util.helpfultriggerwrappers import AxisButton
+from util.helpfultriggerwrappers import AxisButton, SmartDashboardButton
 
 
 class RobotContainer:
@@ -179,9 +179,7 @@ class RobotContainer:
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.toggleManualModeShooter
-        ).toggleWhenPressed(
+        SmartDashboardButton(constants.kShootingManualModeKey).whileHeld(
             AimShooterManually(self.shooter, self.operatorInterface.shooterOffset)
         )
 

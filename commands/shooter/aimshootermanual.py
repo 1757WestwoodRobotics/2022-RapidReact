@@ -22,7 +22,4 @@ class AimShooterManually(CommandBase):
         turretPosition = SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 0)
         self.shooter.setWheelSpeed(wheelSpeed)
         self.shooter.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
-        self.shooter.rotateTurret(
-            Rotation2d.fromDegrees(turretPosition)
-            + constants.kOffsetAngleRange * self.distanceAndRotationOffset.sideToSide()
-        )
+        self.shooter.rotateTurret(Rotation2d.fromDegrees(turretPosition))

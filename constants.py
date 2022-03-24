@@ -593,7 +593,7 @@ kStagingSpeed = 100
 kIndexerSpeed = 100
 """rpm"""
 
-kIntakeSolenoidChannelId = 1
+kIntakeSolenoidChannelId = 4
 
 kSimIntakeCameraObjectName = "Intake Camera"
 
