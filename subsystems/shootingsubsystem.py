@@ -85,19 +85,33 @@ class ShootingSubsystem(SubsystemBase):
             SmartDashboard.putNumber(
                 constants.kShootingTurretAngleKey, self.getTurretRotation().degrees()
             )
-        SmartDashboard.putBoolean(constants.kShootingOnTargetKey, self.onTarget())
+        SmartDashboard.putBoolean(
+            constants.kShootingFlywheelOnTargetKey, self.wheelOnTarget()
+        )
+        SmartDashboard.putBoolean(
+            constants.kShootingHoodOnTargetKey, self.hoodOnTarget()
+        )
+        SmartDashboard.putBoolean(
+            constants.kShootingTurretOnTargetKey, self.turretOnTarget()
+        )
 
-    def onTarget(self) -> bool:
-        if (
+    def wheelOnTarget(self) -> bool:
+        return (
             abs(self.getWheelSpeed() - self.targetWheelSpeed)
             <= constants.kWheelSpeedTolerence
-            and abs((self.getHoodAngle() - self.targetHoodAngle).radians())
+        )
+
+    def hoodOnTarget(self) -> bool:
+        return (
+            abs((self.getHoodAngle() - self.targetHoodAngle).radians())
             <= constants.kHoodAngleTolerence.radians()
-            and abs((self.getTurretRotation() - self.targetTurretAngle).radians())
+        )
+
+    def turretOnTarget(self) -> bool:
+        return (
+            abs((self.getTurretRotation() - self.targetTurretAngle).radians())
             <= constants.kTurretAngleTolerence.radians()
-        ):
-            return True
-        return False
+        )
 
     def getWheelSpeed(self) -> int:
         """returns wheel speed in RPM"""

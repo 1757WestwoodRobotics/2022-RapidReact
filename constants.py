@@ -187,7 +187,7 @@ kBackRightModuleName = "back_right"
 kLimelightMountingOffset = Translation2d(
     (kRobotLength / 2) - (4.125 * kMetersPerInch), 0.0
 )
-kLimelightVerticalOffset = 25.833857 * kMetersPerInch # derived from cad
+kLimelightVerticalOffset = 25.833857 * kMetersPerInch  # derived from cad
 """meters"""
 kLimelightVerticalAngleOffset = Rotation2d.fromDegrees(44.153)  # derived from cad
 kTrackerPanAngleKey = "tracker/pan_angle"
@@ -505,7 +505,9 @@ kShootingIGain = 0
 kShootingDGain = 0
 kShootingMotorInverted = True
 
-kShootingMappingFunction = lambda x: 16.41 * math.pow(math.e, 0.3662 * x) + 532 # derived from testing at multiple points, distance is input variable and exponential curve of best fit
+kShootingMappingFunction = (
+    lambda x: 16.41 * math.pow(math.e, 0.3662 * x) + 532
+)  # derived from testing at multiple points, distance is input variable and exponential curve of best fit
 
 kTurretPIDSlot = 0
 kTurretPGain = 0.06
@@ -523,7 +525,9 @@ kHoodMotorInverted = True
 
 kHoodGearRatio = (1 / 5) * (13 / 360)
 
-kHoodMappingFunction = lambda x: 11.04 * math.pow(math.e, 0.1004 * x) + -11.06 # see above for derivation method
+kHoodMappingFunction = (
+    lambda x: 11.04 * math.pow(math.e, 0.1004 * x) + -11.06
+)  # see above for derivation method
 
 kTurretMotorName = "shooting_turret"
 kShootingMotorName = "shooting_shooting"
@@ -533,7 +537,9 @@ kShootingWheelSpeedKey = "shooting/wheelSpeed"
 kShootingHoodAngleKey = "shooting/hoodAngle"
 kShootingTurretAngleKey = "shooting/turretAngle"
 kShootingManualModeKey = "shooting/manualMode"
-kShootingOnTargetKey = "shooting/onTarget"
+kShootingFlywheelOnTargetKey = "shooting/wheelOnTarget"
+kShootingHoodOnTargetKey = "shooting/hoodOnTarget"
+kShootingTurretOnTargetKey = "shooting/turretOnTarget"
 
 kHoodStartingAngle = 0
 
