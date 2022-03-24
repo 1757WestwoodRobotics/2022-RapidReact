@@ -12,15 +12,27 @@ from commands.targetrelativedrive import TargetRelativeDrive
 from commands.robotrelativedrive import RobotRelativeDrive
 from commands.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.resetdrive import ResetDrive
-from commands.climber.fullextend import FullLeftClimber, FullRightClimber
+from commands.climber.moveclimberstomiddlerungcaptureposition import (
+    MoveLeftClimberToMiddleRungCapturePosition,
+    MoveRightClimberToMiddleRungCapturePosition,
+    MoveBothClimbersToMiddleRungCapturePosition,
+)
 from commands.climber.moveclimberstomiddlerunghangposition import (
     MoveLeftClimberToMiddleRungHangPosition,
     MoveRightClimberToMiddleRungHangPosition,
+    MoveBothClimbersToMiddleRungHangPosition,
 )
-from commands.climber.holdleftclimberextension import HoldLeftClimberExtension
-from commands.climber.holdrightclimberextension import HoldRightClimberExtension
-from commands.climber.toggleleftpiston import ToggleLeftPiston
-from commands.climber.togglerightpiston import ToggleRightPiston
+from commands.climber.holdcimbersposition import (
+    HoldBothClimbersPosition,
+    HoldLeftClimberPosition,
+)
+from commands.climber.holdcimbersposition import HoldRightClimberPosition
+from commands.climber.pistonactuation import (
+    PivotLeftPistonToTilted,
+    PivotRightPistonToTilted,
+    PivotLeftPistonToVertical,
+    PivotRightPistonToVertical,
+)
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
@@ -104,10 +116,8 @@ class RobotContainer:
             )
         )
 
-        self.rightClimber.setDefaultCommand(
-            HoldRightClimberExtension(self.rightClimber)
-        )
-        self.leftClimber.setDefaultCommand(HoldLeftClimberExtension(self.leftClimber))
+        self.rightClimber.setDefaultCommand(HoldRightClimberPosition(self.rightClimber))
+        self.leftClimber.setDefaultCommand(HoldLeftClimberPosition(self.leftClimber))
         self.intake.setDefaultCommand(DefaultIntake(self.intake))
         self.indexer.setDefaultCommand(DefaultIndexer(self.indexer))
 
@@ -180,26 +190,37 @@ class RobotContainer:
         ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.fullExtendLeftClimber
-        ).whenPressed(FullLeftClimber(self.leftClimber)).whenReleased(
-            MoveLeftClimberToMiddleRungHangPosition(
-                self.leftClimber
-            )  # This can swap for Hanging if we get working pistons
+            *self.operatorInterface.moveBothClimbersToMiddleRungCapturePosition
+        ).whenPressed(
+            MoveBothClimbersToMiddleRungCapturePosition(
+                self.leftClimber, self.rightClimber
+            )
         )
-
         commands2.button.JoystickButton(
-            *self.operatorInterface.fullExtendRightClimber
-        ).whenPressed(FullRightClimber(self.rightClimber)).whenReleased(
-            MoveRightClimberToMiddleRungHangPosition(self.rightClimber)
+            *self.operatorInterface.moveBothClimbersToMiddleRungHangPosition
+        ).whenPressed(
+            MoveBothClimbersToMiddleRungHangPosition(
+                self.leftClimber, self.rightClimber
+            )
         )
+        commands2.button.JoystickButton(
+            *self.operatorInterface.holdBothClimbersPosition
+        ).whenPressed(HoldBothClimbersPosition(self.leftClimber, self.rightClimber))
+        commands2.button.JoystickButton(
+            *self.operatorInterface.tiltLeftClimberPiston
+        ).whenPressed(PivotLeftPistonToTilted(self.leftClimber))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.toggleLeftClimbPiston
-        ).whenPressed(ToggleLeftPiston(self.leftClimber))
+            *self.operatorInterface.tiltRightClimberPiston
+        ).whenPressed(PivotRightPistonToTilted(self.rightClimber))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.toggleRightClimbPiston
-        ).whenPressed(ToggleRightPiston(self.rightClimber))
+            *self.operatorInterface.leftClimberPiston
+        ).whenPressed(PivotLeftPistonToVertical(self.leftClimber))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.rightClimberPiston
+        ).whenPressed(PivotRightPistonToVertical(self.rightClimber))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.autoBallIntakeControl

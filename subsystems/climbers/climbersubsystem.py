@@ -31,7 +31,7 @@ class ClimberModule:
         )
         if RobotBase.isReal():
             self.climbMotor.motor.configReverseSoftLimitThreshold(
-                constants.kClimberHangingExtension
+                constants.kClimberMiddleRungHangPosition
             )
             self.climbMotor.motor.configReverseSoftLimitEnable(True)
         self.extendPiston()
@@ -49,10 +49,10 @@ class ClimberModule:
         self.piston.set(DoubleSolenoid.Value.kReverse)
 
     def setClimberFullExtension(self) -> None:
-        self.climbMotor.setPosition(constants.kClimberFullExtension)
+        self.climbMotor.setPosition(constants.kClimberMiddleRungCapturePosition)
 
     def setClimberHangingExtension(self) -> None:
-        self.climbMotor.setPosition(constants.kClimberHangingExtension)
+        self.climbMotor.setPosition(constants.kClimberHangingPosition)
 
     def setClimberMidExtension(self) -> None:
-        self.climbMotor.setPosition(constants.kClimberMidExtension)
+        self.climbMotor.setPosition(constants.kClimberMiddleRungHangPosition)

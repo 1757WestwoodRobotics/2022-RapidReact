@@ -213,4 +213,4 @@ black .
    - for python we are using [black](https://github.com/psf/black)
    - for json we are using [prettier](https://prettier.io)
    - all JSON files must be alphabetized, you can use the [following extension for prettier](https://www.npmjs.com/package/prettier-plugin-sort-json)
-   -If you're using VSCode, use json-sorter to sort the json without dealing with npm above [json-sorter](https://marketplace.visualstudio.com/items?itemName=msyesyan.json-sorter). Open command pallete in the file with ctrl+shift+p and type "alpha". "Sort JSON keys by alpha order" should show up, and hit enter to run it. Afterward, save to autoformat with prettier.
+   - If you're using VSCode, use json-sorter to sort the json without dealing with npm above [json-sorter](https://marketplace.visualstudio.com/items?itemName=msyesyan.json-sorter). Open command pallete in the file with ctrl+shift+p and type "alpha". "Sort JSON keys by alpha order" should show up, and hit enter to run it. Afterward, save to autoformat with prettier.

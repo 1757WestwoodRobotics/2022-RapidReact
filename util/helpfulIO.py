@@ -111,6 +111,12 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
                 driveEncoderPulsesPerSecond / constants.k100MillisecondsPerSecond,
             )
 
+    def neutralOutput(self) -> None:
+        if RobotBase.isReal():
+            self.motor.neutralOutput()
+        else:
+            self.setSpeed(0)
+
 
 class LimitSwitch:
     def __init__(self, falcon: Falcon, isRealForwardSwitch: bool, simId: int) -> None:

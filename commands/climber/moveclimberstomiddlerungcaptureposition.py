@@ -4,7 +4,7 @@ from subsystems.climbers.rightclimbersubsystem import RightClimber
 import constants
 
 
-class MoveLeftClimberToMiddleRungHangPosition(CommandBase):
+class MoveLeftClimberToMiddleRungCapturePosition(CommandBase):
     def __init__(self, climber: LeftClimber) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
@@ -15,7 +15,7 @@ class MoveLeftClimberToMiddleRungHangPosition(CommandBase):
         self.climber.leftClimber.deactivateBrake()
 
     def execute(self) -> None:
-        self.climber.leftClimber.setClimberMidExtension()
+        self.climber.leftClimber.setClimberFullExtension()
 
     def end(self, _interrupted: bool) -> None:
         self.climber.leftClimber.climbMotor.neutralOutput()
@@ -27,14 +27,14 @@ class MoveLeftClimberToMiddleRungHangPosition(CommandBase):
             abs(
                 (
                     self.climber.leftClimber.climbMotor.getPosition()
-                    - constants.kClimberMiddleRungHangPosition
+                    - constants.kClimberMiddleRungCapturePosition
                 )
             )
-            < constants.kClimberRetractionPositionThreshold
+            < constants.kClimberExtensionPositionThreshold
         )
 
 
-class MoveRightClimberToMiddleRungHangPosition(CommandBase):
+class MoveRightClimberToMiddleRungCapturePosition(CommandBase):
     def __init__(self, climber: RightClimber) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
@@ -45,7 +45,7 @@ class MoveRightClimberToMiddleRungHangPosition(CommandBase):
         self.climber.rightClimber.deactivateBrake()
 
     def execute(self) -> None:
-        self.climber.rightClimber.setClimberMidExtension()
+        self.climber.rightClimber.setClimberFullExtension()
 
     def end(self, _interrupted: bool) -> None:
         self.climber.rightClimber.climbMotor.neutralOutput()
@@ -57,17 +57,17 @@ class MoveRightClimberToMiddleRungHangPosition(CommandBase):
             abs(
                 (
                     self.climber.rightClimber.climbMotor.getPosition()
-                    - constants.kClimberMiddleRungHangPosition
+                    - constants.kClimberMiddleRungCapturePosition
                 )
             )
-            < constants.kClimberRetractionPositionThreshold
+            < constants.kClimberExtensionPositionThreshold
         )
 
 
-class MoveBothClimbersToMiddleRungHangPosition(ParallelCommandGroup):
+class MoveBothClimbersToMiddleRungCapturePosition(ParallelCommandGroup):
     def __init__(self, leftClimber: LeftClimber, rightClimber: RightClimber):
         super().__init__(
-            MoveLeftClimberToMiddleRungHangPosition(leftClimber),
-            MoveRightClimberToMiddleRungHangPosition(rightClimber),
+            MoveLeftClimberToMiddleRungCapturePosition(leftClimber),
+            MoveRightClimberToMiddleRungCapturePosition(rightClimber),
         )
         self.setName(__class__.__name__)

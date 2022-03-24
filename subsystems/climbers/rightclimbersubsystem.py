@@ -9,18 +9,18 @@ class RightClimber(SubsystemBase):
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
 
-        self.rightClimb = ClimberModule(
+        self.rightClimber = ClimberModule(
             constants.kRightClimberMotorName,
             constants.kRightClimberMotorCanID,
             constants.kSimRightClimberMotorID,
             constants.kClimberMotorPGain,
             constants.kRightClimberBrakePCMID,
-            constants.kRightClimberForwardActuationID,
-            constants.kRightClimberBackwardActuationID,
+            constants.kRightClimberPivotSolenoidForwardActuationID,
+            constants.kRightClimberPivotSolenoidBackwardActuationID,
         )
 
     def periodic(self) -> None:
         SmartDashboard.putNumber(
             constants.kRightClimberEncoderTicksKey,
-            self.rightClimb.climbMotor.getPosition(),
+            self.rightClimber.climbMotor.getPosition(),
         )

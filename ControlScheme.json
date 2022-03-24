@@ -55,6 +55,55 @@
     },
     "Left Bumper (Xbox)"
   ],
+  "holdBothClimbersPosition": [
+    1,
+    {
+      "Button": 7
+    },
+    "Right set top right"
+  ],
+  "moveBothClimbersToMiddleRungCapturePosition": [
+    1,
+    {
+      "Button": 5
+    },
+    "Right set top right"
+  ],
+  "moveBothClimbersToMiddleRungHangPosition": [
+    1,
+    {
+      "Button": 6
+    },
+    "Right set top right"
+  ],
+  "pivotLeftClimberToTilted": [
+    1,
+    {
+      "Button": 12
+    },
+    "Left set top middle"
+  ],
+  "pivotLeftClimberToVertical": [
+    1,
+    {
+      "Button": 15
+    },
+    "Left set bottom middle0"
+  ],
+  "pivotRightClimberToTilted": [
+    1,
+    {
+      "Button": 13
+    },
+    "Left set top right"
+  ],
+  "pivotRightClimberToVertical": [
+    1,
+    {
+      "Button": 14
+    },
+    "Left set bottom right"
+  ],
   "resetSwerveControl": [
     0,
     {
@@ -89,19 +138,5 @@
       "Button": 6
     },
     "Right Bumper (Xbox)"
-  ],
-  "toggleLeftClimberPiston": [
-    1,
-    {
-      "Button": 12
-    },
-    "Left set top middle"
-  ],
-  "toggleRightClimberPiston": [
-    1,
-    {
-      "Button": 13
-    },
-    "Left set top right"
   ]
 }

@@ -486,29 +486,46 @@ kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
 
 # Climber Constants
+kLeftClimberMotorCanID = 24
 kRightClimberMotorCanID = 25
 kSimRightClimberMotorID = 16
-kLeftClimberMotorCanID = 24
 kSimLeftClimberMotorID = 17
-kRightClimberBrakePCMID = 1
 kLeftClimberBrakePCMID = 0
+kRightClimberBrakePCMID = 1
 kLeftClimberInverted = True
-kLeftClimberFullExtensionName = "leftClimberFullExtension"
-kRightClimberFullExtensionName = "rightClimberFullExtension"
+kMoveLeftClimberToMiddleRungCapturePositionName = (
+    "moveLeftClimberToMiddleRungCapturePosition"
+)
+kMoveRightClimberToMiddleRungCapturePositionName = (
+    "moveRightClimberToMiddleRungCapturePosition"
+)
+kMoveBothClimbersToMiddleRungCapturePositionName = (
+    "moveBothClimbersToMiddleRungCapturePosition"
+)
+kMoveLeftClimberToMiddleRungHangPositionName = "moveLeftClimberToMiddleRungHangPosition"
+kMoveRightClimberToMiddleRungHangPositionName = (
+    "moveRightClimberToMiddleRungHangPosition"
+)
+kMoveBothClimbersToMiddleRungHangPositionName = (
+    "moveBothClimbersToMiddleRungHangPosition"
+)
+kHoldBothClimbersPositionName = "holdBothClimbersPosition"
 kRightClimberMotorName = "climber_right"
 kLeftClimberMotorName = "climber_left"
-kToggleRightClimberPistonName = "toggleRightClimberPiston"
-kToggleLeftClimberPistonName = "toggleLeftClimberPiston"
+kPivotRightClimberToTilted = "pivotRightClimberToTilted"
+kPivotLeftClimberToTilted = "pivotLeftClimberToTilted"
+kPivotRightClimberToVertical = "pivotRightClimberToVertical"
+kPivotLeftClimberToVertical = "pivotLeftClimberToVertical"
 kLeftClimberEncoderTicksKey = "Left Encoder"
 kRightClimberEncoderTicksKey = "Right Encoder"
-kRightClimberForwardActuationID = 2
-kRightClimberBackwardActuationID = 13
-kLeftClimberForwardActuationID = 3
-kLeftClimberBackwardActuationID = 12
+kRightClimberPivotSolenoidForwardActuationID = 2
+kLeftClimberPivotSolenoidForwardActuationID = 3
+kLeftClimberPivotSolenoidBackwardActuationID = 12
+kRightClimberPivotSolenoidBackwardActuationID = 13
 kClimberMotorPGain = 0.025
-kClimberFullExtension = 344502
-kClimberMidExtension = 304502
-kClimberHangingExtension = 95102
+kClimberMiddleRungCapturePosition = 344502
+kClimberMiddleRungHangPosition = 304502
+kClimberHangingPosition = 95102  # Not currently used
 kClimberRetractionPositionThreshold = 3500
 kClimberExtensionPositionThreshold = 2000
 # Intake Camera
