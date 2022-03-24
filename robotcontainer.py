@@ -13,9 +13,12 @@ from commands.robotrelativedrive import RobotRelativeDrive
 from commands.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.resetdrive import ResetDrive
 from commands.climber.fullextend import FullLeftClimber, FullRightClimber
-from commands.climber.hangingretract import HangingLeftClimber, HangingRightClimber
-from commands.climber.defaultrightclimberstate import DefaultRightClimber
-from commands.climber.defaultleftclimberstate import DefaultLeftClimber
+from commands.climber.moveclimberstomiddlerunghangposition import (
+    MoveLeftClimberToMiddleRungHangPosition,
+    MoveRightClimberToMiddleRungHangPosition,
+)
+from commands.climber.holdleftclimberextension import HoldLeftClimberExtension
+from commands.climber.holdrightclimberextension import HoldRightClimberExtension
 from commands.climber.toggleleftpiston import ToggleLeftPiston
 from commands.climber.togglerightpiston import ToggleRightPiston
 from commands.reverseballpath import ReverseBallPath
@@ -57,8 +60,8 @@ class RobotContainer:
         # The robot's subsystems
         self.drive = DriveSubsystem()
         self.vision = VisionSubsystem()
-        self.leftClimb = LeftClimber()
-        self.rightClimb = RightClimber()
+        self.leftClimber = LeftClimber()
+        self.rightClimber = RightClimber()
         self.intake = IntakeSubsystem()
         self.indexer = IndexerSubsystem()
 
@@ -101,8 +104,10 @@ class RobotContainer:
             )
         )
 
-        self.rightClimb.setDefaultCommand(DefaultRightClimber(self.rightClimb))
-        self.leftClimb.setDefaultCommand(DefaultLeftClimber(self.leftClimb))
+        self.rightClimber.setDefaultCommand(
+            HoldRightClimberExtension(self.rightClimber)
+        )
+        self.leftClimber.setDefaultCommand(HoldLeftClimberExtension(self.leftClimber))
         self.intake.setDefaultCommand(DefaultIntake(self.intake))
         self.indexer.setDefaultCommand(DefaultIndexer(self.indexer))
 
@@ -176,23 +181,25 @@ class RobotContainer:
 
         commands2.button.JoystickButton(
             *self.operatorInterface.fullExtendLeftClimber
-        ).whenPressed(FullLeftClimber(self.leftClimb)).whenReleased(
-            HangingLeftClimber(self.leftClimb)
+        ).whenPressed(FullLeftClimber(self.leftClimber)).whenReleased(
+            MoveLeftClimberToMiddleRungHangPosition(
+                self.leftClimber
+            )  # This can swap for Hanging if we get working pistons
         )
 
         commands2.button.JoystickButton(
             *self.operatorInterface.fullExtendRightClimber
-        ).whenPressed(FullRightClimber(self.rightClimb)).whenReleased(
-            HangingRightClimber(self.rightClimb)
+        ).whenPressed(FullRightClimber(self.rightClimber)).whenReleased(
+            MoveRightClimberToMiddleRungHangPosition(self.rightClimber)
         )
 
         commands2.button.JoystickButton(
             *self.operatorInterface.toggleLeftClimbPiston
-        ).whenPressed(ToggleLeftPiston(self.leftClimb))
+        ).whenPressed(ToggleLeftPiston(self.leftClimber))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.toggleRightClimbPiston
-        ).whenPressed(ToggleRightPiston(self.rightClimb))
+        ).whenPressed(ToggleRightPiston(self.rightClimber))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.autoBallIntakeControl

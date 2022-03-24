@@ -3,7 +3,7 @@ from wpilib import RobotBase
 from subsystems.climbers.leftclimbersubsystem import LeftClimber
 
 
-class DefaultLeftClimber(CommandBase):
+class HoldLeftClimberExtension(CommandBase):
     def __init__(self, climber: LeftClimber) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)

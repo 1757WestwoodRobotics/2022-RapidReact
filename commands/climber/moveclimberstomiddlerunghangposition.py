@@ -5,7 +5,7 @@ from subsystems.climbers.rightclimbersubsystem import RightClimber
 import constants
 
 
-class FullLeftClimber(CommandBase):
+class MoveLeftClimberToMiddleRungHangPosition(CommandBase):
     def __init__(self, climber: LeftClimber) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
@@ -16,7 +16,7 @@ class FullLeftClimber(CommandBase):
         self.climber.leftClimb.deactivateBrake()
 
     def execute(self) -> None:
-        self.climber.leftClimb.setClimberFullExtension()
+        self.climber.leftClimb.setClimberMidExtension()
 
     def end(self, _interrupted: bool) -> None:
         if RobotBase.isReal():
@@ -31,14 +31,14 @@ class FullLeftClimber(CommandBase):
             abs(
                 (
                     self.climber.leftClimb.climbMotor.getPosition()
-                    - constants.kClimberFullExtension
+                    - constants.kClimberMidExtension
                 )
             )
-            < constants.kClimberExtensionPositionThreshold
+            < constants.kClimberRetractionPositionThreshold
         )
 
 
-class FullRightClimber(CommandBase):
+class MoveRightClimberToMiddleRungHangPosition(CommandBase):
     def __init__(self, climber: RightClimber) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
@@ -49,7 +49,7 @@ class FullRightClimber(CommandBase):
         self.climber.rightClimb.deactivateBrake()
 
     def execute(self) -> None:
-        self.climber.rightClimb.setClimberFullExtension()
+        self.climber.rightClimb.setClimberMidExtension()
 
     def end(self, _interrupted: bool) -> None:
         if RobotBase.isReal():
@@ -64,8 +64,8 @@ class FullRightClimber(CommandBase):
             abs(
                 (
                     self.climber.rightClimb.climbMotor.getPosition()
-                    - constants.kClimberFullExtension
+                    - constants.kClimberMidExtension
                 )
             )
-            < constants.kClimberExtensionPositionThreshold
+            < constants.kClimberRetractionPositionThreshold
         )

@@ -4,7 +4,7 @@ from subsystems.climbers.leftclimbersubsystem import LeftClimber
 from subsystems.climbers.rightclimbersubsystem import RightClimber
 import constants
 
-
+# TEMPORARILY OUT OF USE FOR COMP (very sad)
 class HangingLeftClimber(CommandBase):
     def __init__(self, climber: LeftClimber) -> None:
         CommandBase.__init__(self)
@@ -31,10 +31,10 @@ class HangingLeftClimber(CommandBase):
             abs(
                 (
                     self.climber.leftClimb.climbMotor.getPosition()
-                    - constants.kClimbHangingExtension
+                    - constants.kClimberHangingExtension
                 )
             )
-            < constants.kClimbRetractionMotorThreshold
+            < constants.kClimberRetractionPositionThreshold
         )
 
 
@@ -64,8 +64,8 @@ class HangingRightClimber(CommandBase):
             abs(
                 (
                     self.climber.rightClimb.climbMotor.getPosition()
-                    - constants.kClimbHangingExtension
+                    - constants.kClimberHangingExtension
                 )
             )
-            < constants.kClimbRetractionMotorThreshold
+            < constants.kClimberRetractionPositionThreshold
         )

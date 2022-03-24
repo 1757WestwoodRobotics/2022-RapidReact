@@ -11,13 +11,13 @@ class LeftClimber(SubsystemBase):
 
         self.leftClimb = ClimberModule(
             constants.kLeftClimberMotorName,
-            constants.kLeftClimbMotorCanID,
-            constants.kSimLeftClimbMotorID,
-            constants.kClimbMotorPGain,
-            constants.kLeftClimbBrakePCMID,
-            constants.kLeftClimbForwardActuationID,
-            constants.kLeftClimbBackwardActuationID,
-            constants.kLeftClimbInverted,
+            constants.kLeftClimberMotorCanID,
+            constants.kSimLeftClimberMotorID,
+            constants.kClimberMotorPGain,
+            constants.kLeftClimberBrakePCMID,
+            constants.kLeftClimberForwardActuationID,
+            constants.kLeftClimberBackwardActuationID,
+            constants.kLeftClimberInverted,
         )
 
     def periodic(self) -> None:

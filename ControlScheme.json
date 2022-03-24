@@ -90,14 +90,14 @@
     },
     "Right Bumper (Xbox)"
   ],
-  "toggleLeftClimbPiston": [
+  "toggleLeftClimberPiston": [
     1,
     {
       "Button": 12
     },
     "Left set top middle"
   ],
-  "toggleRightClimbPiston": [
+  "toggleRightClimberPiston": [
     1,
     {
       "Button": 13

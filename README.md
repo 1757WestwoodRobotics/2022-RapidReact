@@ -57,6 +57,7 @@ Code for the FRC 1757 2022 Competition Bot
 | ------------------- | ------- | ------- | -------------- |
 | robo_rio            | core    | 0 - 9   | master (no ID) |
 | pdp                 | core    | 0 - 9   | 0              |
+| pneumatic_hub       | core    | 0 - 9   | 1              |
 | front_left_drive    | motors  | 10 - 29 | 10             |
 | front_left_steer    | motors  | 10 - 29 | 11             |
 | front_right_drive   | motors  | 10 - 29 | 12             |
@@ -65,10 +66,24 @@ Code for the FRC 1757 2022 Competition Bot
 | back_left_steer     | motors  | 10 - 29 | 15             |
 | back_right_drive    | motors  | 10 - 29 | 16             |
 | back_right_steer    | motors  | 10 - 29 | 17             |
+| left_climb_motor    | motors  | 10 - 29 | 24             |
+| right_climb_motor   | motors  | 10 - 29 | 25             |
 | front_left_encoder  | sensors | 40 - 59 | 40             |
 | front_right_encoder | sensors | 40 - 59 | 41             |
 | back_left_encoder   | sensors | 40 - 59 | 42             |
 | back_right_encoder  | sensors | 40 - 59 | 43             |
+
+#### Configure Pneumatic devices
+
+| Device                       | ID  |
+| ---------------------------- | --- |
+| left_climber_brake           | 0   |
+| right_climber_brake          | 1   |
+| right_climber_pivot_forward  | 2   |
+| left_climber_pivot_forward   | 3   |
+| intake_deploy                | 4   |
+| left_climber_pivot_backward  | 12  |
+| right_climber_pivot_backward | 13  |
 
 #### Configure network devices
 
@@ -148,8 +163,54 @@ py -3 -m venv ./.venv
      python robot.py sim
      ```
 
+### Steps to take when commiting
+
+1.  **Make sure Pylint, Black and Prettier are installed**
+
+- Run Pylint in terminal and check for a help output. It should be autoinstalled with python.
+
+```bash
+pylint
+```
+
+- Run Black in terminal empty and look for "No path provided". If nothing happens, run the second command
+
+```bash
+black
+
+python -m pip install -U black
+```
+
+1.  **Make Pylint happy**
+
+- Run Pylint on your files
+
+```bash
+pylint $(git ls-files “*.py”)
+```
+
+- With the error "Method could be a function" on an isFinished in a command, add this command above it. If necessary, swap out "no-self-use" with whatever error it gives you at the end.
+
+```bash
+# pylint: disable-next=no-self-use
+```
+
+1.  **Formatting with Black and Prettier**
+
+- Run black on your files (autoformats). Also note that it can be configured to run on save of a file.
+
+```bash
+black .
+```
+
+-You also may need to format json files using Prettier. When opening a json file in VSCode, it should prompt you to download Prettier in a small window in the bottom right. If not, go to the extensions tab on the left and search "Prettier". The top result is it (about 19 million downloads)
+
+1.  **Make sure it starts in sim and works as expected**
+
+- Should be obvious but make sure to do it
+
 1. **CODE FORMATTING PRACTICES**
    - for python we are using [black](https://github.com/psf/black)
    - for json we are using [prettier](https://prettier.io)
    - all JSON files must be alphabetized, you can use the [following extension for prettier](https://www.npmjs.com/package/prettier-plugin-sort-json)
-     -If you're using VSCode, use json-sorter to sort the json without dealing with npm above [json-sorter](https://marketplace.visualstudio.com/items?itemName=msyesyan.json-sorter). Open command pallete in the file with ctrl+shift+p and type "alpha". "Sort JSON keys by alpha order" should show up, and hit enter to run it. Afterward, save to autoformat with prettier.
+   -If you're using VSCode, use json-sorter to sort the json without dealing with npm above [json-sorter](https://marketplace.visualstudio.com/items?itemName=msyesyan.json-sorter). Open command pallete in the file with ctrl+shift+p and type "alpha". "Sort JSON keys by alpha order" should show up, and hit enter to run it. Afterward, save to autoformat with prettier.
