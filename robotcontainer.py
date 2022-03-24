@@ -3,6 +3,7 @@ import wpilib
 import commands2
 import commands2.button
 
+
 import constants
 
 from commands.complexauto import ComplexAuto
@@ -24,6 +25,7 @@ from commands.intake.autoballintake import AutoBallIntake
 from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
 from commands.shooter.aimshootertotarget import AimShooterToTarget
+from commands.shooter.aimshootermanual import AimShooterManually
 
 
 from subsystems.drivesubsystem import DriveSubsystem
@@ -176,6 +178,12 @@ class RobotContainer:
         commands2.button.JoystickButton(*self.operatorInterface.shootBall).whenHeld(
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.toggleManualModeShooter
+        ).toggleWhenPressed(
+            AimShooterManually(self.shooter, self.operatorInterface.shooterOffset)
+        )
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()

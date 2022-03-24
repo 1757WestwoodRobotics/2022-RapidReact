@@ -122,6 +122,10 @@ class OperatorInterface:
 
         self.fenderShot = getButtonBindingOfName(constants.kFenderShotButtonName)
 
+        self.toggleManualModeShooter = getButtonBindingOfName(
+            constants.kManualModeToggleButtonName
+        )
+
         self.chassisControls = HolonomicInput(
             Invert(
                 Deadband(

@@ -605,6 +605,7 @@ kAutoBallIntakeName = "autoBallIntake"
 
 kShootBallButtonName = "shootBall"
 kFenderShotButtonName = "fenderShot"
+kManualModeToggleButtonName = "toggleManualModeShooter"
 kTurretAngleOffsetAxisName = "turretOffset"
 kShootingDistanceOffsetAxisName = "distanceOffset"
 

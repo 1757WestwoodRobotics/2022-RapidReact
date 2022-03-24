@@ -23,21 +23,21 @@
   "chassisXRotation": [
     0,
     {
-      "Axis": 3
+      "Axis": 4
     },
     "Right Stick X (Xbox)"
   ],
   "chassisYRotation": [
     0,
     {
-      "Axis": 4
+      "Axis": 5
     },
     "Right Stick Y (Xbox)"
   ],
   "deployIntake": [
     0,
     {
-      "Axis": 5
+      "Axis": 3
     },
     "Right Trigger (Xbox)"
   ],
@@ -96,6 +96,13 @@
       "Button": 6
     },
     "Right Bumper (Xbox)"
+  ],
+  "toggleManualModeShooter": [
+    1,
+    {
+      "Button": 3
+    },
+    "Top Set, Left Button (Thrustmaster)"
   ],
   "turretOffset": [
     1,
