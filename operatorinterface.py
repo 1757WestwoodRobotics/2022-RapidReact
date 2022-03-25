@@ -75,11 +75,16 @@ class OperatorInterface:
         controllerNumbers = set(
             i[0] for i in controlScheme.values()
         )  # set ensures no duplicates
+        print(f"Looking for controllers: {controllerNumbers} ...")
 
         controllers = {}
 
         for num in controllerNumbers:
-            controllers[num] = Joystick(num)
+            controller = Joystick(num)
+            print(
+                f"Found Controller {num}:{controller.getName()}\n\tAxis: {controller.getAxisCount()}\n\tButtons: {controller.getButtonCount()}\n\tPoV Hats: {controller.getPOVCount()}"
+            )
+            controllers[num] = controller
 
         def getButtonBindingOfName(name: str) -> typing.Tuple[Joystick, int]:
             binding = controlScheme[name]
@@ -102,6 +107,33 @@ class OperatorInterface:
             constants.kDriveToTargetControlButtonName
         )
 
+        self.moveBothClimbersToMiddleRungCapturePosition = getButtonBindingOfName(
+            constants.kMoveBothClimbersToMiddleRungCapturePositionName
+        )
+
+        self.moveBothClimbersToMiddleRungHangPosition = getButtonBindingOfName(
+            constants.kMoveBothClimbersToMiddleRungHangPositionName
+        )
+
+        self.holdBothClimbersPosition = getButtonBindingOfName(
+            constants.kHoldBothClimbersPositionName
+        )
+
+        self.tiltRightClimberPiston = getButtonBindingOfName(
+            constants.kPivotRightClimberToTilted
+        )
+
+        self.tiltLeftClimberPiston = getButtonBindingOfName(
+            constants.kPivotLeftClimberToTilted
+        )
+
+        self.rightClimberPiston = getButtonBindingOfName(
+            constants.kPivotRightClimberToVertical
+        )
+
+        self.leftClimberPiston = getButtonBindingOfName(
+            constants.kPivotLeftClimberToVertical
+        )
         self.deployIntakeControl = getAxisBindingOfName(
             constants.kDeployIntakeButtonName
         )

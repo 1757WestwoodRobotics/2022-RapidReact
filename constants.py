@@ -485,6 +485,49 @@ kCameraServoPGain = 0.15
 kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
 
+# Climber Constants
+kLeftClimberMotorCanID = 24
+kRightClimberMotorCanID = 25
+kSimRightClimberMotorID = 16
+kSimLeftClimberMotorID = 17
+kLeftClimberBrakePCMID = 0
+kRightClimberBrakePCMID = 1
+kLeftClimberInverted = True
+kMoveLeftClimberToMiddleRungCapturePositionName = (
+    "moveLeftClimberToMiddleRungCapturePosition"
+)
+kMoveRightClimberToMiddleRungCapturePositionName = (
+    "moveRightClimberToMiddleRungCapturePosition"
+)
+kMoveBothClimbersToMiddleRungCapturePositionName = (
+    "moveBothClimbersToMiddleRungCapturePosition"
+)
+kMoveLeftClimberToMiddleRungHangPositionName = "moveLeftClimberToMiddleRungHangPosition"
+kMoveRightClimberToMiddleRungHangPositionName = (
+    "moveRightClimberToMiddleRungHangPosition"
+)
+kMoveBothClimbersToMiddleRungHangPositionName = (
+    "moveBothClimbersToMiddleRungHangPosition"
+)
+kHoldBothClimbersPositionName = "holdBothClimbersPosition"
+kRightClimberMotorName = "climber_right"
+kLeftClimberMotorName = "climber_left"
+kPivotRightClimberToTilted = "pivotRightClimberToTilted"
+kPivotLeftClimberToTilted = "pivotLeftClimberToTilted"
+kPivotRightClimberToVertical = "pivotRightClimberToVertical"
+kPivotLeftClimberToVertical = "pivotLeftClimberToVertical"
+kLeftClimberEncoderTicksKey = "Left Encoder"
+kRightClimberEncoderTicksKey = "Right Encoder"
+kRightClimberPivotSolenoidForwardActuationID = 2
+kLeftClimberPivotSolenoidForwardActuationID = 3
+kLeftClimberPivotSolenoidBackwardActuationID = 12
+kRightClimberPivotSolenoidBackwardActuationID = 13
+kClimberMotorPGain = 0.025
+kClimberMiddleRungCapturePosition = 344502
+kClimberMiddleRungHangPosition = 304502
+kClimberHangingPosition = 95102  # Not currently used
+kClimberRetractionPositionThreshold = 3500
+kClimberExtensionPositionThreshold = 2000
 # Intake Camera
 kIntakeCameraTiltAngle = Rotation2d.fromDegrees(90 - 25)
 kIntakeCameraHeightInMeters = 0.5
@@ -498,7 +541,7 @@ kStagingSpeed = 800
 kIndexerSpeed = 800
 """rpm"""
 
-kIntakeSolenoidChannelId = 1
+kIntakeSolenoidChannelId = 4
 
 kSimIntakeCameraObjectName = "Intake Camera"
 

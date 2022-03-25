@@ -12,6 +12,23 @@ from commands.targetrelativedrive import TargetRelativeDrive
 from commands.robotrelativedrive import RobotRelativeDrive
 from commands.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.resetdrive import ResetDrive
+from commands.climber.moveclimberstomiddlerungcaptureposition import (
+    MoveBothClimbersToMiddleRungCapturePosition,
+)
+from commands.climber.moveclimberstomiddlerunghangposition import (
+    MoveBothClimbersToMiddleRungHangPosition,
+)
+from commands.climber.holdcimbersposition import (
+    HoldBothClimbersPosition,
+    HoldLeftClimberPosition,
+)
+from commands.climber.holdcimbersposition import HoldRightClimberPosition
+from commands.climber.pistonactuation import (
+    PivotLeftPistonToTilted,
+    PivotRightPistonToTilted,
+    PivotLeftPistonToVertical,
+    PivotRightPistonToVertical,
+)
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
@@ -26,6 +43,8 @@ from commands.intake.retractintake import RetractIntake
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
+from subsystems.climbers.leftclimbersubsystem import LeftClimber
+from subsystems.climbers.rightclimbersubsystem import RightClimber
 from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
 
@@ -49,6 +68,8 @@ class RobotContainer:
         # The robot's subsystems
         self.drive = DriveSubsystem()
         self.vision = VisionSubsystem()
+        self.leftClimber = LeftClimber()
+        self.rightClimber = RightClimber()
         self.intake = IntakeSubsystem()
         self.indexer = IndexerSubsystem()
 
@@ -91,6 +112,8 @@ class RobotContainer:
             )
         )
 
+        self.rightClimber.setDefaultCommand(HoldRightClimberPosition(self.rightClimber))
+        self.leftClimber.setDefaultCommand(HoldLeftClimberPosition(self.leftClimber))
         self.intake.setDefaultCommand(DefaultIntake(self.intake))
         self.indexer.setDefaultCommand(DefaultIndexer(self.indexer))
 
@@ -161,6 +184,39 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl
         ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.moveBothClimbersToMiddleRungCapturePosition
+        ).whenPressed(
+            MoveBothClimbersToMiddleRungCapturePosition(
+                self.leftClimber, self.rightClimber
+            )
+        )
+        commands2.button.JoystickButton(
+            *self.operatorInterface.moveBothClimbersToMiddleRungHangPosition
+        ).whenPressed(
+            MoveBothClimbersToMiddleRungHangPosition(
+                self.leftClimber, self.rightClimber
+            )
+        )
+        commands2.button.JoystickButton(
+            *self.operatorInterface.holdBothClimbersPosition
+        ).whenPressed(HoldBothClimbersPosition(self.leftClimber, self.rightClimber))
+        commands2.button.JoystickButton(
+            *self.operatorInterface.tiltLeftClimberPiston
+        ).whenPressed(PivotLeftPistonToTilted(self.leftClimber))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.tiltRightClimberPiston
+        ).whenPressed(PivotRightPistonToTilted(self.rightClimber))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.leftClimberPiston
+        ).whenPressed(PivotLeftPistonToVertical(self.leftClimber))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.rightClimberPiston
+        ).whenPressed(PivotRightPistonToVertical(self.rightClimber))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.autoBallIntakeControl
