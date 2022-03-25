@@ -56,6 +56,12 @@ class HolonomicInput:
         self.rotationY = rotationY
 
 
+class Control2D:
+    def __init__(self, forwardsBackwards: AnalogInput, sideToSide: AnalogInput) -> None:
+        self.forwardsBackwards = forwardsBackwards
+        self.sideToSide = sideToSide
+
+
 class OperatorInterface:
     """
     The controls that the operator(s)/driver(s) interact with
@@ -146,6 +152,12 @@ class OperatorInterface:
 
         self.shootBall = getButtonBindingOfName(constants.kShootBallButtonName)
 
+        self.fenderShot = getButtonBindingOfName(constants.kFenderShotButtonName)
+
+        self.toggleManualModeShooter = getButtonBindingOfName(
+            constants.kManualModeToggleButtonName
+        )
+
         self.chassisControls = HolonomicInput(
             Invert(
                 Deadband(
@@ -168,6 +180,21 @@ class OperatorInterface:
             Invert(
                 Deadband(
                     getAxisBindingOfName(constants.kChassisRotationYAxisName),
+                    constants.kXboxJoystickDeadband,
+                )
+            ),
+        )
+
+        self.shooterOffset = Control2D(
+            Invert(
+                Deadband(
+                    getAxisBindingOfName(constants.kTurretAngleOffsetAxisName),
+                    constants.kXboxJoystickDeadband,
+                )
+            ),
+            Invert(
+                Deadband(
+                    getAxisBindingOfName(constants.kShootingDistanceOffsetAxisName),
                     constants.kXboxJoystickDeadband,
                 )
             ),

@@ -3,6 +3,7 @@ import wpilib
 import commands2
 import commands2.button
 
+
 import constants
 
 from commands.complexauto import ComplexAuto
@@ -11,7 +12,6 @@ from commands.drivetotarget import DriveToTarget
 from commands.targetrelativedrive import TargetRelativeDrive
 from commands.robotrelativedrive import RobotRelativeDrive
 from commands.absoluterelativedrive import AbsoluteRelativeDrive
-from commands.resetdrive import ResetDrive
 from commands.climber.moveclimberstomiddlerungcaptureposition import (
     MoveBothClimbersToMiddleRungCapturePosition,
 )
@@ -32,6 +32,7 @@ from commands.climber.pistonactuation import (
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
+from commands.resetrobot import ResetRobot
 
 from commands.indexer.defaultindexer import DefaultIndexer
 from commands.indexer.holdball import HoldBall
@@ -39,6 +40,8 @@ from commands.intake.defaultintake import DefaultIntake
 from commands.intake.autoballintake import AutoBallIntake
 from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
+from commands.shooter.aimshootertotarget import AimShooterToTarget
+from commands.shooter.aimshootermanual import AimShooterManually
 
 
 from subsystems.drivesubsystem import DriveSubsystem
@@ -47,9 +50,10 @@ from subsystems.climbers.leftclimbersubsystem import LeftClimber
 from subsystems.climbers.rightclimbersubsystem import RightClimber
 from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
+from subsystems.shootersubsystem import ShooterSubsystem
 
 from operatorinterface import OperatorInterface
-from util.helpfultriggerwrappers import AxisButton
+from util.helpfultriggerwrappers import AxisButton, SmartDashboardButton
 
 
 class RobotContainer:
@@ -70,6 +74,7 @@ class RobotContainer:
         self.vision = VisionSubsystem()
         self.leftClimber = LeftClimber()
         self.rightClimber = RightClimber()
+        self.shooter = ShooterSubsystem()
         self.intake = IntakeSubsystem()
         self.indexer = IndexerSubsystem()
 
@@ -114,6 +119,9 @@ class RobotContainer:
 
         self.rightClimber.setDefaultCommand(HoldRightClimberPosition(self.rightClimber))
         self.leftClimber.setDefaultCommand(HoldLeftClimberPosition(self.leftClimber))
+        self.shooter.setDefaultCommand(
+            AimShooterToTarget(self.shooter, self.operatorInterface.shooterOffset)
+        )
         self.intake.setDefaultCommand(DefaultIntake(self.intake))
         self.indexer.setDefaultCommand(DefaultIndexer(self.indexer))
 
@@ -179,7 +187,7 @@ class RobotContainer:
 
         commands2.button.JoystickButton(
             *self.operatorInterface.resetSwerveControl
-        ).whenPressed(ResetDrive(self.drive))
+        ).whenPressed(ResetRobot(self.shooter, self.drive))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl
@@ -225,6 +233,10 @@ class RobotContainer:
         commands2.button.JoystickButton(*self.operatorInterface.shootBall).whenHeld(
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
+
+        SmartDashboardButton(constants.kShootingManualModeKey).whileHeld(
+            AimShooterManually(self.shooter, self.operatorInterface.shooterOffset)
+        )
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()

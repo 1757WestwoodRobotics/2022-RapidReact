@@ -3,8 +3,7 @@ import typing
 
 from commands2 import SubsystemBase
 from networktables import NetworkTables
-from wpilib import SmartDashboard, Timer, RobotBase, PWM
-from wpilib.simulation import PWMSim
+from wpilib import SmartDashboard, Timer
 from wpimath.controller import PIDController
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d
 import constants
@@ -238,15 +237,6 @@ class LimelightTrackingModule(TrackingModule):
             constants.kLimelightNetworkTableName
         )
 
-        self.rotationServo = (
-            PWM(constants.kCameraPanServoPWMChannel)
-            if RobotBase.isReal()
-            else PWMSim(constants.kCameraSimPanServoPWMChannel)
-        )
-
-        self.lastReadAngle = None
-        self.limelightAngle = 0
-
     def getTargetAngle(self) -> typing.Optional[Rotation2d]:
         return self.targetAngle
 
@@ -256,38 +246,29 @@ class LimelightTrackingModule(TrackingModule):
     def getTargetFacingAngle(self) -> typing.Optional[Rotation2d]:
         return self.targetFacingAngle
 
-    def getServoAngle(self) -> Rotation2d:
-        return Rotation2d(
-            value=self.rotationServo.getSpeed() * constants.kCameraServoMaxAngle
-        )
-
-    def setServoAngle(self, angle: Rotation2d) -> None:
-        offset = self.servoController.calculate(
-            (self.getServoAngle() - angle).radians()
-        )
-        self.rotationServo.setSpeed(
-            (self.getServoAngle().radians() + offset) / constants.kCameraServoMaxAngle
-        )
-
     def update(self) -> None:
         targetValid = self.limelightNetworkTable.getNumber(
             constants.kLimelightTargetValidKey, constants.kLimelightTargetInvalidValue
         )
         if targetValid:
-            self.limelightAngle = Rotation2d.fromDegrees(
-                -1
-                * self.limelightNetworkTable.getNumber(
-                    constants.kLimelightTargetHorizontalAngleKey, 0.0
+            # real model has limelight rotated 90 degrees
+            self.targetAngle = Rotation2d.fromDegrees(
+                self.limelightNetworkTable.getNumber(
+                    constants.kLimelightTargetVerticalAngleKey, 0.0
                 )
             )
-
-            self.targetAngle = self.limelightAngle + self.getServoAngle()
-
-            if self.limelightAngle != self.lastReadAngle:
-                self.setServoAngle(self.targetAngle)
-
-                self.lastReadAngle = self.limelightAngle
+            self.targetDistance = (
+                constants.kSimDefaultTargetHeight - constants.kLimelightVerticalOffset
+            ) / (
+                Rotation2d.fromDegrees(
+                    self.limelightNetworkTable.getNumber(
+                        constants.kLimelightTargetHorizontalAngleKey, 0.0
+                    )
+                )
+                + constants.kLimelightVerticalAngleOffset
+            ).tan()
         else:
+            self.targetDistance = None
             self.targetAngle = None
 
         TrackingModule.update(self)
@@ -334,24 +315,28 @@ class VisionSubsystem(SubsystemBase):
             robotPoseX, robotPoseY, robotPoseAngle = SmartDashboard.getNumberArray(
                 constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0]
             )
-            robotPose = Pose2d(robotPoseX, robotPoseY, robotPoseAngle)
+
+            limelightPanAngle = (
+                SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 0)
+                * constants.kRadiansPerDegree
+            )
+
+            robotPose = Pose2d(
+                robotPoseX, robotPoseY, robotPoseAngle + limelightPanAngle
+            )
             robotToTarget = Transform2d(
                 convenientmath.translationFromDistanceAndRotation(
                     targetDistance, targetAngle
                 ),
                 targetFacingAngle,
             )
+
             targetPose = robotPose + robotToTarget
             SmartDashboard.putNumberArray(
                 constants.kTargetPoseArrayKeys.valueKey,
                 [targetPose.X(), targetPose.Y(), targetPose.rotation().radians()],
             )
             SmartDashboard.putBoolean(constants.kTargetPoseArrayKeys.validKey, True)
-
-            SmartDashboard.putNumber(
-                constants.kCameraServoRotationNumberKey,
-                self.trackingModule.getServoAngle().degrees(),
-            )
 
         if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
             print(
