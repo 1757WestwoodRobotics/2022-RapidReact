@@ -7,6 +7,7 @@ from util.convenientmath import clamp
 
 import constants
 
+
 class Falcon:  # represents either a simulated motor or a real Falcon 500
     def __init__(
         self,
