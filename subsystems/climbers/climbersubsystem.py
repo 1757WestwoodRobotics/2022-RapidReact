@@ -51,8 +51,5 @@ class ClimberModule:
     def setClimberFullExtension(self) -> None:
         self.climbMotor.setPosition(constants.kClimberMiddleRungCapturePosition)
 
-    def setClimberHangingExtension(self) -> None:
-        self.climbMotor.setPosition(constants.kClimberHangingPosition)
-
     def setClimberMidExtension(self) -> None:
         self.climbMotor.setPosition(constants.kClimberMiddleRungHangPosition)

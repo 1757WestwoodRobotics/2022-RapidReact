@@ -13,13 +13,9 @@ from commands.robotrelativedrive import RobotRelativeDrive
 from commands.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.resetdrive import ResetDrive
 from commands.climber.moveclimberstomiddlerungcaptureposition import (
-    MoveLeftClimberToMiddleRungCapturePosition,
-    MoveRightClimberToMiddleRungCapturePosition,
     MoveBothClimbersToMiddleRungCapturePosition,
 )
 from commands.climber.moveclimberstomiddlerunghangposition import (
-    MoveLeftClimberToMiddleRungHangPosition,
-    MoveRightClimberToMiddleRungHangPosition,
     MoveBothClimbersToMiddleRungHangPosition,
 )
 from commands.climber.holdcimbersposition import (
