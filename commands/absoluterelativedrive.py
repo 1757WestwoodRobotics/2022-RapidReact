@@ -33,7 +33,9 @@ class AbsoluteRelativeDrive(CommandBase):
         self.setName(__class__.__name__)
 
     def rotation(self) -> float:
-        targetRotation = atan2(self.rotationY(), self.rotationX())
+        targetRotation = atan2(
+            self.rotationX(), self.rotationY()
+        )  # rotate to be relative to driver
         if self.rotationX() == 0 and self.rotationY() == 0:
             return 0
 

@@ -2,7 +2,7 @@ from enum import Enum, auto
 
 from typing import Callable
 from commands2.button import Button
-from wpilib import Joystick
+from wpilib import Joystick, SmartDashboard
 
 
 Axis = Callable[[], float]
@@ -15,6 +15,11 @@ class AxisButton(Button):
         self.axis = axis
         self.threshold = threshold
         super().__init__(lambda: self.axis() > self.threshold)
+
+
+class SmartDashboardButton(Button):
+    def __init__(self, key: str) -> None:
+        super().__init__(lambda: SmartDashboard.getBoolean(key, False))
 
 
 class DPadButton(Button):

@@ -9,7 +9,6 @@
 # of your robot code without too much extra effort.
 #
 
-import math
 import typing
 from wpilib import RobotController, SmartDashboard
 from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim
@@ -120,21 +119,47 @@ class LimelightSim:
             constants.kLimelightNetworkTableName
         )
 
-    def update(self, limelightPose: Pose2d, targetPose: Pose2d) -> None:
+    def update(
+        self,
+        limelightPose: Pose2d,
+        targetPose: Pose2d,
+    ) -> None:
         targetInLimelight = Transform2d(limelightPose, targetPose)
         targetAngle = convenientmath.rotationFromTranslation(
             targetInLimelight.translation()
         )
+        targetDistance = limelightPose.translation().distance(targetPose.translation())
+        targetVerticalAngle = (
+            convenientmath.rotationFromTranslation(
+                Translation2d(
+                    targetDistance,
+                    constants.kSimDefaultTargetHeight
+                    - constants.kLimelightVerticalOffset,
+                )
+            )
+            - constants.kLimelightVerticalAngleOffset
+        )
+
         targetValid = constants.kLimelightTargetInvalidValue
         if (
-            constants.kLimelightMinHorizontalFoV.radians()
+            constants.kLimelightMinVerticalFoV.radians()  # rotated 90 degrees, FOV increased
             < targetAngle.radians()
-            < constants.kLimelightMaxHorizontalFoV.radians()
+            < constants.kLimelightMaxVerticalFoV.radians()
         ):
             targetValid = constants.kLimelightTargetValidValue
             self.limelightNetworkTable.putNumber(
+                constants.kLimelightTargetVerticalAngleKey,
+                targetAngle.degrees(),  # limelight uses reversed direction along x
+            )
+
+        if (
+            constants.kLimelightMinHorizontalFoV.radians()
+            < targetVerticalAngle.radians()
+            < constants.kLimelightMaxHorizontalFoV.radians()
+        ):
+            self.limelightNetworkTable.putNumber(
                 constants.kLimelightTargetHorizontalAngleKey,
-                -1 * targetAngle.degrees(),  # limelight uses reversed direction along x
+                targetVerticalAngle.degrees(),
             )
 
         self.limelightNetworkTable.putNumber(
@@ -156,8 +181,8 @@ class IntakeCameraSim:
         )
         ballDistance = intakeCameraPose.translation().distance(ballPose.translation())
         ballVerticalAngle = (
-            Rotation2d(
-                math.atan(ballDistance / constants.kIntakeCameraHeightInMeters)
+            convenientmath.rotationFromTranslation(
+                Translation2d(constants.kIntakeCameraHeightInMeters, ballDistance)
             ).degrees()
             - constants.kIntakeCameraTiltAngle.degrees()
         )
@@ -331,8 +356,9 @@ class PhysicsEngine:
             simLimelightPose.translation(),
             simLimelightPose.rotation()
             + Rotation2d.fromDegrees(
-                SmartDashboard.getNumber(constants.kCameraServoRotationNumberKey, 0.0)
-            ),
+                SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 0.0)
+            )
+            + constants.kTurretOffsetFromRobotAngle,  # robot 180 is turret 0,
         )
         self.limelightSim.update(servoPose, simTargetPose)
 
@@ -346,8 +372,19 @@ class PhysicsEngine:
             targetPoseX, targetPoseY, targetAngle = SmartDashboard.getNumberArray(
                 constants.kTargetPoseArrayKeys.valueKey, [0, 0, 0]
             )
-            targetPose = Pose2d(targetPoseX, targetPoseY, targetAngle)
+
+            targetPose = Pose2d(
+                targetPoseX,
+                targetPoseY,
+                targetAngle,  # robot 0 is turret 180
+            )
             targetObject = self.physics_controller.field.getObject(
                 constants.kTargetName
             )
-            targetObject.setPose(targetPose)
+            targetObject.setPose(
+                convenientmath.rotateAroundPoint(
+                    targetPose,
+                    simRobotPose.translation(),
+                    constants.kTurretOffsetFromRobotAngle,
+                )
+            )
