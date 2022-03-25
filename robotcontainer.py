@@ -12,7 +12,6 @@ from commands.drivetotarget import DriveToTarget
 from commands.targetrelativedrive import TargetRelativeDrive
 from commands.robotrelativedrive import RobotRelativeDrive
 from commands.absoluterelativedrive import AbsoluteRelativeDrive
-from commands.resetdrive import ResetDrive
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
