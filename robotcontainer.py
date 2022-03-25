@@ -24,6 +24,7 @@ from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
 
 from commands.auto.fivebrstandard import FiveBRStandard
+from commands.auto.twoblhangerbounce import TwoBLHangerbounce
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
@@ -71,6 +72,9 @@ class RobotContainer:
 
         # A routine that follows a set trajectory
         self.fiveBRStandard = FiveBRStandard(self.drive, self.intake, self.indexer)
+        self.twoBLHangerbounce = TwoBLHangerbounce(
+            self.drive, self.intake, self.indexer
+        )
 
         # Chooser
         self.chooser = wpilib.SendableChooser()
@@ -79,6 +83,7 @@ class RobotContainer:
         self.chooser.addOption("Complex Auto", self.complexAuto)
         self.chooser.addOption("Simple Auto", self.simpleAuto)
         self.chooser.addOption("Target Auto", self.driveToTarget)
+        self.chooser.addOption("2 Ball Left Hangerbounce Auto", self.twoBLHangerbounce)
         self.chooser.setDefaultOption("5 Ball Right Standard Auto", self.fiveBRStandard)
 
         # Put the chooser on the dashboard
