@@ -27,12 +27,10 @@ class IndexerSubsystem(SubsystemBase):
         self.indexerMotor = Falcon(
             constants.kIndexerMotorName,
             constants.kIndexerMotorId,
-            constants.kSimIndexerMotorPort,
         )
         self.stagingMotor = Falcon(
             constants.kStagingMotorName,
             constants.kStagingMotorId,
-            constants.kSimStagingMotorPort,
         )
         self.indexerSensor = LimitSwitch(
             self.stagingMotor,

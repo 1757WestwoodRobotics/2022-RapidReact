@@ -30,7 +30,6 @@ class IntakeSubsystem(SubsystemBase):
         self.intakeMotor = Falcon(
             constants.kIntakeMotorName,
             constants.kIntakeMotorId,
-            constants.kSimIntakeMotorPort,
             inverted=constants.kIntakeMotorInverted,
             canbus=constants.kCANivoreName,
         )
