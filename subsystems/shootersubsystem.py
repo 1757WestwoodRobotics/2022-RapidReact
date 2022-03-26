@@ -41,8 +41,8 @@ class ShooterSubsystem(SubsystemBase):
             constants.kHoodMotorInverted,
         )
 
-        self.initializationMinimum = 0
-        self.initializationMaximum = 0
+        self.initializationMinimum = -1
+        self.initializationMaximum = 1
 
         self.targetTurretAngle = Rotation2d()
         self.targetHoodAngle = Rotation2d()
@@ -71,6 +71,18 @@ class ShooterSubsystem(SubsystemBase):
         )
         self.initializationMaximum = max(
             self.initializationMaximum, self.turretMotor.getPosition()
+        )
+        SmartDashboard.putNumber(
+            "mappedVal",
+            map_range(
+                self.turretMotor.getPosition(),
+                self.initializationMinimum,
+                self.initializationMaximum,
+                constants.kTurretMinimumAngle.radians()
+                * constants.kTalonEncoderPulsesPerRadian,
+                constants.kTurretMaximumAngle.radians()
+                * constants.kTalonEncoderPulsesPerRadian,
+            ),
         )
         if not SmartDashboard.getBoolean(constants.kShootingManualModeKey, False):
             SmartDashboard.putNumber(
