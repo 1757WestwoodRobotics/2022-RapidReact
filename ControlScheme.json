@@ -72,51 +72,51 @@
   "holdBothClimbersPosition": [
     1,
     {
-      "Button": 7
+      "Button": 5
     },
-    "Right set top right"
+    "right button set, right top (ThrustmasterT16000M)"
   ],
   "moveBothClimbersToMiddleRungCapturePosition": [
     1,
     {
-      "Button": 5
+      "Button": 7
     },
-    "Right set top right"
+    "right button set, left top (ThrustmasterT16000M)"
   ],
   "moveBothClimbersToMiddleRungHangPosition": [
     1,
     {
       "Button": 6
     },
-    "Right set top right"
+    "right button set, middle top (ThrustmasterT16000M)"
   ],
   "pivotLeftClimberToTilted": [
     1,
     {
       "Button": 12
     },
-    "Left set top middle"
+    "left button set, middle top (ThrustmasterT16000M)"
   ],
   "pivotLeftClimberToVertical": [
     1,
     {
       "Button": 15
     },
-    "Left set bottom middle0"
+    "left button set, middle bottom (ThrustmasterT16000M)"
   ],
   "pivotRightClimberToTilted": [
     1,
     {
       "Button": 13
     },
-    "Left set top right"
+    "left button set, right top (ThrustmasterT16000M)"
   ],
   "pivotRightClimberToVertical": [
     1,
     {
       "Button": 14
     },
-    "Left set bottom right"
+    "left button set, right bottom (ThrustmasterT16000M)"
   ],
   "resetSwerveControl": [
     0,
@@ -151,7 +151,7 @@
     {
       "Button": 3
     },
-    "Top Set, Left Button (Thrustmaster)"
+    "left button on top of joystick (ThrustmasterT16000M)"
   ],
   "turretOffset": [
     1,
