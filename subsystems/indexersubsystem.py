@@ -67,7 +67,7 @@ class IndexerSubsystem(SubsystemBase):
             self.indexerMotor.setSpeed(constants.kIndexerSpeed)
             self.stagingMotor.setSpeed(constants.kStagingSpeed)
         elif self.state == self.Mode.Holding:
-            if self.indexerSensor.value() and self.stagingSensor.value():
+            if not self.indexerSensor.value() and not self.stagingSensor.value():
                 self.indexerMotor.setSpeed(0)
                 self.stagingMotor.setSpeed(0)
             else:
