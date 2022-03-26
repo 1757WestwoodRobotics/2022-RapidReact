@@ -18,7 +18,7 @@ class MoveLeftClimberToMiddleRungCapturePosition(CommandBase):
         self.climber.leftClimber.setClimberFullExtension()
 
     def end(self, _interrupted: bool) -> None:
-        self.climber.leftClimber.climbMotor.neutralOutput()
+        self.climber.leftClimber.climberMotor.neutralOutput()
         self.climber.leftClimber.activateBrake()
 
     # pylint: disable-next=no-self-use
@@ -26,7 +26,7 @@ class MoveLeftClimberToMiddleRungCapturePosition(CommandBase):
         return (
             abs(
                 (
-                    self.climber.leftClimber.climbMotor.getPosition()
+                    self.climber.leftClimber.climberMotor.getSelectedSensorPosition()
                     - constants.kClimberMiddleRungCapturePosition
                 )
             )
@@ -48,7 +48,7 @@ class MoveRightClimberToMiddleRungCapturePosition(CommandBase):
         self.climber.rightClimber.setClimberFullExtension()
 
     def end(self, _interrupted: bool) -> None:
-        self.climber.rightClimber.climbMotor.neutralOutput()
+        self.climber.rightClimber.climberMotor.neutralOutput()
         self.climber.rightClimber.activateBrake()
 
     # pylint: disable-next=no-self-use
@@ -56,7 +56,7 @@ class MoveRightClimberToMiddleRungCapturePosition(CommandBase):
         return (
             abs(
                 (
-                    self.climber.rightClimber.climbMotor.getPosition()
+                    self.climber.rightClimber.climberMotor.getSelectedSensorPosition()
                     - constants.kClimberMiddleRungCapturePosition
                 )
             )

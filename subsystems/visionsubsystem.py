@@ -2,8 +2,7 @@ import typing
 
 from commands2 import SubsystemBase
 from networktables import NetworkTables
-from wpilib import SmartDashboard, Timer
-from wpimath.controller import PIDController
+from wpilib import SmartDashboard
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d
 import constants
 from util import convenientmath
@@ -130,12 +129,6 @@ class LimelightTrackingModule(TrackingModule):
         self.targetDistance = None
         self.targetFacingAngle = None
 
-        self.servoController = PIDController(
-            constants.kCameraServoPGain,
-            constants.kCameraServoIGain,
-            constants.kCameraServoDGain,
-        )
-
         NetworkTables.initialize()
         self.limelightNetworkTable = NetworkTables.getTable(
             constants.kLimelightNetworkTableName
@@ -190,8 +183,6 @@ class VisionSubsystem(SubsystemBase):
             constants.kLimelightTrackerModuleName
         )
 
-        self.printTimer = Timer()
-
     def resetTrackingModule(self):
         self.trackingModule.reset()
 
@@ -238,8 +229,3 @@ class VisionSubsystem(SubsystemBase):
                 [targetPose.X(), targetPose.Y(), targetPose.rotation().radians()],
             )
             SmartDashboard.putBoolean(constants.kTargetPoseArrayKeys.validKey, True)
-
-        if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
-            print(
-                f"ta: {self.trackingModule.getTargetAngle().degrees():.0f}* td: {self.trackingModule.getTargetDistance():.1f} tfa: {self.trackingModule.getTargetFacingAngle().degrees():.0f}*"
-            )
