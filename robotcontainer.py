@@ -1,4 +1,3 @@
-from commands1 import WaitCommand
 import wpilib
 
 import commands2
@@ -88,7 +87,10 @@ class RobotContainer:
                 constants.kAutoDriveSpeedFactor,
                 DriveDistance.Axis.X,
                 self.drive,
-            )
+            ),
+            ShootBall(self.indexer),
+            commands2.WaitCommand(2),
+            HoldBall(self.indexer),
         )
 
         # A complex auto routine that drives to the target, drives forward, waits, drives back
@@ -123,7 +125,7 @@ class RobotContainer:
         self.rightClimber.setDefaultCommand(HoldRightClimberPosition(self.rightClimber))
         self.leftClimber.setDefaultCommand(HoldLeftClimberPosition(self.leftClimber))
         self.shooter.setDefaultCommand(
-            AimShooterToTarget(self.shooter, self.operatorInterface.shooterOffset)
+            AimShooterManually(self.shooter, self.operatorInterface.shooterOffset)
         )
         self.intake.setDefaultCommand(DefaultIntake(self.intake))
         self.indexer.setDefaultCommand(DefaultIndexer(self.indexer))
@@ -237,8 +239,8 @@ class RobotContainer:
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
 
-        SmartDashboardButton(constants.kShootingManualModeKey).whileHeld(
-            AimShooterManually(self.shooter, self.operatorInterface.shooterOffset)
+        commands2.button.JoystickButton(*self.operatorInterface.fenderShot).whileHeld(
+            AimShooterToTarget(self.shooter, self.operatorInterface.shooterOffset)
         )
 
     def getAutonomousCommand(self) -> commands2.Command:
