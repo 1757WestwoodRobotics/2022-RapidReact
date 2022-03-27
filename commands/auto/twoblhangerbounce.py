@@ -2,7 +2,6 @@ from os import path
 
 from commands2 import SequentialCommandGroup, WaitCommand
 from wpimath.trajectory import TrajectoryConfig, TrajectoryUtil
-from commands.resetgyro import ResetGyro
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.intakesubsystem import IntakeSubsystem
@@ -13,6 +12,7 @@ from commands.intake.retractintake import RetractIntake
 from commands.followtrajectory import FollowTrajectory
 from commands.indexer.feedforward import FeedForward
 from commands.indexer.holdball import HoldBall
+from commands.resetgyro import ResetGyro
 
 import constants
 

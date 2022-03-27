@@ -1,6 +1,5 @@
-from commands1 import WaitCommand
 import wpilib
-from wpimath.geometry import Pose2d, Translation2d, Rotation2d
+from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
 
@@ -34,7 +33,6 @@ from commands.resetgyro import ResetGyro
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
-from commands.resetrobot import ResetRobot
 
 from commands.indexer.defaultindexer import DefaultIndexer
 from commands.indexer.holdball import HoldBall
@@ -120,7 +118,6 @@ class RobotContainer:
         self.chooser.addOption("4 Ball Left Noninvasive Auto", self.fourBLNoninvasive)
         self.chooser.addOption("5 Ball Right Standard Auto", self.fiveBRStandard)
         self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
-
 
         # Put the chooser on the dashboard
         wpilib.SmartDashboard.putData("Autonomous", self.chooser)

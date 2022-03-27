@@ -1,6 +1,5 @@
 from enum import Enum, auto
 from commands2 import SubsystemBase
-from wpilib import SmartDashboard
 import constants
 from util.helpfulIO import Falcon, LimitSwitch
 

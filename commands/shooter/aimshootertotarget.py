@@ -1,12 +1,10 @@
 from commands2 import CommandBase
 from wpilib import SmartDashboard
-from wpimath.geometry import Pose2d, Transform2d, Rotation2d
+from wpimath.geometry import Rotation2d
 from operatorinterface import Control2D
 
 from subsystems.shootersubsystem import ShooterSubsystem
 import constants
-from util.angleoptimize import optimizeAngle
-from util.convenientmath import rotationFromTranslation
 
 
 class AimShooterToTarget(CommandBase):

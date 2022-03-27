@@ -1,6 +1,6 @@
 from enum import Enum, auto
 from commands2 import SubsystemBase
-from wpilib import PneumaticsModuleType, Solenoid, SmartDashboard
+from wpilib import PneumaticsModuleType, Solenoid
 import constants
 from util.helpfulIO import Falcon
 
