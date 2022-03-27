@@ -435,7 +435,7 @@ kChassisForwardsBackwardsAxisName = "chassisForwardsBackwards"
 kChassisSideToSideAxisName = "chassisSideToSide"
 
 kFieldRelativeCoordinateModeControlButtonName = "fieldRelativeCoordinateModeControl"
-kResetSwerveControlButtonName = "resetSwerveControl"
+kResetGyroButtonName = "resetGyro"
 kTargetRelativeCoordinateModeControlButtonName = "targetRelativeCoordinateModeControl"
 kDriveToTargetControlButtonName = "driveToTargetControl"
 kDeployIntakeButtonName = "deployIntake"

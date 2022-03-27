@@ -118,7 +118,7 @@
     },
     "left button set, right bottom (ThrustmasterT16000M)"
   ],
-  "resetSwerveControl": [
+  "resetGyro": [
     0,
     {
       "Button": 3

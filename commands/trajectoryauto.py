@@ -3,7 +3,7 @@ from os import path
 from commands2 import SequentialCommandGroup
 from wpimath.trajectory import TrajectoryConfig, TrajectoryUtil
 from commands.followtrajectory import FollowTrajectory
-from commands.resetdrive import ResetDrive
+from commands.resetgyro import ResetGyro
 
 from subsystems.drivesubsystem import DriveSubsystem
 import constants
@@ -29,6 +29,6 @@ class TrajectoryAuto(SequentialCommandGroup):
         )
 
         super().__init__(
-            ResetDrive(self.drive, trajectory.sample(0).pose),
+            ResetGyro(self.drive, trajectory.sample(0).pose),
             FollowTrajectory(self.drive, trajectory),
         )

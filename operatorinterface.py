@@ -103,9 +103,7 @@ class OperatorInterface:
         self.fieldRelativeCoordinateModeControl = getButtonBindingOfName(
             constants.kFieldRelativeCoordinateModeControlButtonName
         )
-        self.resetSwerveControl = getButtonBindingOfName(
-            constants.kResetSwerveControlButtonName
-        )
+        self.resetGyro = getButtonBindingOfName(constants.kResetGyroButtonName)
         self.targetRelativeCoordinateModeControl = getButtonBindingOfName(
             constants.kTargetRelativeCoordinateModeControlButtonName
         )

@@ -1,6 +1,6 @@
 from commands1 import WaitCommand
 import wpilib
-
+from wpimath.geometry import Pose2d, Translation2d, Rotation2d
 import commands2
 import commands2.button
 
@@ -30,6 +30,7 @@ from commands.climber.pistonactuation import (
     PivotLeftPistonToVertical,
     PivotRightPistonToVertical,
 )
+from commands.resetgyro import ResetGyro
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
@@ -204,9 +205,9 @@ class RobotContainer:
             )
         )
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.resetSwerveControl
-        ).whenPressed(ResetRobot(self.shooter, self.drive))
+        commands2.button.JoystickButton(*self.operatorInterface.resetGyro).whenPressed(
+            ResetGyro(self.drive, Pose2d(0, 0, 0))
+        )
 
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl
