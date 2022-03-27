@@ -35,19 +35,8 @@ class IntakeSubsystem(SubsystemBase):
         )
         self.state = self.Mode.Retracted
 
-    # def periodic(self) -> None:
-    #     SmartDashboard.putString(constants.kIntakeSystemStateKey, self.state.asString())
-
-    def reverseIntake(self) -> None:
-        self.state = self.Mode.Reversed
-
-    def deployIntake(self) -> None:
-        self.state = self.Mode.Deployed
-
-    def retractIntake(self) -> None:
-        self.state = self.Mode.Retracted
-
-    def defaultIntake(self) -> None:
+    def periodic(self) -> None:
+        # SmartDashboard.putString(constants.kIntakeSystemStateKey, self.state.asString())
         if self.state == self.Mode.Deployed:
             self.intakeSolenoid.set(True)
             self.intakeMotor.setSpeed(constants.kIntakeSpeed)
@@ -57,3 +46,12 @@ class IntakeSubsystem(SubsystemBase):
         elif self.state == self.Mode.Retracted:
             self.intakeSolenoid.set(False)
             self.intakeMotor.setSpeed(0)
+
+    def reverseIntake(self) -> None:
+        self.state = self.Mode.Reversed
+
+    def deployIntake(self) -> None:
+        self.state = self.Mode.Deployed
+
+    def retractIntake(self) -> None:
+        self.state = self.Mode.Retracted

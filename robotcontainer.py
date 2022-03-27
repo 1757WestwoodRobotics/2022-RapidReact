@@ -3,10 +3,10 @@ from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
 
-
 import constants
 
 from commands.complexauto import ComplexAuto
+from commands.indexer.feedforward import FeedForward
 from commands.drivedistance import DriveDistance
 from commands.drivetotarget import DriveToTarget
 from commands.targetrelativedrive import TargetRelativeDrive
@@ -34,9 +34,7 @@ from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
 
-from commands.indexer.defaultindexer import DefaultIndexer
 from commands.indexer.holdball import HoldBall
-from commands.intake.defaultintake import DefaultIntake
 from commands.intake.autoballintake import AutoBallIntake
 from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
@@ -56,7 +54,7 @@ from subsystems.indexersubsystem import IndexerSubsystem
 from subsystems.shootersubsystem import ShooterSubsystem
 
 from operatorinterface import OperatorInterface
-from util.helpfultriggerwrappers import AxisButton, SmartDashboardButton
+from util.helpfultriggerwrappers import AxisButton
 
 
 class RobotContainer:
@@ -85,14 +83,18 @@ class RobotContainer:
 
         # A simple auto routine that drives forward a specified distance, and then stops.
         self.simpleAuto = commands2.SequentialCommandGroup(
+            HoldBall(self.indexer),
+            DeployIntake(self.intake),
             DriveDistance(
-                2 * constants.kWheelCircumference,
+                4 * constants.kWheelCircumference,
                 constants.kAutoDriveSpeedFactor,
                 DriveDistance.Axis.X,
                 self.drive,
             ),
-            ShootBall(self.indexer),
+            commands2.WaitCommand(0.5),
+            FeedForward(self.indexer),
             commands2.WaitCommand(2),
+            RetractIntake(self.intake),
             HoldBall(self.indexer),
         )
 
@@ -142,8 +144,6 @@ class RobotContainer:
         self.shooter.setDefaultCommand(
             AimShooterManually(self.shooter, self.operatorInterface.shooterOffset)
         )
-        self.intake.setDefaultCommand(DefaultIntake(self.intake))
-        self.indexer.setDefaultCommand(DefaultIndexer(self.indexer))
 
     def configureButtonBindings(self):
         """
