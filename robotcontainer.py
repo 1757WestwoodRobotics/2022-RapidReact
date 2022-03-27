@@ -53,7 +53,7 @@ from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
 from subsystems.shootersubsystem import ShooterSubsystem
 
-from operatorinterface import OperatorInterface
+from operatorinterface import Control2D, OperatorInterface
 from util.helpfultriggerwrappers import AxisButton
 
 
@@ -82,20 +82,21 @@ class RobotContainer:
         # Autonomous routines
 
         # A simple auto routine that drives forward a specified distance, and then stops.
-        self.simpleAuto = commands2.SequentialCommandGroup(
-            HoldBall(self.indexer),
-            DeployIntake(self.intake),
-            DriveDistance(
-                4 * constants.kWheelCircumference,
-                constants.kAutoDriveSpeedFactor,
-                DriveDistance.Axis.X,
-                self.drive,
+        self.simpleAuto = commands2.ParallelCommandGroup(
+            commands2.SequentialCommandGroup(
+                HoldBall(self.indexer),
+                DriveDistance(
+                    4 * constants.kWheelCircumference,
+                    constants.kAutoDriveSpeedFactor,
+                    DriveDistance.Axis.X,
+                    self.drive,
+                ),
+                commands2.WaitCommand(2),
+                FeedForward(self.indexer),
+                commands2.WaitCommand(2),
+                HoldBall(self.indexer),
             ),
-            commands2.WaitCommand(0.5),
-            FeedForward(self.indexer),
-            commands2.WaitCommand(2),
-            RetractIntake(self.intake),
-            HoldBall(self.indexer),
+            AimShooterToTarget(self.shooter, Control2D(lambda: 0, lambda: 0)),
         )
 
         # A complex auto routine that drives to the target, drives forward, waits, drives back

@@ -291,7 +291,7 @@ kConfigurationTimeoutLimit = int(5 * kMillisecondsPerSecond)
 """milliseconds"""
 
 kDrivePIDSlot = 0
-kDrivePGain = 0.06
+kDrivePGain = 0.12
 kDriveIGain = 0.0
 kDriveDGain = 0.0
 
