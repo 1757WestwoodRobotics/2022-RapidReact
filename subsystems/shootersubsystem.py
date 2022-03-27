@@ -84,7 +84,7 @@ class ShooterSubsystem(SubsystemBase):
                 * constants.kTalonEncoderPulsesPerRadian,
             ),
         )
-        if not SmartDashboard.getBoolean(constants.kShootingManualModeKey, False):
+        if not SmartDashboard.getBoolean(constants.kShootingManualModeKey, True):
             SmartDashboard.putNumber(
                 constants.kShootingWheelSpeedKey, self.getWheelSpeed()
             )

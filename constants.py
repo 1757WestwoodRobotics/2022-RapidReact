@@ -291,7 +291,7 @@ kConfigurationTimeoutLimit = int(5 * kMillisecondsPerSecond)
 """milliseconds"""
 
 kDrivePIDSlot = 0
-kDrivePGain = 0.03
+kDrivePGain = 0.06
 kDriveIGain = 0.0
 kDriveDGain = 0.0
 
@@ -324,16 +324,16 @@ To determine encoder offsets (with robot ON and DISABLED):
   7. Click "Self-Test Snapshot"
   8. Record value from line: "Absolute Position (unsigned):"
 """
-kFrontLeftAbsoluteEncoderOffset = -113.467
+kFrontLeftAbsoluteEncoderOffset = 0.264
 """degrees"""
 
-kFrontRightAbsoluteEncoderOffset = -121.025
+kFrontRightAbsoluteEncoderOffset = 0.879
 """degrees"""
 
-kBackLeftAbsoluteEncoderOffset = -167.520
+kBackLeftAbsoluteEncoderOffset = 179.736
 """degrees"""
 
-kBackRightAbsoluteEncoderOffset = -72.510
+kBackRightAbsoluteEncoderOffset = 0.352
 """degrees"""
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
@@ -358,7 +358,7 @@ kBallDistanceRelativeToRobotKeys = OptionalValueKeys("BallDistanceRelativeToRobo
 
 
 # Autonomous
-kAutoDriveDistance = 3 * kWheelCircumference
+kAutoDriveDistance = -8 * kWheelCircumference
 """meters"""
 
 kAutoFrontwaysDistance = 24 * kMetersPerInch
@@ -384,7 +384,7 @@ kTargetRelativeDriveAnglePGain = 1
 kTargetRelativeDriveAngleIGain = 0
 kTargetRelativeDriveAngleDGain = 0
 
-kRotationPGain = 1.3
+kRotationPGain = 0.8
 kRotationIGain = 0
 kRotationDGain = 0
 
@@ -534,7 +534,7 @@ kLeftClimberPivotSolenoidBackwardActuationID = 12
 kRightClimberPivotSolenoidBackwardActuationID = 13
 kClimberMotorPGain = 0.025
 kClimberMiddleRungCapturePosition = 344502
-kClimberMiddleRungHangPosition = 304502
+kClimberMiddleRungHangPosition = 250502
 kClimberHangingPosition = 95102  # Not currently used
 kClimberRetractionPositionThreshold = 3500
 kClimberExtensionPositionThreshold = 2000

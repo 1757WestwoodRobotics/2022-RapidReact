@@ -35,8 +35,8 @@ class IntakeSubsystem(SubsystemBase):
         )
         self.state = self.Mode.Retracted
 
-    def periodic(self) -> None:
-        SmartDashboard.putString(constants.kIntakeSystemStateKey, self.state.asString())
+    # def periodic(self) -> None:
+    #     SmartDashboard.putString(constants.kIntakeSystemStateKey, self.state.asString())
 
     def reverseIntake(self) -> None:
         self.state = self.Mode.Reversed

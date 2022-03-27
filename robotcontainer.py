@@ -1,3 +1,4 @@
+from commands1 import WaitCommand
 import wpilib
 
 import commands2
@@ -81,11 +82,13 @@ class RobotContainer:
         # Autonomous routines
 
         # A simple auto routine that drives forward a specified distance, and then stops.
-        self.simpleAuto = DriveDistance(
-            constants.kAutoDriveDistance,
-            constants.kAutoDriveSpeedFactor,
-            DriveDistance.Axis.X,
-            self.drive,
+        self.simpleAuto = commands2.SequentialCommandGroup(
+            DriveDistance(
+                2 * constants.kWheelCircumference,
+                constants.kAutoDriveSpeedFactor,
+                DriveDistance.Axis.X,
+                self.drive,
+            )
         )
 
         # A complex auto routine that drives to the target, drives forward, waits, drives back
@@ -98,8 +101,8 @@ class RobotContainer:
         self.chooser = wpilib.SendableChooser()
 
         # Add commands to the autonomous command chooser
-        self.chooser.setDefaultOption("Complex Auto", self.complexAuto)
-        self.chooser.addOption("Simple Auto", self.simpleAuto)
+        self.chooser.addOption("Complex Auto", self.complexAuto)
+        self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
         self.chooser.addOption("Target Auto", self.driveToTarget)
 
         # Put the chooser on the dashboard
@@ -165,7 +168,7 @@ class RobotContainer:
 
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl
-        ).whileHeld(
+        ).toggleWhenPressed(
             RobotRelativeDrive(
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,

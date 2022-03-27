@@ -1,4 +1,10 @@
-from ctre import WPI_TalonFX, ControlMode, NeutralMode
+from ctre import (
+    LimitSwitchNormal,
+    LimitSwitchSource,
+    WPI_TalonFX,
+    ControlMode,
+    NeutralMode,
+)
 from wpilib import RobotBase, DigitalInput, SmartDashboard
 
 from wpimath.controller import PIDController
@@ -28,6 +34,17 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
 
         if RobotBase.isReal():
             print(f"Initializing Falcon: {self.name}")
+
+            self.motor.overrideLimitSwitchesEnable(False)
+            if not ctreCheckError(
+                "disableRevSwitch",
+                self.motor.configReverseLimitSwitchSource(
+                    LimitSwitchSource.Deactivated,
+                    LimitSwitchNormal.Disabled,
+                    constants.kConfigurationTimeoutLimit,
+                ),
+            ):
+                return
             if not ctreCheckError(
                 "configFactoryDefault",
                 self.motor.configFactoryDefault(constants.kConfigurationTimeoutLimit),

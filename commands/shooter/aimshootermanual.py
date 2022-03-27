@@ -15,11 +15,17 @@ class AimShooterManually(CommandBase):
         self.shooter = shooter
         self.distanceAndRotationOffset = shooterOffset
         self.addRequirements([self.shooter])
+        SmartDashboard.putNumber(constants.kShootingHoodAngleKey, 8)
 
     def execute(self) -> None:
-        wheelSpeed = SmartDashboard.getNumber(constants.kShootingWheelSpeedKey, 0)
-        hoodAngle = SmartDashboard.getNumber(constants.kShootingHoodAngleKey, 0)
-        turretPosition = SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 0)
+        # wheelSpeed = SmartDashboard.getNumber(constants.kShootingWheelSpeedKey, 550)
+        # hoodAngle = SmartDashboard.getNumber(constants.kShootingHoodAngleKey, 8)
+        wheelSpeed = 550
+        hoodAngle = 8
+        turretPosition = (
+            SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 0)
+            + 90 * self.distanceAndRotationOffset.sideToSide()
+        )
         self.shooter.setWheelSpeed(wheelSpeed)
         self.shooter.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
         self.shooter.rotateTurret(Rotation2d.fromDegrees(turretPosition))
