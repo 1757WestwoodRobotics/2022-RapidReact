@@ -23,23 +23,30 @@
   "chassisXRotation": [
     0,
     {
-      "Axis": 3
+      "Axis": 4
     },
     "Right Stick X (Xbox)"
   ],
   "chassisYRotation": [
     0,
     {
-      "Axis": 4
+      "Axis": 5
     },
     "Right Stick Y (Xbox)"
   ],
   "deployIntake": [
     0,
     {
-      "Axis": 5
+      "Axis": 3
     },
     "Right Trigger (Xbox)"
+  ],
+  "distanceOffset": [
+    1,
+    {
+      "Axis": 1
+    },
+    "Stick Y Axis (Thrustmaster)"
   ],
   "driveToTargetControl": [
     0,
@@ -48,12 +55,68 @@
     },
     "B (Xbox)"
   ],
+  "fenderShot": [
+    0,
+    {
+      "Button": 11
+    },
+    "Left Thumb Button (Xbox)"
+  ],
   "fieldRelativeCoordinateModeControl": [
     0,
     {
       "Button": 5
     },
     "Left Bumper (Xbox)"
+  ],
+  "holdBothClimbersPosition": [
+    1,
+    {
+      "Button": 5
+    },
+    "right button set, right top (ThrustmasterT16000M)"
+  ],
+  "moveBothClimbersToMiddleRungCapturePosition": [
+    1,
+    {
+      "Button": 7
+    },
+    "right button set, left top (ThrustmasterT16000M)"
+  ],
+  "moveBothClimbersToMiddleRungHangPosition": [
+    1,
+    {
+      "Button": 6
+    },
+    "right button set, middle top (ThrustmasterT16000M)"
+  ],
+  "pivotLeftClimberToTilted": [
+    1,
+    {
+      "Button": 12
+    },
+    "left button set, middle top (ThrustmasterT16000M)"
+  ],
+  "pivotLeftClimberToVertical": [
+    1,
+    {
+      "Button": 15
+    },
+    "left button set, middle bottom (ThrustmasterT16000M)"
+  ],
+  "pivotRightClimberToTilted": [
+    1,
+    {
+      "Button": 13
+    },
+    "left button set, right top (ThrustmasterT16000M)"
+  ],
+  "pivotRightClimberToVertical": [
+    1,
+    {
+      "Button": 14
+    },
+    "left button set, right bottom (ThrustmasterT16000M)"
   ],
   "resetSwerveControl": [
     0,
@@ -82,5 +145,19 @@
       "Button": 6
     },
     "Right Bumper (Xbox)"
+  ],
+  "toggleManualModeShooter": [
+    1,
+    {
+      "Button": 3
+    },
+    "left button on top of joystick (ThrustmasterT16000M)"
+  ],
+  "turretOffset": [
+    1,
+    {
+      "Axis": 0
+    },
+    "Stick X Axis (Thrustmaster)"
   ]
 }

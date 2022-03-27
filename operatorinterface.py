@@ -56,6 +56,12 @@ class HolonomicInput:
         self.rotationY = rotationY
 
 
+class Control2D:
+    def __init__(self, forwardsBackwards: AnalogInput, sideToSide: AnalogInput) -> None:
+        self.forwardsBackwards = forwardsBackwards
+        self.sideToSide = sideToSide
+
+
 class OperatorInterface:
     """
     The controls that the operator(s)/driver(s) interact with
@@ -75,11 +81,16 @@ class OperatorInterface:
         controllerNumbers = set(
             i[0] for i in controlScheme.values()
         )  # set ensures no duplicates
+        print(f"Looking for controllers: {controllerNumbers} ...")
 
         controllers = {}
 
         for num in controllerNumbers:
-            controllers[num] = Joystick(num)
+            controller = Joystick(num)
+            print(
+                f"Found Controller {num}:{controller.getName()}\n\tAxis: {controller.getAxisCount()}\n\tButtons: {controller.getButtonCount()}\n\tPoV Hats: {controller.getPOVCount()}"
+            )
+            controllers[num] = controller
 
         def getButtonBindingOfName(name: str) -> typing.Tuple[Joystick, int]:
             binding = controlScheme[name]
@@ -102,6 +113,33 @@ class OperatorInterface:
             constants.kDriveToTargetControlButtonName
         )
 
+        self.moveBothClimbersToMiddleRungCapturePosition = getButtonBindingOfName(
+            constants.kMoveBothClimbersToMiddleRungCapturePositionName
+        )
+
+        self.moveBothClimbersToMiddleRungHangPosition = getButtonBindingOfName(
+            constants.kMoveBothClimbersToMiddleRungHangPositionName
+        )
+
+        self.holdBothClimbersPosition = getButtonBindingOfName(
+            constants.kHoldBothClimbersPositionName
+        )
+
+        self.tiltRightClimberPiston = getButtonBindingOfName(
+            constants.kPivotRightClimberToTilted
+        )
+
+        self.tiltLeftClimberPiston = getButtonBindingOfName(
+            constants.kPivotLeftClimberToTilted
+        )
+
+        self.rightClimberPiston = getButtonBindingOfName(
+            constants.kPivotRightClimberToVertical
+        )
+
+        self.leftClimberPiston = getButtonBindingOfName(
+            constants.kPivotLeftClimberToVertical
+        )
         self.deployIntakeControl = getAxisBindingOfName(
             constants.kDeployIntakeButtonName
         )
@@ -114,18 +152,32 @@ class OperatorInterface:
 
         self.shootBall = getButtonBindingOfName(constants.kShootBallButtonName)
 
+        self.fenderShot = getButtonBindingOfName(constants.kFenderShotButtonName)
+
+        self.toggleManualModeShooter = getButtonBindingOfName(
+            constants.kManualModeToggleButtonName
+        )
+
         self.chassisControls = HolonomicInput(
-            Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisForwardsBackwardsAxisName),
-                    constants.kXboxJoystickDeadband,
+            Multiply(
+                Invert(
+                    Deadband(
+                        getAxisBindingOfName(
+                            constants.kChassisForwardsBackwardsAxisName
+                        ),
+                        constants.kXboxJoystickDeadband,
+                    ),
                 ),
+                lambda: map_range(self.reverseBallPath(), 0, 1, 0.5, 1),
             ),
-            Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisSideToSideAxisName),
-                    constants.kXboxJoystickDeadband,
+            Multiply(
+                Invert(
+                    Deadband(
+                        getAxisBindingOfName(constants.kChassisSideToSideAxisName),
+                        constants.kXboxJoystickDeadband,
+                    ),
                 ),
+                lambda: map_range(self.reverseBallPath(), 0, 1, 0.5, 1),
             ),
             Invert(
                 Deadband(
@@ -136,6 +188,21 @@ class OperatorInterface:
             Invert(
                 Deadband(
                     getAxisBindingOfName(constants.kChassisRotationYAxisName),
+                    constants.kXboxJoystickDeadband,
+                )
+            ),
+        )
+
+        self.shooterOffset = Control2D(
+            Invert(
+                Deadband(
+                    getAxisBindingOfName(constants.kTurretAngleOffsetAxisName),
+                    constants.kXboxJoystickDeadband,
+                )
+            ),
+            Invert(
+                Deadband(
+                    getAxisBindingOfName(constants.kShootingDistanceOffsetAxisName),
                     constants.kXboxJoystickDeadband,
                 )
             ),

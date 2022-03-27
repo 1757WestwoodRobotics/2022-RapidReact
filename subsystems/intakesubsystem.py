@@ -30,14 +30,13 @@ class IntakeSubsystem(SubsystemBase):
         self.intakeMotor = Falcon(
             constants.kIntakeMotorName,
             constants.kIntakeMotorId,
-            constants.kSimIntakeMotorPort,
             inverted=constants.kIntakeMotorInverted,
             canbus=constants.kCANivoreName,
         )
         self.state = self.Mode.Retracted
 
-    def periodic(self) -> None:
-        SmartDashboard.putString(constants.kIntakeSystemStateKey, self.state.asString())
+    # def periodic(self) -> None:
+    #     SmartDashboard.putString(constants.kIntakeSystemStateKey, self.state.asString())
 
     def reverseIntake(self) -> None:
         self.state = self.Mode.Reversed

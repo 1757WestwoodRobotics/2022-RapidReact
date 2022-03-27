@@ -26,6 +26,6 @@ class RobotRelativeDrive(CommandBase):
         self.drive.arcadeDriveWithFactors(
             self.forward(),
             self.sideways(),
-            self.rotation(),
+            self.rotation() * 0.2,  # better control
             DriveSubsystem.CoordinateMode.RobotRelative,
         )

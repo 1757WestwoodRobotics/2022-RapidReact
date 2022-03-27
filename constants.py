@@ -57,6 +57,9 @@ kRadiansPerDegree = kRadiansPerRevolution / kDegeersPerRevolution
 kMillisecondsPerSecond = 1000 / 1
 """milliseconds / second"""
 
+kSecondsPerMinute = 60 / 1
+"""seconds / minute"""
+
 # Debug parameters
 kPrintFrequency = 2
 """ 1 / second"""
@@ -184,6 +187,9 @@ kBackRightModuleName = "back_right"
 kLimelightMountingOffset = Translation2d(
     (kRobotLength / 2) - (4.125 * kMetersPerInch), 0.0
 )
+kLimelightVerticalOffset = 25.833857 * kMetersPerInch  # derived from cad
+"""meters"""
+kLimelightVerticalAngleOffset = Rotation2d.fromDegrees(44.153)  # derived from cad
 kTrackerPanAngleKey = "tracker/pan_angle"
 kLimelightTrackerModuleName = "limelight_target_tracker"
 
@@ -285,7 +291,7 @@ kConfigurationTimeoutLimit = int(5 * kMillisecondsPerSecond)
 """milliseconds"""
 
 kDrivePIDSlot = 0
-kDrivePGain = 0.03
+kDrivePGain = 0.06
 kDriveIGain = 0.0
 kDriveDGain = 0.0
 
@@ -318,19 +324,23 @@ To determine encoder offsets (with robot ON and DISABLED):
   7. Click "Self-Test Snapshot"
   8. Record value from line: "Absolute Position (unsigned):"
 """
-kFrontLeftAbsoluteEncoderOffset = 247.324
+kFrontLeftAbsoluteEncoderOffset = 0.264
 """degrees"""
 
-kFrontRightAbsoluteEncoderOffset = 239.678
+kFrontRightAbsoluteEncoderOffset = 0.879
 """degrees"""
 
-kBackLeftAbsoluteEncoderOffset = 12.217
+kBackLeftAbsoluteEncoderOffset = 179.736
 """degrees"""
 
-kBackRightAbsoluteEncoderOffset = 287.402
+kBackRightAbsoluteEncoderOffset = 0.352
 """degrees"""
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
+
+kDriveVelocityKeys = "robotVelocity"
+kRobotUpdatePeriod = 1 / 50
+"""seconds"""
 
 # Vision parameters
 kTargetAngleRelativeToRobotKeys = OptionalValueKeys("TargetAngleRelativeToRobot")
@@ -348,7 +358,7 @@ kBallDistanceRelativeToRobotKeys = OptionalValueKeys("BallDistanceRelativeToRobo
 
 
 # Autonomous
-kAutoDriveDistance = 3 * kWheelCircumference
+kAutoDriveDistance = -8 * kWheelCircumference
 """meters"""
 
 kAutoFrontwaysDistance = 24 * kMetersPerInch
@@ -376,7 +386,7 @@ kTargetRelativeDriveAnglePGain = 1
 kTargetRelativeDriveAngleIGain = 0
 kTargetRelativeDriveAngleDGain = 0
 
-kRotationPGain = 1.3
+kRotationPGain = 0.8
 kRotationIGain = 0
 kRotationDGain = 0
 
@@ -440,10 +450,10 @@ kSimDefaultTargetLocation = Pose2d(
 """[meters, meters, radians]"""
 
 kSimDefaultRobotLocation = Pose2d(kFieldLength / 2, kFieldWidth / 2, 0)
+kSimDefaultTargetHeight = 8 * kMetersPerFoot + 8 * kMetersPerInch  # 8ft 8in
 kSimBallName = "SimBall"
 kSimDefaultBallLocation = Pose2d(kFieldLength / 4, kFieldWidth / 2, 0)
 
-kSimDefaultTargetHeight = 10
 """meters"""
 
 kSimRobotPoseArrayKey = "SimRobotPoseArray"
@@ -497,6 +507,136 @@ kCameraServoPGain = 0.15
 kCameraServoIGain = 0.0
 kCameraServoDGain = 0.0
 
+# Climber Constants
+kLeftClimberMotorCanID = 24
+kRightClimberMotorCanID = 25
+kSimRightClimberMotorID = 16
+kSimLeftClimberMotorID = 17
+kLeftClimberBrakePCMID = 0
+kRightClimberBrakePCMID = 1
+kLeftClimberInverted = True
+kMoveLeftClimberToMiddleRungCapturePositionName = (
+    "moveLeftClimberToMiddleRungCapturePosition"
+)
+kMoveRightClimberToMiddleRungCapturePositionName = (
+    "moveRightClimberToMiddleRungCapturePosition"
+)
+kMoveBothClimbersToMiddleRungCapturePositionName = (
+    "moveBothClimbersToMiddleRungCapturePosition"
+)
+kMoveLeftClimberToMiddleRungHangPositionName = "moveLeftClimberToMiddleRungHangPosition"
+kMoveRightClimberToMiddleRungHangPositionName = (
+    "moveRightClimberToMiddleRungHangPosition"
+)
+kMoveBothClimbersToMiddleRungHangPositionName = (
+    "moveBothClimbersToMiddleRungHangPosition"
+)
+kHoldBothClimbersPositionName = "holdBothClimbersPosition"
+kRightClimberMotorName = "climber_right"
+kLeftClimberMotorName = "climber_left"
+kPivotRightClimberToTilted = "pivotRightClimberToTilted"
+kPivotLeftClimberToTilted = "pivotLeftClimberToTilted"
+kPivotRightClimberToVertical = "pivotRightClimberToVertical"
+kPivotLeftClimberToVertical = "pivotLeftClimberToVertical"
+kLeftClimberEncoderTicksKey = "Left Encoder"
+kRightClimberEncoderTicksKey = "Right Encoder"
+kRightClimberPivotSolenoidForwardActuationID = 2
+kLeftClimberPivotSolenoidForwardActuationID = 3
+kLeftClimberPivotSolenoidBackwardActuationID = 12
+kRightClimberPivotSolenoidBackwardActuationID = 13
+kClimberMotorPGain = 0.025
+kClimberMiddleRungCapturePosition = 344502
+kClimberMiddleRungHangPosition = 250502
+kClimberHangingPosition = 95102  # Not currently used
+kClimberRetractionPositionThreshold = 3500
+kClimberExtensionPositionThreshold = 2000
+
+# shooter parameters
+kHoodMotorId = 21
+kTurretMotorId = 22
+kShootingMotorId = 23
+
+kSimTurretMotorPort = 9
+kSimShootingMotorPort = 15
+kSimHoodMotorPort = 16
+
+kSimTurretMinimumLimitSwitchPort = 0
+kSimTurretMaximumLimitSwitchPort = 1
+kSimHoodMinimumSwitchPort = 2
+kSimHoodMaximumSwitchPort = 3
+
+kShootingPIDSlot = 0
+kShootingPGain = 0.7
+kShootingIGain = 0
+kShootingDGain = 0
+kShootingMotorInverted = True
+
+kShootingMappingFunction = (
+    lambda x: 16.41 * math.pow(math.e, 0.3662 * x) + 532
+)  # derived from testing at multiple points, distance is input variable and exponential curve of best fit
+
+kTurretPIDSlot = 0
+kTurretPGain = 0.06
+kTurretIGain = 0
+kTurretDGain = 0
+kTurretMotorInverted = False
+
+kTurretGearRatio = (1 / 5) * (24 / 200)
+
+kHoodPIDSlot = 0
+kHoodPGain = 0.15
+kHoodIGain = 0
+kHoodDGain = 0
+kHoodMotorInverted = True
+
+kHoodGearRatio = (1 / 5) * (13 / 360)
+
+kHoodMappingFunction = (
+    lambda x: 11.04 * math.pow(math.e, 0.1004 * x) + -11.06
+)  # see above for derivation method
+
+kTurretMotorName = "shooting_turret"
+kShootingMotorName = "shooting_shooting"
+kHoodMotorName = "shooting_hood"
+
+kShootingWheelSpeedKey = "shooting/wheelSpeed"
+kShootingHoodAngleKey = "shooting/hoodAngle"
+kShootingTurretAngleKey = "shooting/turretAngle"
+kShootingManualModeKey = "shooting/manualMode"
+kShootingFlywheelOnTargetKey = "shooting/wheelOnTarget"
+kShootingHoodOnTargetKey = "shooting/hoodOnTarget"
+kShootingTurretOnTargetKey = "shooting/turretOnTarget"
+
+kHoodStartingAngle = 0
+
+kTurretMaximumAngle = Rotation2d.fromDegrees(160)
+kTurretMinimumAngle = Rotation2d.fromDegrees(-160)
+kTurretSoftLimitBuffer = Rotation2d.fromDegrees(1)
+
+kTurretRelativeForwardAngle = Rotation2d.fromDegrees(0)
+kTurretOffsetFromRobotAngle = Rotation2d.fromDegrees(180)  # shooter 0 is robot 180
+
+kHoodMaximum = Rotation2d.fromDegrees(18)
+kHoodMinimum = Rotation2d.fromDegrees(-5)
+kHoodSoftLimitBuffer = Rotation2d.fromDegrees(0.5)
+
+kTurretAngleTolerence = Rotation2d.fromDegrees(2)
+kHoodAngleTolerence = Rotation2d.fromDegrees(1)
+kWheelSpeedTolerence = 20
+
+kOffsetDistanceRange = 1
+"""meters"""
+
+kOffsetAngleRange = Rotation2d.fromDegrees(3)
+
+kMotorBaseKey = "motors"
+kPredictiveAimGain = 0.1
+
+# Fender Shot
+kFenderHoodAngle = Rotation2d.fromDegrees(0)
+kFenderWheelSpeed = 600
+"""rotations / minute """
+
 # Intake Camera
 kIntakeCameraTiltAngle = Rotation2d.fromDegrees(90 - 25)
 kIntakeCameraHeightInMeters = 0.5
@@ -510,7 +650,7 @@ kStagingSpeed = 800
 kIndexerSpeed = 800
 """rpm"""
 
-kIntakeSolenoidChannelId = 1
+kIntakeSolenoidChannelId = 4
 
 kSimIntakeCameraObjectName = "Intake Camera"
 
@@ -521,6 +661,11 @@ kDriveToBallDGain = 0.2
 kAutoBallIntakeName = "autoBallIntake"
 
 kShootBallButtonName = "shootBall"
+kFenderShotButtonName = "fenderShot"
+kManualModeToggleButtonName = "toggleManualModeShooter"
+kTurretAngleOffsetAxisName = "turretOffset"
+kShootingDistanceOffsetAxisName = "distanceOffset"
+
 
 kIntakeRunningKey = "intake/running"
 kIntakeReversedKey = "intake/reversed"

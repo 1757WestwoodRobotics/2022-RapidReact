@@ -27,12 +27,10 @@ class IndexerSubsystem(SubsystemBase):
         self.indexerMotor = Falcon(
             constants.kIndexerMotorName,
             constants.kIndexerMotorId,
-            constants.kSimIndexerMotorPort,
         )
         self.stagingMotor = Falcon(
             constants.kStagingMotorName,
             constants.kStagingMotorId,
-            constants.kSimStagingMotorPort,
         )
         self.indexerSensor = LimitSwitch(
             self.stagingMotor,
@@ -46,10 +44,10 @@ class IndexerSubsystem(SubsystemBase):
         )
         self.state = self.Mode.Holding
 
-    def periodic(self) -> None:
-        SmartDashboard.putString(
-            constants.kIndexerSystemStateKey, self.state.asString()
-        )
+    # def periodic(self) -> None:
+    #     # SmartDashboard.putString(
+    #     #     constants.kIndexerSystemStateKey, self.state.asString()
+    #     # )
 
     # Switches direction to reverse the ball path
     def motorsOff(self) -> None:
@@ -69,12 +67,12 @@ class IndexerSubsystem(SubsystemBase):
             self.indexerMotor.setSpeed(constants.kIndexerSpeed)
             self.stagingMotor.setSpeed(constants.kStagingSpeed)
         elif self.state == self.Mode.Holding:
-            if self.indexerSensor.value() and self.stagingSensor.value():
-                self.indexerMotor.setSpeed(0)
-                self.stagingMotor.setSpeed(0)
-            else:
-                self.indexerMotor.setSpeed(constants.kIndexerSpeed)
-                self.stagingMotor.setSpeed(-constants.kStagingSpeed)
+            # if not self.indexerSensor.value() and not self.stagingSensor.value():
+            #     self.indexerMotor.setSpeed(0)
+            #     self.stagingMotor.setSpeed(0)
+            # else:
+            self.indexerMotor.setSpeed(constants.kIndexerSpeed)
+            self.stagingMotor.setSpeed(-constants.kStagingSpeed)
         elif self.state == self.Mode.Reversed:
             self.indexerMotor.setSpeed(-constants.kIndexerSpeed)
             self.stagingMotor.setSpeed(-constants.kStagingSpeed)

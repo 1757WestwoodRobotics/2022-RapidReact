@@ -1,6 +1,6 @@
 import math
 import typing
-from wpimath.geometry import Rotation2d, Translation2d
+from wpimath.geometry import Rotation2d, Translation2d, Pose2d
 
 number = typing.Union[float, int]
 
@@ -27,6 +27,20 @@ def translationFromDistanceAndRotation(
 
 def rotationFromTranslation(translation: Translation2d) -> Rotation2d:
     return Rotation2d(math.atan2(translation.Y(), translation.X()))
+
+
+def rotateAroundPoint(
+    pose: Pose2d, position: Translation2d, rotation: Rotation2d
+) -> Pose2d:
+    deltaTranslation = pose.translation() - position
+    newRotation = rotation + pose.rotation()
+
+    rotatedTranslation = translationFromDistanceAndRotation(
+        deltaTranslation.distance(Translation2d()),
+        rotationFromTranslation(deltaTranslation) + rotation,
+    )
+
+    return Pose2d(rotatedTranslation + position, newRotation)
 
 
 def map_range(

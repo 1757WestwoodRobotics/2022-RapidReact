@@ -567,5 +567,10 @@ class DriveSubsystem(SubsystemBase):
             else:
                 robotChassisSpeeds = ChassisSpeeds()
 
+        SmartDashboard.putNumberArray(
+            constants.kDriveVelocityKeys,
+            [robotChassisSpeeds.vx, robotChassisSpeeds.vy, robotChassisSpeeds.omega],
+        )
+
         moduleStates = self.kinematics.toSwerveModuleStates(robotChassisSpeeds)
         self.applyStates(moduleStates)
