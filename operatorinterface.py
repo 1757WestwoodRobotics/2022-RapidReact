@@ -154,26 +154,20 @@ class OperatorInterface:
 
         self.defenseStateControl = getButtonBindingOfName("defenseStateControl")
 
+        self.turboSpeed = getButtonBindingOfName(constants.kTurboSpeedButtonName)
+
         self.chassisControls = HolonomicInput(
-            Multiply(
-                Invert(
-                    Deadband(
-                        getAxisBindingOfName(
-                            constants.kChassisForwardsBackwardsAxisName
-                        ),
-                        constants.kXboxJoystickDeadband,
-                    ),
+            Invert(
+                Deadband(
+                    getAxisBindingOfName(constants.kChassisForwardsBackwardsAxisName),
+                    constants.kXboxJoystickDeadband,
                 ),
-                lambda: map_range(self.reverseBallPath(), 0, 1, 0.5, 1),
             ),
-            Multiply(
-                Invert(
-                    Deadband(
-                        getAxisBindingOfName(constants.kChassisSideToSideAxisName),
-                        constants.kXboxJoystickDeadband,
-                    ),
+            Invert(
+                Deadband(
+                    getAxisBindingOfName(constants.kChassisSideToSideAxisName),
+                    constants.kXboxJoystickDeadband,
                 ),
-                lambda: map_range(self.reverseBallPath(), 0, 1, 0.5, 1),
             ),
             Invert(
                 Deadband(
