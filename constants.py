@@ -472,6 +472,10 @@ kDeployIntakeButtonName = "deployIntake"
 kReverseBallPathName = "reverseBallPath"
 kXboxTriggerActivationThreshold = 0.5
 
+kTurboSpeedButtonName = "turboSpeed"
+kNormalSpeedMultiplier = 0.5  # half full on normal
+kTurboSpeedMultiplier = 1.0  # full speed!!!
+
 # Simulation Parameters
 kSimTargetName = "SimTarget"
 kSimDefaultTargetLocation = Pose2d(
@@ -682,7 +686,6 @@ kAutoBallIntakeName = "autoBallIntake"
 
 kShootBallButtonName = "shootBall"
 kTarmacShotButtonName = "shootTarmac"
-kAutomaticShotButtonName = "automaticShooting"
 kTurretAngleOffsetAxisName = "turretOffset"
 kShootingDistanceOffsetAxisName = "distanceOffset"
 

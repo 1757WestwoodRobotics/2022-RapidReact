@@ -142,8 +142,10 @@ class RobotContainer:
         self.drive.setDefaultCommand(
             AbsoluteRelativeDrive(
                 self.drive,
-                self.operatorInterface.chassisControls.forwardsBackwards,
-                self.operatorInterface.chassisControls.sideToSide,
+                lambda: self.operatorInterface.chassisControls.forwardsBackwards()
+                * constants.kNormalSpeedMultiplier,
+                lambda: self.operatorInterface.chassisControls.sideToSide()
+                * constants.kNormalSpeedMultiplier,
                 self.operatorInterface.chassisControls.rotationX,
                 self.operatorInterface.chassisControls.rotationY,
             )
@@ -190,6 +192,18 @@ class RobotContainer:
         ).whenActive(
             NormalBallPath(self.intake, self.indexer)
         )  # when let go of just the reverse button, go back to normal ball path
+
+        commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whenHeld(
+            AbsoluteRelativeDrive(
+                self.drive,
+                lambda: self.operatorInterface.chassisControls.forwardsBackwards()
+                * constants.kTurboSpeedMultiplier,
+                lambda: self.operatorInterface.chassisControls.sideToSide()
+                * constants.kTurboSpeedMultiplier,
+                self.operatorInterface.chassisControls.rotationX,
+                self.operatorInterface.chassisControls.rotationY,
+            )
+        )
 
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl
