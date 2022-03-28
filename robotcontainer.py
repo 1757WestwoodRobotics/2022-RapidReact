@@ -34,9 +34,7 @@ from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
 
-from commands.indexer.defaultindexer import DefaultIndexer
 from commands.indexer.holdball import HoldBall
-from commands.intake.defaultintake import DefaultIntake
 from commands.intake.autoballintake import AutoBallIntake
 from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
@@ -139,8 +137,6 @@ class RobotContainer:
         self.shooter.setDefaultCommand(
             AimShooterToTarget(self.shooter, self.operatorInterface.shooterOffset)
         )
-        self.intake.setDefaultCommand(DefaultIntake(self.intake))
-        self.indexer.setDefaultCommand(DefaultIndexer(self.indexer))
 
     def configureButtonBindings(self):
         """

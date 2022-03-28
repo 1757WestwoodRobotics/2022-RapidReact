@@ -43,25 +43,7 @@ class IndexerSubsystem(SubsystemBase):
         )
         self.state = self.Mode.Holding
 
-    # def periodic(self) -> None:
-    #     # SmartDashboard.putString(
-    #     #     constants.kIndexerSystemStateKey, self.state.asString()
-    #     # )
-
-    # Switches direction to reverse the ball path
-    def motorsOff(self) -> None:
-        self.state = self.Mode.Off
-
-    def feedBallForward(self) -> None:
-        self.state = self.Mode.FeedForward
-
-    def holdBall(self) -> None:
-        self.state = self.Mode.Holding
-
-    def reversePath(self) -> None:
-        self.state = self.Mode.Reversed
-
-    def defaultIndexer(self) -> None:
+    def periodic(self) -> None:
         if self.state == self.Mode.FeedForward:
             self.indexerMotor.setSpeed(constants.kIndexerSpeed)
             self.stagingMotor.setSpeed(constants.kStagingSpeed)
@@ -78,3 +60,16 @@ class IndexerSubsystem(SubsystemBase):
         elif self.state == self.Mode.Off:
             self.indexerMotor.setSpeed(0)
             self.stagingMotor.setSpeed(0)
+
+    # Switches direction to reverse the ball path
+    def motorsOff(self) -> None:
+        self.state = self.Mode.Off
+
+    def feedBallForward(self) -> None:
+        self.state = self.Mode.FeedForward
+
+    def holdBall(self) -> None:
+        self.state = self.Mode.Holding
+
+    def reversePath(self) -> None:
+        self.state = self.Mode.Reversed
