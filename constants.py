@@ -632,9 +632,9 @@ kOffsetAngleRange = Rotation2d.fromDegrees(3)
 kMotorBaseKey = "motors"
 kPredictiveAimGain = 0.1
 
-# Fender Shot
-kFenderHoodAngle = Rotation2d.fromDegrees(0)
-kFenderWheelSpeed = 600
+# Tarmac Shot
+kTarmacHoodAngle = Rotation2d.fromDegrees(8)
+kTarmacWheelSpeed = 550
 """rotations / minute """
 
 # Intake Camera
@@ -661,8 +661,8 @@ kDriveToBallDGain = 0.2
 kAutoBallIntakeName = "autoBallIntake"
 
 kShootBallButtonName = "shootBall"
-kFenderShotButtonName = "fenderShot"
-kManualModeToggleButtonName = "toggleManualModeShooter"
+kTarmacShotButtonName = "shootTarmac"
+kAutomaticShotButtonName = "automaticShooting"
 kTurretAngleOffsetAxisName = "turretOffset"
 kShootingDistanceOffsetAxisName = "distanceOffset"
 

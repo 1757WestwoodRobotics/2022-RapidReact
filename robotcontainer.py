@@ -40,6 +40,7 @@ from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
 from commands.shooter.aimshootertotarget import AimShooterToTarget
 from commands.shooter.aimshootermanual import AimShooterManually
+from commands.shooter.tarmacshot import TarmacShot
 
 from commands.auto.fivebrstandard import FiveBRStandard
 from commands.auto.twoblhangerbounce import TwoBLHangerbounce
@@ -142,9 +143,7 @@ class RobotContainer:
 
         self.rightClimber.setDefaultCommand(HoldRightClimberPosition(self.rightClimber))
         self.leftClimber.setDefaultCommand(HoldLeftClimberPosition(self.leftClimber))
-        self.shooter.setDefaultCommand(
-            AimShooterManually(self.shooter, self.operatorInterface.shooterOffset)
-        )
+        self.shooter.setDefaultCommand(AimShooterManually(self.shooter))
 
     def configureButtonBindings(self):
         """
@@ -255,8 +254,14 @@ class RobotContainer:
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
 
-        commands2.button.JoystickButton(*self.operatorInterface.fenderShot).whileHeld(
+        commands2.button.JoystickButton(
+            *self.operatorInterface.automaticShoot
+        ).whileHeld(
             AimShooterToTarget(self.shooter, self.operatorInterface.shooterOffset)
+        )
+
+        commands2.button.JoystickButton(*self.operatorInterface.tarmacShot).whileHeld(
+            TarmacShot(self.shooter)
         )
 
     def getAutonomousCommand(self) -> commands2.Command:
