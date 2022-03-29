@@ -53,10 +53,11 @@ class TwoBLHangerbounce(SequentialCommandGroup):
         super().__init__(
             ResetGyro(drive, pathA.sample(0).pose),
             DeployIntake(intake),
-            FollowTrajectory(drive, pathA),
+            FollowTrajectory(drive, pathA),  # pickup ball 2
             RetractIntake(intake),
+            WaitCommand(constants.kAutoTimeFromStopToShoot),
             FeedForward(indexer),
-            WaitCommand(2),
+            WaitCommand(constants.kAutoTimeFromShootToMove),
             HoldBall(indexer),
-            FollowTrajectory(drive, pathB),
+            FollowTrajectory(drive, pathB),  # hit red ball out of way
         )
