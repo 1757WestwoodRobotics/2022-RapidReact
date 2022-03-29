@@ -43,7 +43,7 @@ from commands.shooter.aimshootermanual import AimShooterManually
 
 from commands.auto.fivebrstandard import FiveBRStandard
 from commands.auto.twoblhangerbounce import TwoBLHangerbounce
-from commands.auto.fourblhangerbounce import FourBLNoninvasive
+from commands.auto.fourblnoninvasive import FourBLNoninvasive
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
