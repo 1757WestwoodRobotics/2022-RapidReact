@@ -380,6 +380,11 @@ kAutoTargetOffset = Translation2d(2, 0)
 """[meters, meters]"""
 
 kAuto5BallFilename = "5ba"
+kAutoTimeFromStopToShoot = 0.5
+"""seconds"""
+kAutoTimeFromShootToMove = 1
+"""seconds"""
+kAutoTerminalWaitTime = 2
 
 # Target relative drive
 kTargetRelativeDriveAnglePGain = 1
