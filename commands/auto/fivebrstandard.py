@@ -75,21 +75,26 @@ class FiveBRStandard(SequentialCommandGroup):
         super().__init__(
             ResetGyro(drive, pathA.sample(0).pose),
             DeployIntake(intake),
-            FollowTrajectory(drive, pathA),
+            FollowTrajectory(drive, pathA),  # pickup ball 2
             RetractIntake(intake),
-            FeedForward(indexer),
-            WaitCommand(2),
+            WaitCommand(constants.kAutoTimeFromStopToShoot),
+            FeedForward(indexer),  # shoot balls 1 and 2
+            WaitCommand(constants.kAutoTimeFromShootToMove),
             DeployIntake(intake),
             HoldBall(indexer),
-            FollowTrajectory(drive, pathB),
+            FollowTrajectory(drive, pathB),  # pickup ball 3
             RetractIntake(intake),
-            FeedForward(indexer),
-            WaitCommand(2),
+            WaitCommand(constants.kAutoTimeFromStopToShoot),
+            FeedForward(indexer),  # shoot ball 3
+            WaitCommand(constants.kAutoTimeFromShootToMove),
             DeployIntake(intake),
             HoldBall(indexer),
-            FollowTrajectory(drive, pathC),
-            WaitCommand(2),
-            FollowTrajectory(drive, pathD),
+            FollowTrajectory(drive, pathC),  # go to terminal, pickup terminal ball
+            WaitCommand(
+                constants.kAutoTerminalWaitTime
+            ),  # wait for user ball in terminal
+            FollowTrajectory(drive, pathD),  # go back to shooting range
             RetractIntake(intake),
-            FeedForward(indexer),
+            WaitCommand(constants.kAutoTimeFromStopToShoot),
+            FeedForward(indexer),  # shoot balls 4 and 5
         )
