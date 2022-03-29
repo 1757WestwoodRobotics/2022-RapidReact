@@ -150,11 +150,9 @@ class OperatorInterface:
 
         self.shootBall = getButtonBindingOfName(constants.kShootBallButtonName)
 
-        self.fenderShot = getButtonBindingOfName(constants.kFenderShotButtonName)
+        self.automaticShoot = getButtonBindingOfName(constants.kAutomaticShotButtonName)
 
-        self.toggleManualModeShooter = getButtonBindingOfName(
-            constants.kManualModeToggleButtonName
-        )
+        self.tarmacShot = getButtonBindingOfName(constants.kTarmacShotButtonName)
 
         self.chassisControls = HolonomicInput(
             Multiply(

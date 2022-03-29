@@ -5,19 +5,20 @@ from subsystems.shootersubsystem import ShooterSubsystem
 import constants
 
 
-class FenderShot(CommandBase):
-    def __init__(self, shoot: ShooterSubsystem):
-        self.shoot = shoot
+class TarmacShot(CommandBase):
+    def __init__(self, shooter: ShooterSubsystem) -> None:
+        CommandBase.__init__(self)
         self.setName(__class__.__name__)
-        self.addRequirements([self.shoot])
+        self.shooter = shooter
+        self.addRequirements([self.shooter])
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")
 
     def execute(self) -> None:
-        self.shoot.rotateTurret(Rotation2d.fromDegrees(0))
-        self.shoot.setHoodAngle(constants.kFenderHoodAngle)
-        self.shoot.setWheelSpeed(constants.kFenderWheelSpeed)
+        self.shooter.rotateTurret(Rotation2d.fromDegrees(0))
+        self.shooter.setHoodAngle(constants.kTarmacHoodAngle)
+        self.shooter.setWheelSpeed(constants.kTarmacWheelSpeed)
 
     # pylint: disable-next=no-self-use
     def end(self, _interrupted: bool) -> None:

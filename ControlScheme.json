@@ -6,6 +6,13 @@
     },
     "A (Xbox)"
   ],
+  "automaticShooting": [
+    1,
+    {
+      "Button": 2
+    },
+    "bottom button on top of joystick (ThrustmasterT16000M)"
+  ],
   "chassisForwardsBackwards": [
     0,
     {
@@ -54,13 +61,6 @@
       "Button": 2
     },
     "B (Xbox)"
-  ],
-  "fenderShot": [
-    1,
-    {
-      "Button": 2
-    },
-    "Left Thumb Button (Xbox)"
   ],
   "fieldRelativeCoordinateModeControl": [
     0,
@@ -139,19 +139,19 @@
     },
     "A (Xbox)"
   ],
+  "shootTarmac": [
+    1,
+    {
+      "Button": 3
+    },
+    "left button on top of joystick (ThrustmasterT16000M)"
+  ],
   "targetRelativeCoordinateModeControl": [
     0,
     {
       "Button": 6
     },
     "Right Bumper (Xbox)"
-  ],
-  "toggleManualModeShooter": [
-    1,
-    {
-      "Button": 3
-    },
-    "left button on top of joystick (ThrustmasterT16000M)"
   ],
   "turretOffset": [
     1,
