@@ -36,7 +36,6 @@ class IntakeSubsystem(SubsystemBase):
         self.state = self.Mode.Retracted
 
     def periodic(self) -> None:
-        # SmartDashboard.putString(constants.kIntakeSystemStateKey, self.state.asString())
         if self.state == self.Mode.Deployed:
             self.intakeSolenoid.set(True)
             self.intakeMotor.setSpeed(constants.kIntakeSpeed)

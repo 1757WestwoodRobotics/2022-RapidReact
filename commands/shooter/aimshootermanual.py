@@ -18,8 +18,6 @@ class AimShooterManually(CommandBase):
         SmartDashboard.putNumber(constants.kShootingHoodAngleKey, 8)
 
     def execute(self) -> None:
-        # wheelSpeed = SmartDashboard.getNumber(constants.kShootingWheelSpeedKey, 550)
-        # hoodAngle = SmartDashboard.getNumber(constants.kShootingHoodAngleKey, 8)
         wheelSpeed = 550
         hoodAngle = 8
         turretPosition = 0

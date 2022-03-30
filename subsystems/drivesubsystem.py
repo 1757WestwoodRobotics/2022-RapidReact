@@ -194,14 +194,6 @@ class CTRESwerveModule(SwerveModule):
             self.driveMotor.configFactoryDefault(constants.kConfigurationTimeoutLimit),
         ):
             return
-        # config = TalonFXConfiguration()
-        # if not ctreCheckError(
-        #     "getAllConfigs",
-        #     self.driveMotor.getAllConfigs(config, constants.kConfigurationTimeoutLimit),
-        # ):
-        #     return
-        # else:
-        #     print("   Config:\n{}".format(config.toString()))
         self.driveMotor.setInverted(self.driveMotorInverted)
         if not ctreCheckError(
             "config_kP",
@@ -238,14 +230,6 @@ class CTRESwerveModule(SwerveModule):
             self.steerMotor.configFactoryDefault(constants.kConfigurationTimeoutLimit),
         ):
             return
-        # config = TalonFXConfiguration()
-        # if not ctreCheckError(
-        #     "getAllConfigs",
-        #     self.driveMotor.getAllConfigs(config, constants.kConfigurationTimeoutLimit),
-        # ):
-        #     return
-        # else:
-        #     print("   Config:\n{}".format(config.toString()))
         self.steerMotor.setInverted(self.steerMotorInverted)
         if not ctreCheckError(
             "config_kP",
@@ -281,7 +265,6 @@ class CTRESwerveModule(SwerveModule):
     def getSwerveAngle(self) -> Rotation2d:
         steerEncoderPulses = self.steerMotor.getSelectedSensorPosition()
         swerveAngle = steerEncoderPulses / constants.kSwerveEncoderPulsesPerRadian
-        # print("Steer[{}]: {}".format(self.steerMotor.getDeviceID(), swerveAngle))
         return Rotation2d(swerveAngle)
 
     def setSwerveAngle(self, swerveAngle: Rotation2d) -> None:
@@ -423,7 +406,6 @@ class DriveSubsystem(SubsystemBase):
         self.odometry = SwerveDrive4Odometry(self.kinematics, self.gyro.getRotation2d())
 
         self.printTimer = Timer()
-        # self.printTimer.start()
 
     def resetSwerveModules(self):
         for module in self.modules:
@@ -512,11 +494,6 @@ class DriveSubsystem(SubsystemBase):
         :param sidewaysSpeedFactor: the commanded sideways movement
         :param rotationSpeedFactor: the commanded rotation
         """
-        # print(
-        #     "inputs: x: {:.2f} y: {:.2f} *: {:.2f}".format(
-        #         forwardSpeedFactor, sidewaysSpeedFactor, rotationSpeedFactor
-        #     )
-        # )
 
         forwardSpeedFactor = convenientmath.clamp(forwardSpeedFactor, -1, 1)
         sidewaysSpeedFactor = convenientmath.clamp(sidewaysSpeedFactor, -1, 1)

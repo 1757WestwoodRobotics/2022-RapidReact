@@ -48,10 +48,6 @@ class IndexerSubsystem(SubsystemBase):
             self.indexerMotor.setSpeed(constants.kIndexerSpeed)
             self.stagingMotor.setSpeed(constants.kStagingSpeed)
         elif self.state == self.Mode.Holding:
-            # if not self.indexerSensor.value() and not self.stagingSensor.value():
-            #     self.indexerMotor.setSpeed(0)
-            #     self.stagingMotor.setSpeed(0)
-            # else:
             self.indexerMotor.setSpeed(constants.kIndexerSpeed)
             self.stagingMotor.setSpeed(-constants.kStagingSpeed)
         elif self.state == self.Mode.Reversed:
@@ -60,9 +56,6 @@ class IndexerSubsystem(SubsystemBase):
         elif self.state == self.Mode.Off:
             self.indexerMotor.setSpeed(0)
             self.stagingMotor.setSpeed(0)
-        # SmartDashboard.putString(
-        #     constants.kIndexerSystemStateKey, self.state.asString()
-        # )
 
     # Switches direction to reverse the ball path
     def motorsOff(self) -> None:

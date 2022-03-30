@@ -130,11 +130,9 @@ class Falcon:  # represents either a simulated motor or a real Falcon 500
                     currentPosition
                     + (
                         clampedAmount
-                        # * 2 * tau # radians per second
                         * DCMotor.falcon500().freeSpeed  # radians per second
                         * constants.kTalonEncoderPulsesPerRadian  # encoder ticks per radian
-                        * 1
-                        / 50  # 50 updates per second
+                        * constants.kRobotUpdatePeriod
                     )
                 )  # amount of free speed, free speed is in RPS, convert from revolutions to encodes ticks expected
 
