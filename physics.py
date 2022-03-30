@@ -216,7 +216,8 @@ class PhysicsEngine:
     Simulates a drivetrain
     """
 
-    def __init__(self, physics_controller: PhysicsInterface):
+    # pylint: disable-next=unused-argument
+    def __init__(self, physics_controller: PhysicsInterface, robot: "MentorBot"):
 
         self.physics_controller = physics_controller
 
@@ -277,16 +278,10 @@ class PhysicsEngine:
         self.gyroSim = SimDeviceSim("navX-Sensor[4]")
         self.gyroYaw = self.gyroSim.getDouble("Yaw")
 
-        simTargetObject = self.physics_controller.field.getObject(
-            constants.kSimTargetName
-        )
-        simTargetObject.setPose(constants.kSimDefaultTargetLocation)
-
-        simBallObject = self.physics_controller.field.getObject(constants.kSimBallName)
-        simBallObject.setPose(constants.kSimDefaultBallLocation)
-
         self.limelightSim = LimelightSim()
         self.intakeCameraSim = IntakeCameraSim()
+
+        self.sim_initialized = False
 
     # pylint: disable-next=unused-argument
     def update_sim(self, now: float, tm_diff: float) -> None:
@@ -298,6 +293,18 @@ class PhysicsEngine:
         :param tm_diff: The amount of time that has passed since the last
                         time that this function was called
         """
+
+        if not self.sim_initialized:
+            self.sim_initialized = True
+            # self.physics_controller.field, is not set until simulation_init
+            simTargetObject = self.physics_controller.field.getObject(
+                constants.kSimTargetName
+            )
+            simTargetObject.setPose(constants.kSimDefaultTargetLocation)
+            simBallObject = self.physics_controller.field.getObject(
+                constants.kSimBallName
+            )
+            simBallObject.setPose(constants.kSimDefaultBallLocation)
 
         self.gyroYaw.set(-self.driveSim.getHeading().degrees())
 
