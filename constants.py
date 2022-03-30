@@ -291,7 +291,7 @@ kConfigurationTimeoutLimit = int(5 * kMillisecondsPerSecond)
 """milliseconds"""
 
 kDrivePIDSlot = 0
-kDrivePGain = 0.03
+kDrivePGain = 0.12
 kDriveIGain = 0.0
 kDriveDGain = 0.0
 
@@ -324,16 +324,16 @@ To determine encoder offsets (with robot ON and DISABLED):
   7. Click "Self-Test Snapshot"
   8. Record value from line: "Absolute Position (unsigned):"
 """
-kFrontLeftAbsoluteEncoderOffset = 247.324
+kFrontLeftAbsoluteEncoderOffset = 0.264
 """degrees"""
 
-kFrontRightAbsoluteEncoderOffset = 239.678
+kFrontRightAbsoluteEncoderOffset = 0.879
 """degrees"""
 
-kBackLeftAbsoluteEncoderOffset = 12.217
+kBackLeftAbsoluteEncoderOffset = 179.736
 """degrees"""
 
-kBackRightAbsoluteEncoderOffset = 287.402
+kBackRightAbsoluteEncoderOffset = 0.352
 """degrees"""
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
@@ -358,7 +358,7 @@ kBallDistanceRelativeToRobotKeys = OptionalValueKeys("BallDistanceRelativeToRobo
 
 
 # Autonomous
-kAutoDriveDistance = 3 * kWheelCircumference
+kAutoDriveDistance = -8 * kWheelCircumference
 """meters"""
 
 kAutoFrontwaysDistance = 24 * kMetersPerInch
@@ -379,12 +379,14 @@ kAutoWaitDuration = 1
 kAutoTargetOffset = Translation2d(2, 0)
 """[meters, meters]"""
 
+kAuto5BallFilename = "5ba"
+
 # Target relative drive
 kTargetRelativeDriveAnglePGain = 1
 kTargetRelativeDriveAngleIGain = 0
 kTargetRelativeDriveAngleDGain = 0
 
-kRotationPGain = 1.3
+kRotationPGain = 0.8
 kRotationIGain = 0
 kRotationDGain = 0
 
@@ -409,6 +411,15 @@ kDriveToTargetAngleTolerance = 5 * kRadiansPerDegree
 kDriveToTargetAngularVelocityTolerance = 5 * kRadiansPerDegree / 1
 """radians / second"""
 
+# Trajectory Following
+kTrajectoryPositionPGain = 3.0
+kTrajectoryPositionIGain = 0
+kTrajectoryPositionDGain = 0
+
+kTrajectoryAnglePGain = 1.5
+kTrajectoryAngleIGain = 0
+kTrajectoryAngleDGain = 0
+
 # Operator Interface
 kXboxJoystickDeadband = 0.1
 """dimensionless"""
@@ -424,7 +435,7 @@ kChassisForwardsBackwardsAxisName = "chassisForwardsBackwards"
 kChassisSideToSideAxisName = "chassisSideToSide"
 
 kFieldRelativeCoordinateModeControlButtonName = "fieldRelativeCoordinateModeControl"
-kResetSwerveControlButtonName = "resetSwerveControl"
+kResetGyroButtonName = "resetGyro"
 kTargetRelativeCoordinateModeControlButtonName = "targetRelativeCoordinateModeControl"
 kDriveToTargetControlButtonName = "driveToTargetControl"
 kDeployIntakeButtonName = "deployIntake"
@@ -438,6 +449,7 @@ kSimDefaultTargetLocation = Pose2d(
 )
 """[meters, meters, radians]"""
 
+kSimDefaultRobotLocation = Pose2d(kFieldLength / 2, kFieldWidth / 2, 0)
 kSimDefaultTargetHeight = 8 * kMetersPerFoot + 8 * kMetersPerInch  # 8ft 8in
 kSimBallName = "SimBall"
 kSimDefaultBallLocation = Pose2d(kFieldLength / 4, kFieldWidth / 2, 0)
@@ -534,7 +546,7 @@ kLeftClimberPivotSolenoidBackwardActuationID = 12
 kRightClimberPivotSolenoidBackwardActuationID = 13
 kClimberMotorPGain = 0.025
 kClimberMiddleRungCapturePosition = 344502
-kClimberMiddleRungHangPosition = 304502
+kClimberMiddleRungHangPosition = 250502
 kClimberHangingPosition = 95102  # Not currently used
 kClimberRetractionPositionThreshold = 3500
 kClimberExtensionPositionThreshold = 2000
@@ -599,7 +611,7 @@ kHoodStartingAngle = 0
 
 kTurretMaximumAngle = Rotation2d.fromDegrees(160)
 kTurretMinimumAngle = Rotation2d.fromDegrees(-160)
-kTurretSoftLimitBuffer = Rotation2d.fromDegrees(1)
+kTurretSoftLimitBuffer = Rotation2d.fromDegrees(160 - 30)
 
 kTurretRelativeForwardAngle = Rotation2d.fromDegrees(0)
 kTurretOffsetFromRobotAngle = Rotation2d.fromDegrees(180)  # shooter 0 is robot 180

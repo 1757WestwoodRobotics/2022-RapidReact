@@ -186,31 +186,6 @@ class BallTrackingModule:
             self.targetAngle = None
             self.targetDistance = None
 
-        if self.targetAngle is not None:
-            SmartDashboard.putNumber(
-                constants.kBallAngleRelativeToRobotKeys.valueKey,
-                convenientmath.normalizeRotation(self.targetAngle).radians(),
-            )
-            SmartDashboard.putBoolean(
-                constants.kBallAngleRelativeToRobotKeys.validKey, True
-            )
-        else:
-            SmartDashboard.putBoolean(
-                constants.kBallAngleRelativeToRobotKeys.validKey, False
-            )
-
-        if self.targetDistance is not None:
-            SmartDashboard.putNumber(
-                constants.kBallDistanceRelativeToRobotKeys.valueKey, self.targetDistance
-            )
-            SmartDashboard.putBoolean(
-                constants.kBallDistanceRelativeToRobotKeys.validKey, True
-            )
-        else:
-            SmartDashboard.putBoolean(
-                constants.kBallDistanceRelativeToRobotKeys.validKey, False
-            )
-
 
 class LimelightTrackingModule(TrackingModule):
     """

@@ -1,6 +1,6 @@
 from enum import Enum, auto
 from commands2 import SubsystemBase
-from wpilib import PneumaticsModuleType, Solenoid, SmartDashboard
+from wpilib import PneumaticsModuleType, Solenoid
 import constants
 from util.helpfulIO import Falcon
 
@@ -30,25 +30,12 @@ class IntakeSubsystem(SubsystemBase):
         self.intakeMotor = Falcon(
             constants.kIntakeMotorName,
             constants.kIntakeMotorId,
-            constants.kSimIntakeMotorPort,
             inverted=constants.kIntakeMotorInverted,
             canbus=constants.kCANivoreName,
         )
         self.state = self.Mode.Retracted
 
     def periodic(self) -> None:
-        SmartDashboard.putString(constants.kIntakeSystemStateKey, self.state.asString())
-
-    def reverseIntake(self) -> None:
-        self.state = self.Mode.Reversed
-
-    def deployIntake(self) -> None:
-        self.state = self.Mode.Deployed
-
-    def retractIntake(self) -> None:
-        self.state = self.Mode.Retracted
-
-    def defaultIntake(self) -> None:
         if self.state == self.Mode.Deployed:
             self.intakeSolenoid.set(True)
             self.intakeMotor.setSpeed(constants.kIntakeSpeed)
@@ -58,3 +45,12 @@ class IntakeSubsystem(SubsystemBase):
         elif self.state == self.Mode.Retracted:
             self.intakeSolenoid.set(False)
             self.intakeMotor.setSpeed(0)
+
+    def reverseIntake(self) -> None:
+        self.state = self.Mode.Reversed
+
+    def deployIntake(self) -> None:
+        self.state = self.Mode.Deployed
+
+    def retractIntake(self) -> None:
+        self.state = self.Mode.Retracted

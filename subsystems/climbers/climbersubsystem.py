@@ -13,7 +13,6 @@ class ClimberModule:
         self,
         motorName,
         realMotorID,
-        simMotorID,
         motorPGain,
         brakeID,
         actuatorID1,
@@ -26,9 +25,7 @@ class ClimberModule:
             actuatorID1,
             actuatorID2,
         )
-        self.climbMotor = Falcon(
-            motorName, realMotorID, simMotorID, motorPGain, inverted=inverted
-        )
+        self.climbMotor = Falcon(motorName, realMotorID, motorPGain, inverted=inverted)
         if RobotBase.isReal():
             self.climbMotor.motor.configReverseSoftLimitThreshold(
                 constants.kClimberMiddleRungHangPosition

@@ -1,12 +1,12 @@
 import wpilib
-
+from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
-
 
 import constants
 
 from commands.complexauto import ComplexAuto
+from commands.indexer.feedforward import FeedForward
 from commands.drivedistance import DriveDistance
 from commands.drivetotarget import DriveToTarget
 from commands.targetrelativedrive import TargetRelativeDrive
@@ -29,20 +29,21 @@ from commands.climber.pistonactuation import (
     PivotLeftPistonToVertical,
     PivotRightPistonToVertical,
 )
+from commands.resetgyro import ResetGyro
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
-from commands.resetrobot import ResetRobot
 
-from commands.indexer.defaultindexer import DefaultIndexer
 from commands.indexer.holdball import HoldBall
-from commands.intake.defaultintake import DefaultIntake
 from commands.intake.autoballintake import AutoBallIntake
 from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
 from commands.shooter.aimshootertotarget import AimShooterToTarget
 from commands.shooter.aimshootermanual import AimShooterManually
 
+from commands.auto.fivebrstandard import FiveBRStandard
+from commands.auto.twoblhangerbounce import TwoBLHangerbounce
+from commands.auto.fourblhangerbounce import FourBLNoninvasive
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
@@ -52,8 +53,8 @@ from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
 from subsystems.shootersubsystem import ShooterSubsystem
 
-from operatorinterface import OperatorInterface
-from util.helpfultriggerwrappers import AxisButton, SmartDashboardButton
+from operatorinterface import Control2D, OperatorInterface
+from util.helpfultriggerwrappers import AxisButton
 
 
 class RobotContainer:
@@ -81,11 +82,21 @@ class RobotContainer:
         # Autonomous routines
 
         # A simple auto routine that drives forward a specified distance, and then stops.
-        self.simpleAuto = DriveDistance(
-            constants.kAutoDriveDistance,
-            constants.kAutoDriveSpeedFactor,
-            DriveDistance.Axis.X,
-            self.drive,
+        self.simpleAuto = commands2.ParallelCommandGroup(
+            commands2.SequentialCommandGroup(
+                HoldBall(self.indexer),
+                DriveDistance(
+                    4 * constants.kWheelCircumference,
+                    constants.kAutoDriveSpeedFactor,
+                    DriveDistance.Axis.X,
+                    self.drive,
+                ),
+                commands2.WaitCommand(2),
+                FeedForward(self.indexer),
+                commands2.WaitCommand(2),
+                HoldBall(self.indexer),
+            ),
+            AimShooterToTarget(self.shooter, Control2D(lambda: 0, lambda: 0)),
         )
 
         # A complex auto routine that drives to the target, drives forward, waits, drives back
@@ -94,13 +105,25 @@ class RobotContainer:
         # A routine that drives to the target with a given offset
         self.driveToTarget = DriveToTarget(self.drive, constants.kAutoTargetOffset)
 
+        # A routine that follows a set trajectory
+        self.fiveBRStandard = FiveBRStandard(self.drive, self.intake, self.indexer)
+        self.twoBLHangerbounce = TwoBLHangerbounce(
+            self.drive, self.intake, self.indexer
+        )
+        self.fourBLNoninvasive = FourBLNoninvasive(
+            self.drive, self.intake, self.indexer
+        )
+
         # Chooser
         self.chooser = wpilib.SendableChooser()
 
         # Add commands to the autonomous command chooser
-        self.chooser.setDefaultOption("Complex Auto", self.complexAuto)
-        self.chooser.addOption("Simple Auto", self.simpleAuto)
+        self.chooser.addOption("Complex Auto", self.complexAuto)
         self.chooser.addOption("Target Auto", self.driveToTarget)
+        self.chooser.addOption("2 Ball Left Hangerbounce Auto", self.twoBLHangerbounce)
+        self.chooser.addOption("4 Ball Left Noninvasive Auto", self.fourBLNoninvasive)
+        self.chooser.addOption("5 Ball Right Standard Auto", self.fiveBRStandard)
+        self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
 
         # Put the chooser on the dashboard
         wpilib.SmartDashboard.putData("Autonomous", self.chooser)
@@ -120,10 +143,8 @@ class RobotContainer:
         self.rightClimber.setDefaultCommand(HoldRightClimberPosition(self.rightClimber))
         self.leftClimber.setDefaultCommand(HoldLeftClimberPosition(self.leftClimber))
         self.shooter.setDefaultCommand(
-            AimShooterToTarget(self.shooter, self.operatorInterface.shooterOffset)
+            AimShooterManually(self.shooter, self.operatorInterface.shooterOffset)
         )
-        self.intake.setDefaultCommand(DefaultIntake(self.intake))
-        self.indexer.setDefaultCommand(DefaultIndexer(self.indexer))
 
     def configureButtonBindings(self):
         """
@@ -165,7 +186,7 @@ class RobotContainer:
 
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl
-        ).whileHeld(
+        ).toggleWhenPressed(
             RobotRelativeDrive(
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
@@ -185,9 +206,9 @@ class RobotContainer:
             )
         )
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.resetSwerveControl
-        ).whenPressed(ResetRobot(self.shooter, self.drive))
+        commands2.button.JoystickButton(*self.operatorInterface.resetGyro).whenPressed(
+            ResetGyro(self.drive, Pose2d(0, 0, 0))
+        )
 
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl
@@ -234,8 +255,8 @@ class RobotContainer:
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
 
-        SmartDashboardButton(constants.kShootingManualModeKey).whileHeld(
-            AimShooterManually(self.shooter, self.operatorInterface.shooterOffset)
+        commands2.button.JoystickButton(*self.operatorInterface.fenderShot).whileHeld(
+            AimShooterToTarget(self.shooter, self.operatorInterface.shooterOffset)
         )
 
     def getAutonomousCommand(self) -> commands2.Command:

@@ -12,7 +12,6 @@ class LeftClimber(SubsystemBase):
         self.leftClimber = ClimberModule(
             constants.kLeftClimberMotorName,
             constants.kLeftClimberMotorCanID,
-            constants.kSimLeftClimberMotorID,
             constants.kClimberMotorPGain,
             constants.kLeftClimberBrakePCMID,
             constants.kLeftClimberPivotSolenoidForwardActuationID,

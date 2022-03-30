@@ -12,7 +12,6 @@ class RightClimber(SubsystemBase):
         self.rightClimber = ClimberModule(
             constants.kRightClimberMotorName,
             constants.kRightClimberMotorCanID,
-            constants.kSimRightClimberMotorID,
             constants.kClimberMotorPGain,
             constants.kRightClimberBrakePCMID,
             constants.kRightClimberPivotSolenoidForwardActuationID,

@@ -103,9 +103,7 @@ class OperatorInterface:
         self.fieldRelativeCoordinateModeControl = getButtonBindingOfName(
             constants.kFieldRelativeCoordinateModeControlButtonName
         )
-        self.resetSwerveControl = getButtonBindingOfName(
-            constants.kResetSwerveControlButtonName
-        )
+        self.resetGyro = getButtonBindingOfName(constants.kResetGyroButtonName)
         self.targetRelativeCoordinateModeControl = getButtonBindingOfName(
             constants.kTargetRelativeCoordinateModeControlButtonName
         )
@@ -159,17 +157,25 @@ class OperatorInterface:
         )
 
         self.chassisControls = HolonomicInput(
-            Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisForwardsBackwardsAxisName),
-                    constants.kXboxJoystickDeadband,
+            Multiply(
+                Invert(
+                    Deadband(
+                        getAxisBindingOfName(
+                            constants.kChassisForwardsBackwardsAxisName
+                        ),
+                        constants.kXboxJoystickDeadband,
+                    ),
                 ),
+                lambda: map_range(self.reverseBallPath(), 0, 1, 0.5, 1),
             ),
-            Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisSideToSideAxisName),
-                    constants.kXboxJoystickDeadband,
+            Multiply(
+                Invert(
+                    Deadband(
+                        getAxisBindingOfName(constants.kChassisSideToSideAxisName),
+                        constants.kXboxJoystickDeadband,
+                    ),
                 ),
+                lambda: map_range(self.reverseBallPath(), 0, 1, 0.5, 1),
             ),
             Invert(
                 Deadband(

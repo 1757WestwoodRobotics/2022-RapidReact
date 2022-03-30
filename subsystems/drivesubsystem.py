@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+from typing import Tuple
 from commands2 import SubsystemBase
 from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
 from ctre import (
@@ -193,14 +194,6 @@ class CTRESwerveModule(SwerveModule):
             self.driveMotor.configFactoryDefault(constants.kConfigurationTimeoutLimit),
         ):
             return
-        # config = TalonFXConfiguration()
-        # if not ctreCheckError(
-        #     "getAllConfigs",
-        #     self.driveMotor.getAllConfigs(config, constants.kConfigurationTimeoutLimit),
-        # ):
-        #     return
-        # else:
-        #     print("   Config:\n{}".format(config.toString()))
         self.driveMotor.setInverted(self.driveMotorInverted)
         if not ctreCheckError(
             "config_kP",
@@ -237,14 +230,6 @@ class CTRESwerveModule(SwerveModule):
             self.steerMotor.configFactoryDefault(constants.kConfigurationTimeoutLimit),
         ):
             return
-        # config = TalonFXConfiguration()
-        # if not ctreCheckError(
-        #     "getAllConfigs",
-        #     self.driveMotor.getAllConfigs(config, constants.kConfigurationTimeoutLimit),
-        # ):
-        #     return
-        # else:
-        #     print("   Config:\n{}".format(config.toString()))
         self.steerMotor.setInverted(self.steerMotorInverted)
         if not ctreCheckError(
             "config_kP",
@@ -280,7 +265,6 @@ class CTRESwerveModule(SwerveModule):
     def getSwerveAngle(self) -> Rotation2d:
         steerEncoderPulses = self.steerMotor.getSelectedSensorPosition()
         swerveAngle = steerEncoderPulses / constants.kSwerveEncoderPulsesPerRadian
-        # print("Steer[{}]: {}".format(self.steerMotor.getDeviceID(), swerveAngle))
         return Rotation2d(swerveAngle)
 
     def setSwerveAngle(self, swerveAngle: Rotation2d) -> None:
@@ -422,13 +406,38 @@ class DriveSubsystem(SubsystemBase):
         self.odometry = SwerveDrive4Odometry(self.kinematics, self.gyro.getRotation2d())
 
         self.printTimer = Timer()
-        # self.printTimer.start()
 
     def resetSwerveModules(self):
         for module in self.modules:
             module.reset()
         self.gyro.reset()
         self.odometry.resetPosition(Pose2d(), self.gyro.getRotation2d())
+
+    def setOdometryPosition(self, pose: Pose2d):
+        self.gyro.setAngleAdjustment(pose.rotation().degrees())
+        self.odometry.resetPosition(pose, self.gyro.getRotation2d())
+
+    def resetGyro(self, pose: Pose2d):
+        self.gyro.reset()
+        self.gyro.setAngleAdjustment(pose.rotation().degrees())
+        self.odometry.resetPosition(pose, self.gyro.getRotation2d())
+
+    def getPose(self) -> Pose2d:
+        return self.odometry.getPose()
+
+    def applyStates(self, moduleStates: Tuple[SwerveModuleState]) -> None:
+        (
+            frontLeftState,
+            frontRightState,
+            backLeftState,
+            backRightState,
+        ) = SwerveDrive4Kinematics.desaturateWheelSpeeds(
+            moduleStates, constants.kMaxWheelLinearVelocity
+        )
+        self.frontLeftModule.applyState(frontLeftState)
+        self.frontRightModule.applyState(frontRightState)
+        self.backLeftModule.applyState(backLeftState)
+        self.backRightModule.applyState(backRightState)
 
     def getRotation(self) -> Rotation2d:
         return self.gyro.getRotation2d()
@@ -485,11 +494,6 @@ class DriveSubsystem(SubsystemBase):
         :param sidewaysSpeedFactor: the commanded sideways movement
         :param rotationSpeedFactor: the commanded rotation
         """
-        # print(
-        #     "inputs: x: {:.2f} y: {:.2f} *: {:.2f}".format(
-        #         forwardSpeedFactor, sidewaysSpeedFactor, rotationSpeedFactor
-        #     )
-        # )
 
         forwardSpeedFactor = convenientmath.clamp(forwardSpeedFactor, -1, 1)
         sidewaysSpeedFactor = convenientmath.clamp(sidewaysSpeedFactor, -1, 1)
@@ -551,15 +555,4 @@ class DriveSubsystem(SubsystemBase):
         )
 
         moduleStates = self.kinematics.toSwerveModuleStates(robotChassisSpeeds)
-        (
-            frontLeftState,
-            frontRightState,
-            backLeftState,
-            backRightState,
-        ) = SwerveDrive4Kinematics.desaturateWheelSpeeds(
-            moduleStates, constants.kMaxWheelLinearVelocity
-        )
-        self.frontLeftModule.applyState(frontLeftState)
-        self.frontRightModule.applyState(frontRightState)
-        self.backLeftModule.applyState(backLeftState)
-        self.backRightModule.applyState(backRightState)
+        self.applyStates(moduleStates)
