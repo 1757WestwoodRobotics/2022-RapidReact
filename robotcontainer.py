@@ -45,6 +45,7 @@ from commands.shooter.tarmacshot import TarmacShot
 from commands.auto.fivebrstandard import FiveBRStandard
 from commands.auto.twoblhangerbounce import TwoBLHangerbounce
 from commands.auto.fourblnoninvasive import FourBLNoninvasive
+from commands.auto.twoblhangerouttake import TwoBLHangerOuttake
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
@@ -111,6 +112,9 @@ class RobotContainer:
         self.twoBLHangerbounce = TwoBLHangerbounce(
             self.drive, self.intake, self.indexer
         )
+        self.twoBLHangerOuttake = TwoBLHangerOuttake(
+            self.drive, self.intake, self.indexer
+        )
         self.fourBLNoninvasive = FourBLNoninvasive(
             self.drive, self.intake, self.indexer
         )
@@ -122,6 +126,9 @@ class RobotContainer:
         self.chooser.addOption("Complex Auto", self.complexAuto)
         self.chooser.addOption("Target Auto", self.driveToTarget)
         self.chooser.addOption("2 Ball Left Hangerbounce Auto", self.twoBLHangerbounce)
+        self.chooser.addOption(
+            "2 Ball Left Hanger Outtake Auto", self.twoBLHangerOuttake
+        )
         self.chooser.addOption("4 Ball Left Noninvasive Auto", self.fourBLNoninvasive)
         self.chooser.addOption("5 Ball Right Standard Auto", self.fiveBRStandard)
         self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
