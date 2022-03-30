@@ -184,9 +184,7 @@ kFrontRightModuleName = "front_right"
 kBackLeftModuleName = "back_left"
 kBackRightModuleName = "back_right"
 
-kLimelightMountingOffset = Translation2d(
-    (kRobotLength / 2) - (4.125 * kMetersPerInch), 0.0
-)
+kLimelightMountingOffset = Translation2d(0.0, 0.0)
 kLimelightVerticalOffset = 25.833857 * kMetersPerInch  # derived from cad
 """meters"""
 kLimelightVerticalAngleOffset = Rotation2d.fromDegrees(44.153)  # derived from cad
@@ -338,6 +336,8 @@ kBackRightAbsoluteEncoderOffset = 0.352
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
 
+kRobotVisionPoseWeight = 0.04  # 4% vision data
+
 kDriveVelocityKeys = "robotVelocity"
 kRobotUpdatePeriod = 1 / 50
 """seconds"""
@@ -349,6 +349,7 @@ kTargetFacingAngleRelativeToRobotKeys = OptionalValueKeys(
     "TargetFacingAngleRelativeToRobot"
 )
 kTargetPoseArrayKeys = OptionalValueKeys("TargetPoseArray")
+kRobotVisionPoseArrayKeys = OptionalValueKeys("VisionRobotPose")
 
 kTargetName = "Target"
 
@@ -461,6 +462,7 @@ kSimTargetPoseArrayKey = "SimTargetPoseArray"
 kSimBallPoseArrayKey = "SimBallPoseArray"
 kSimTargetHeightKey = "SimTargetHeight"
 kSimTargetTrackingModuleName = "sim_target_tracker"
+kSimTargetUpperHubRadius = 2
 
 kSimFrontLeftDriveMotorPort = 0
 kSimFrontLeftSteerMotorPort = 1

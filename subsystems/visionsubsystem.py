@@ -278,10 +278,15 @@ class VisionSubsystem(SubsystemBase):
         targetAngle = self.trackingModule.getTargetAngle()
         if targetAngle is None:
             SmartDashboard.putBoolean(constants.kTargetPoseArrayKeys.validKey, False)
+            SmartDashboard.putBoolean(
+                constants.kRobotVisionPoseArrayKeys.validKey, False
+            )
         else:
             targetDistance = self.trackingModule.getTargetDistance()
             if targetDistance is None:
                 targetDistance = float("inf")
+
+            targetDistance += constants.kSimTargetUpperHubRadius
 
             targetFacingAngle = self.trackingModule.getTargetFacingAngle()
             if targetFacingAngle is None:
@@ -291,14 +296,12 @@ class VisionSubsystem(SubsystemBase):
                 constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0]
             )
 
-            limelightPanAngle = (
+            turretRotation = (
                 SmartDashboard.getNumber(constants.kShootingTurretAngleKey, 0)
                 * constants.kRadiansPerDegree
             )
 
-            robotPose = Pose2d(
-                robotPoseX, robotPoseY, robotPoseAngle + limelightPanAngle
-            )
+            robotPose = Pose2d(robotPoseX, robotPoseY, robotPoseAngle + turretRotation)
             robotToTarget = Transform2d(
                 convenientmath.translationFromDistanceAndRotation(
                     targetDistance, targetAngle
@@ -312,6 +315,33 @@ class VisionSubsystem(SubsystemBase):
                 [targetPose.X(), targetPose.Y(), targetPose.rotation().radians()],
             )
             SmartDashboard.putBoolean(constants.kTargetPoseArrayKeys.validKey, True)
+
+            # calculate position on field based purely on vision data
+
+            netRotation = Rotation2d(
+                robotPoseAngle + turretRotation + targetAngle.radians()
+            )
+            horizontalOffset = netRotation.cos() * (targetDistance)
+            verticalOffset = netRotation.sin() * (targetDistance)
+
+            robotEstimatedPose = Pose2d(
+                constants.kSimDefaultTargetLocation.X() + horizontalOffset,
+                constants.kSimDefaultTargetLocation.Y() + verticalOffset,
+                robotPoseAngle,
+            )
+
+            SmartDashboard.putNumberArray(
+                constants.kRobotVisionPoseArrayKeys.valueKey,
+                [
+                    robotEstimatedPose.X(),
+                    robotEstimatedPose.Y(),
+                    robotEstimatedPose.rotation().radians(),
+                ],
+            )
+
+            SmartDashboard.putBoolean(
+                constants.kRobotVisionPoseArrayKeys.validKey, True
+            )
 
         if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
             print(
