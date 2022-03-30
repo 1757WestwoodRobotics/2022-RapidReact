@@ -92,6 +92,12 @@ class ClimberModule:
             ControlMode.Position, constants.kClimberMiddleRungCapturePosition
         )
 
+    def setClimberTiltedExtension(self) -> None:
+        self.climbMotor.setPosition(constants.kClimberTiledExtensionMax)
+
+    def setClimberHangingExtension(self) -> None:
+        self.climbMotor.setPosition(constants.kClimberHangingPosition)
+
     def setClimberMidExtension(self) -> None:
         self.climberMotor.set(
             ControlMode.Position, constants.kClimberMiddleRungHangPosition
