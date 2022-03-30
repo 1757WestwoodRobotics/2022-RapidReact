@@ -57,8 +57,8 @@ class TwoBLHangerOuttake(SequentialCommandGroup):
             ResetGyro(drive, pathA.sample(0).pose),
             DeployIntake(intake),
             FollowTrajectory(drive, pathA),  # pickup ball 2
-            RetractIntake(intake),
             WaitCommand(constants.kAutoTimeFromStopToShoot),
+            RetractIntake(intake),
             FeedForward(indexer),
             WaitCommand(constants.kAutoTimeFromShootToMove),
             HoldBall(indexer),
