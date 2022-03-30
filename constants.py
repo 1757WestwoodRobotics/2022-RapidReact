@@ -580,6 +580,7 @@ kClimberMotorIGain = 0
 kClimberMotorDGain = 0
 kClimberMiddleRungCapturePosition = 344502
 kClimberMiddleRungHangPosition = 250502
+kClimberTiledExtensionMax = 300502  # MUST BE TESTED IRL
 kClimberHangingPosition = 95102  # Not currently used
 kClimberRetractionPositionThreshold = 3500
 kClimberExtensionPositionThreshold = 2000
