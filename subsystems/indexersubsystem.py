@@ -13,15 +13,6 @@ class IndexerSubsystem(SubsystemBase):
         Reversed = auto()
         Off = auto()
 
-        def asString(self) -> str:
-            mapping = {
-                self.Holding: "Holding",
-                self.FeedForward: "Feed Forward",
-                self.Reversed: "Reversed",
-                self.Off: "Off",
-            }
-            return mapping[self]
-
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
@@ -60,16 +51,6 @@ class IndexerSubsystem(SubsystemBase):
             self.indexerMotor.config_kD(
                 constants.kIndexerMotorPIDSlot,
                 constants.kIndexerMotorDGain,
-                constants.kConfigurationTimeoutLimit,
-            ),
-        ):
-            return
-
-        if not ctreCheckError(
-            "configReverseLimitSwitchSource",
-            self.indexerMotor.configReverseLimitSwitchSource(
-                LimitSwitchSource.Deactivated,
-                LimitSwitchNormal.Disabled,
                 constants.kConfigurationTimeoutLimit,
             ),
         ):
@@ -117,7 +98,16 @@ class IndexerSubsystem(SubsystemBase):
             return
         if not ctreCheckError(
             "configForwardLimitSwitchSource",
-            self.indexerMotor.configForwardLimitSwitchSource(
+            self.stagingMotor.configForwardLimitSwitchSource(
+                LimitSwitchSource.Deactivated,
+                LimitSwitchNormal.Disabled,
+                constants.kConfigurationTimeoutLimit,
+            ),
+        ):
+            return
+        if not ctreCheckError(
+            "configReverseLimitSwitchSource",
+            self.stagingMotor.configReverseLimitSwitchSource(
                 LimitSwitchSource.Deactivated,
                 LimitSwitchNormal.Disabled,
                 constants.kConfigurationTimeoutLimit,
@@ -159,8 +149,8 @@ class IndexerSubsystem(SubsystemBase):
                 -constants.kStagingSpeed * constants.kTalonVelocityPerRPM,
             )
         elif self.state == self.Mode.Off:
-            self.indexerMotor.set(ControlMode.Velocity, 0)
-            self.stagingMotor.set(ControlMode.Velocity, 0)
+            self.indexerMotor.neutralOutput()
+            self.stagingMotor.neutralOutput()
 
     # Switches direction to reverse the ball path
     def motorsOff(self) -> None:

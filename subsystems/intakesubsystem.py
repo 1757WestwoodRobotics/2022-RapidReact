@@ -81,7 +81,9 @@ class IntakeSubsystem(SubsystemBase):
             )
         elif self.state == self.Mode.Retracted:
             self.intakeSolenoid.set(False)
-            self.intakeMotor.set(ControlMode.Velocity, 0)
+            self.intakeMotor.set(
+                ControlMode.Velocity, 0
+            )  # drive to 0 instead of neutral to help make sure the rollers have stopped by the time the intake is in the retracted position
 
     def reverseIntake(self) -> None:
         self.state = self.Mode.Reversed

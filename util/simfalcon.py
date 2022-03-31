@@ -127,7 +127,9 @@ class SimFalcon:  # a simulated Falcon 500
 
     def neutralOutput(self):
         self.motor.neutralOutput()
-        self.set(ControlMode.Velocity, 0)
+        self.set(
+            ControlMode.Velocity, 0
+        )  # neutral mode is supposed to coast/brake the motor instead of driving to 0 velocity but for sim this works for now
 
     def set(self, mode: ControlMode, demand: float) -> None:
         self.motor.set(mode, demand)
