@@ -54,8 +54,8 @@ from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
 from subsystems.shootersubsystem import ShooterSubsystem
 
-from operatorinterface import Control2D, OperatorInterface
-from util.helpfultriggerwrappers import AxisButton
+from operatorinterface import OperatorInterface
+from util.helpfultriggerwrappers import AxisButton, SmartDashboardButton
 
 
 class RobotContainer:
@@ -97,7 +97,7 @@ class RobotContainer:
                 commands2.WaitCommand(2),
                 HoldBall(self.indexer),
             ),
-            AimShooterToTarget(self.shooter, Control2D(lambda: 0, lambda: 0)),
+            AimShooterToTarget(self.shooter),
         )
 
         # A complex auto routine that drives to the target, drives forward, waits, drives back
@@ -143,7 +143,7 @@ class RobotContainer:
 
         self.rightClimber.setDefaultCommand(HoldRightClimberPosition(self.rightClimber))
         self.leftClimber.setDefaultCommand(HoldLeftClimberPosition(self.leftClimber))
-        self.shooter.setDefaultCommand(AimShooterManually(self.shooter))
+        self.shooter.setDefaultCommand(AimShooterToTarget(self.shooter))
 
     def configureButtonBindings(self):
         """
@@ -254,10 +254,8 @@ class RobotContainer:
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.automaticShoot
-        ).whileHeld(
-            AimShooterToTarget(self.shooter, self.operatorInterface.shooterOffset)
+        SmartDashboardButton(constants.kShootingManualModeKey).whileHeld(
+            AimShooterManually(self.shooter)
         )
 
         commands2.button.JoystickButton(*self.operatorInterface.tarmacShot).whileHeld(
