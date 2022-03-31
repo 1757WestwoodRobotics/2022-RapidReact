@@ -131,14 +131,18 @@ class IndexerSubsystem(SubsystemBase):
                 constants.kStagingSpeed * constants.kTalonVelocityPerRPM,
             )
         elif self.state == self.Mode.Holding:
-            self.indexerMotor.set(
-                ControlMode.Velocity,
-                constants.kIndexerSpeed * constants.kTalonVelocityPerRPM,
-            )
-            self.stagingMotor.set(
-                ControlMode.Velocity,
-                -constants.kStagingSpeed * constants.kTalonVelocityPerRPM,
-            )
+            if not (self.indexerSensor() == 0 and self.stagingSensor() == 0):
+                self.indexerMotor.set(
+                    ControlMode.Velocity,
+                    constants.kIndexerSpeed * constants.kTalonVelocityPerRPM,
+                )
+                self.stagingMotor.set(
+                    ControlMode.Velocity,
+                    -constants.kStagingSpeed * constants.kTalonVelocityPerRPM,
+                )
+            else:
+                self.indexerMotor.neutralOutput()
+                self.stagingMotor.neutralOutput()
         elif self.state == self.Mode.Reversed:
             self.indexerMotor.set(
                 ControlMode.Velocity,
