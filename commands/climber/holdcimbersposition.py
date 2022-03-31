@@ -11,7 +11,7 @@ class HoldLeftClimberPosition(CommandBase):
         self.addRequirements(climber)
 
     def initialize(self) -> None:
-        self.climber.leftClimber.climbMotor.neutralOutput()
+        self.climber.leftClimber.climberMotor.neutralOutput()
         self.climber.leftClimber.activateBrake()
 
 
@@ -23,7 +23,7 @@ class HoldRightClimberPosition(CommandBase):
         self.addRequirements(climber)
 
     def initialize(self) -> None:
-        self.climber.rightClimber.climbMotor.neutralOutput()
+        self.climber.rightClimber.climberMotor.neutralOutput()
         self.climber.rightClimber.activateBrake()
 
 

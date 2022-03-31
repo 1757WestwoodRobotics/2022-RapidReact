@@ -13,6 +13,8 @@ class RightClimber(SubsystemBase):
             constants.kRightClimberMotorName,
             constants.kRightClimberMotorCanID,
             constants.kClimberMotorPGain,
+            constants.kClimberMotorIGain,
+            constants.kClimberMotorDGain,
             constants.kRightClimberBrakePCMID,
             constants.kRightClimberPivotSolenoidForwardActuationID,
             constants.kRightClimberPivotSolenoidBackwardActuationID,
@@ -21,5 +23,5 @@ class RightClimber(SubsystemBase):
     def periodic(self) -> None:
         SmartDashboard.putNumber(
             constants.kRightClimberEncoderTicksKey,
-            self.rightClimber.climbMotor.getPosition(),
+            self.rightClimber.climberMotor.getSelectedSensorPosition(),
         )
