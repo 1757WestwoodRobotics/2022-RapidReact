@@ -150,8 +150,6 @@ class OperatorInterface:
 
         self.shootBall = getButtonBindingOfName(constants.kShootBallButtonName)
 
-        self.automaticShoot = getButtonBindingOfName(constants.kAutomaticShotButtonName)
-
         self.tarmacShot = getButtonBindingOfName(constants.kTarmacShotButtonName)
 
         self.defenseStateControl = getButtonBindingOfName("defenseStateControl")

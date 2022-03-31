@@ -6,13 +6,6 @@
     },
     "A (Xbox)"
   ],
-  "automaticShooting": [
-    1,
-    {
-      "Button": 2
-    },
-    "bottom button on top of joystick (ThrustmasterT16000M)"
-  ],
   "chassisForwardsBackwards": [
     0,
     {
