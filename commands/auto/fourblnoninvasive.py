@@ -17,7 +17,7 @@ from commands.resetgyro import ResetGyro
 import constants
 
 
-class TwoBLHangerbounce(SequentialCommandGroup):
+class FourBLNoninvasive(SequentialCommandGroup):
     def __init__(
         self, drive: DriveSubsystem, intake: IntakeSubsystem, indexer: IndexerSubsystem
     ):
@@ -35,7 +35,7 @@ class TwoBLHangerbounce(SequentialCommandGroup):
                 "deploy",
                 "pathplanner",
                 "generatedJSON",
-                "2bL-hangerbounce-a.wpilib.json",
+                "4bL-noninvasive-a.wpilib.json",
             )
         )
         pathB = TrajectoryUtil.fromPathweaverJson(
@@ -46,7 +46,18 @@ class TwoBLHangerbounce(SequentialCommandGroup):
                 "deploy",
                 "pathplanner",
                 "generatedJSON",
-                "2bL-hangerbounce-b.wpilib.json",
+                "4bL-noninvasive-b.wpilib.json",
+            )
+        )
+        pathC = TrajectoryUtil.fromPathweaverJson(
+            path.join(
+                path.dirname(path.realpath(__file__)),
+                "..",
+                "..",
+                "deploy",
+                "pathplanner",
+                "generatedJSON",
+                "4bL-noninvasive-c.wpilib.json",
             )
         )
 
@@ -56,8 +67,15 @@ class TwoBLHangerbounce(SequentialCommandGroup):
             FollowTrajectory(drive, pathA),  # pickup ball 2
             RetractIntake(intake),
             WaitCommand(constants.kAutoTimeFromStopToShoot),
+            FeedForward(indexer),  # shoot balls 1 and 2
+            WaitCommand(constants.kAutoTimeFromShootToMove),
+            DeployIntake(intake),
+            HoldBall(indexer),
+            FollowTrajectory(drive, pathB),  # move through hangar to terminal
+            RetractIntake(intake),
+            FollowTrajectory(drive, pathC),  # move into shooting range
+            WaitCommand(constants.kAutoTimeFromStopToShoot),
             FeedForward(indexer),
             WaitCommand(constants.kAutoTimeFromShootToMove),
             HoldBall(indexer),
-            FollowTrajectory(drive, pathB),  # hit red ball out of way
         )

@@ -45,3 +45,8 @@ class FollowTrajectory(Swerve4ControllerCommand):
             self.drive.applyStates,
             [self.drive],
         )
+
+    def end(self, _interrupted: bool) -> None:
+        self.drive.arcadeDriveWithFactors(
+            0, 0, 0, DriveSubsystem.CoordinateMode.RobotRelative
+        )

@@ -3,6 +3,7 @@ from os import path
 from commands2 import SequentialCommandGroup, WaitCommand
 from wpimath.trajectory import TrajectoryConfig, TrajectoryUtil
 
+
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
@@ -13,11 +14,13 @@ from commands.followtrajectory import FollowTrajectory
 from commands.indexer.feedforward import FeedForward
 from commands.indexer.holdball import HoldBall
 from commands.resetgyro import ResetGyro
+from commands.normalballpath import NormalBallPath
+from commands.reverseballpath import ReverseBallPath
 
 import constants
 
 
-class FourBLNoninvasive(SequentialCommandGroup):
+class TwoBLHangerOuttake(SequentialCommandGroup):
     def __init__(
         self, drive: DriveSubsystem, intake: IntakeSubsystem, indexer: IndexerSubsystem
     ):
@@ -35,7 +38,7 @@ class FourBLNoninvasive(SequentialCommandGroup):
                 "deploy",
                 "pathplanner",
                 "generatedJSON",
-                "4bL-noninvasive-a.wpilib.json",
+                "2bL-hangerouttake-a.wpilib.json",
             )
         )
         pathB = TrajectoryUtil.fromPathweaverJson(
@@ -46,35 +49,25 @@ class FourBLNoninvasive(SequentialCommandGroup):
                 "deploy",
                 "pathplanner",
                 "generatedJSON",
-                "4bL-noninvasive-b.wpilib.json",
-            )
-        )
-        pathC = TrajectoryUtil.fromPathweaverJson(
-            path.join(
-                path.dirname(path.realpath(__file__)),
-                "..",
-                "..",
-                "deploy",
-                "pathplanner",
-                "generatedJSON",
-                "4bL-noninvasive-c.wpilib.json",
+                "2bL-hangerouttake-b.wpilib.json",
             )
         )
 
         super().__init__(
             ResetGyro(drive, pathA.sample(0).pose),
             DeployIntake(intake),
-            FollowTrajectory(drive, pathA),
+            FollowTrajectory(drive, pathA),  # pickup ball 2
+            WaitCommand(constants.kAutoTimeFromStopToShoot),
             RetractIntake(intake),
             FeedForward(indexer),
-            WaitCommand(2),
+            WaitCommand(constants.kAutoTimeFromShootToMove),
+            HoldBall(indexer),
             DeployIntake(intake),
-            HoldBall(indexer),
-            FollowTrajectory(drive, pathB),
+            FollowTrajectory(drive, pathB),  # grab the red ball
+            ReverseBallPath(intake, indexer),
+            WaitCommand(
+                constants.kAutoTimeFromShootToMove
+            ),  # Make sure it gets ejected
+            NormalBallPath(intake, indexer),
             RetractIntake(intake),
-            FollowTrajectory(drive, pathC),
-            FeedForward(indexer),
-            WaitCommand(2),
-            HoldBall(indexer),
-            WaitCommand(2),
         )

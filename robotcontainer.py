@@ -40,10 +40,12 @@ from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
 from commands.shooter.aimshootertotarget import AimShooterToTarget
 from commands.shooter.aimshootermanual import AimShooterManually
+from commands.shooter.tarmacshot import TarmacShot
 
 from commands.auto.fivebrstandard import FiveBRStandard
 from commands.auto.twoblhangerbounce import TwoBLHangerbounce
-from commands.auto.fourblhangerbounce import FourBLNoninvasive
+from commands.auto.fourblnoninvasive import FourBLNoninvasive
+from commands.auto.twoblhangerouttake import TwoBLHangerOuttake
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
@@ -110,6 +112,9 @@ class RobotContainer:
         self.twoBLHangerbounce = TwoBLHangerbounce(
             self.drive, self.intake, self.indexer
         )
+        self.twoBLHangerOuttake = TwoBLHangerOuttake(
+            self.drive, self.intake, self.indexer
+        )
         self.fourBLNoninvasive = FourBLNoninvasive(
             self.drive, self.intake, self.indexer
         )
@@ -121,6 +126,9 @@ class RobotContainer:
         self.chooser.addOption("Complex Auto", self.complexAuto)
         self.chooser.addOption("Target Auto", self.driveToTarget)
         self.chooser.addOption("2 Ball Left Hangerbounce Auto", self.twoBLHangerbounce)
+        self.chooser.addOption(
+            "2 Ball Left Hanger Outtake Auto", self.twoBLHangerOuttake
+        )
         self.chooser.addOption("4 Ball Left Noninvasive Auto", self.fourBLNoninvasive)
         self.chooser.addOption("5 Ball Right Standard Auto", self.fiveBRStandard)
         self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
@@ -142,9 +150,7 @@ class RobotContainer:
 
         self.rightClimber.setDefaultCommand(HoldRightClimberPosition(self.rightClimber))
         self.leftClimber.setDefaultCommand(HoldLeftClimberPosition(self.leftClimber))
-        self.shooter.setDefaultCommand(
-            AimShooterManually(self.shooter, self.operatorInterface.shooterOffset)
-        )
+        self.shooter.setDefaultCommand(AimShooterManually(self.shooter))
 
     def configureButtonBindings(self):
         """
@@ -255,8 +261,14 @@ class RobotContainer:
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
 
-        commands2.button.JoystickButton(*self.operatorInterface.fenderShot).whileHeld(
+        commands2.button.JoystickButton(
+            *self.operatorInterface.automaticShoot
+        ).whileHeld(
             AimShooterToTarget(self.shooter, self.operatorInterface.shooterOffset)
+        )
+
+        commands2.button.JoystickButton(*self.operatorInterface.tarmacShot).whileHeld(
+            TarmacShot(self.shooter)
         )
 
     def getAutonomousCommand(self) -> commands2.Command:

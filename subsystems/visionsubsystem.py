@@ -1,10 +1,8 @@
-import math
 import typing
 
 from commands2 import SubsystemBase
 from networktables import NetworkTables
-from wpilib import SmartDashboard, Timer
-from wpimath.controller import PIDController
+from wpilib import SmartDashboard
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d
 import constants
 from util import convenientmath
@@ -117,76 +115,6 @@ class SimTrackingModule(TrackingModule):
         pass
 
 
-class BallTrackingModule:
-    def __init__(self) -> None:
-        self.targetAngle = None
-        self.targetDistance = None
-        self.limelightCargoNetworkTable = NetworkTables.getTable(
-            constants.kLimelightCargoNetworkTableName
-        )
-
-    def getTargetAngle(self) -> typing.Optional[Rotation2d]:
-        return self.targetAngle
-
-    def getTargetDistance(self) -> typing.Optional[float]:
-        return self.targetDistance
-
-    def update(self) -> None:
-        NetworkTables.initialize()
-
-        if self.limelightCargoNetworkTable.getBoolean(
-            constants.kLimelightTargetValidKey, False
-        ):
-            ballAngleYToCamera = Rotation2d.fromDegrees(
-                self.limelightCargoNetworkTable.getValue(
-                    constants.kLimelightTargetVerticalAngleKey, 0
-                )
-            )
-
-            distanceToCamera = (
-                Rotation2d(
-                    constants.kIntakeCameraTiltAngle.radians()
-                    + ballAngleYToCamera.radians()
-                ).tan()
-                * constants.kIntakeCameraHeightInMeters
-            )
-
-            if not constants.kIsIntakeCameraCentered:
-                ballAngleXToCamera = self.limelightCargoNetworkTable.getValue(
-                    constants.kLimelightTargetHorizontalAngleKey, float("inf")
-                )
-                supplementaryAngleToCamera = Rotation2d.fromDegrees(
-                    180 - ballAngleXToCamera
-                )
-
-                self.targetDistance = math.sqrt(
-                    constants.kIntakeCameraCenterOffsetInMeters**2
-                    + distanceToCamera**2
-                    - 2
-                    * constants.kIntakeCameraCenterOffsetInMeters
-                    * distanceToCamera
-                    * supplementaryAngleToCamera.cos()
-                )
-
-                self.targetAngle = Rotation2d(
-                    math.asin(
-                        (supplementaryAngleToCamera.sin() * distanceToCamera)
-                        / self.targetDistance
-                    )
-                )
-            else:
-                self.targetDistance = distanceToCamera
-                self.targetAngle = Rotation2d.fromDegrees(
-                    self.limelightCargoNetworkTable.getValue(
-                        constants.kLimelightTargetHorizontalAngleKey
-                    )
-                )
-
-        else:
-            self.targetAngle = None
-            self.targetDistance = None
-
-
 class LimelightTrackingModule(TrackingModule):
     """
     Implementation of TrackingModule designed for use with the Limelight smart-camera
@@ -200,12 +128,6 @@ class LimelightTrackingModule(TrackingModule):
         self.targetAngle = None
         self.targetDistance = None
         self.targetFacingAngle = None
-
-        self.servoController = PIDController(
-            constants.kCameraServoPGain,
-            constants.kCameraServoIGain,
-            constants.kCameraServoDGain,
-        )
 
         NetworkTables.initialize()
         self.limelightNetworkTable = NetworkTables.getTable(
@@ -261,10 +183,6 @@ class VisionSubsystem(SubsystemBase):
             constants.kLimelightTrackerModuleName
         )
 
-        self.ballTrackingModule = BallTrackingModule()
-
-        self.printTimer = Timer()
-
     def resetTrackingModule(self):
         self.trackingModule.reset()
 
@@ -273,7 +191,6 @@ class VisionSubsystem(SubsystemBase):
         Called periodically by the command framework. Updates the estimate of the target's pose from the tracking data.
         """
         self.trackingModule.update()
-        self.ballTrackingModule.update()
 
         targetAngle = self.trackingModule.getTargetAngle()
         if targetAngle is None:

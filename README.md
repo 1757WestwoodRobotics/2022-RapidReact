@@ -189,7 +189,7 @@ python -m pip install -U black
 - Run Pylint on your files
 
 ```bash
-pylint $(git ls-files “*.py”)
+pylint $(git ls-files "*.py")
 ```
 
 - With the error "Method could be a function" on an isFinished in a command, add this command above it. If necessary, swap out "no-self-use" with whatever error it gives you at the end.

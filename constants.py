@@ -60,6 +60,9 @@ kMillisecondsPerSecond = 1000 / 1
 kSecondsPerMinute = 60 / 1
 """seconds / minute"""
 
+kRPMPerAngularVelocity = (1 / kRadiansPerRevolution) * kSecondsPerMinute
+"""RPM / (radians / second)"""
+
 # Debug parameters
 kPrintFrequency = 2
 """ 1 / second"""
@@ -221,11 +224,23 @@ kBackRightDriveMotorId = 16
 kBackRightSteerMotorId = 17
 kIntakeMotorId = 18
 kIntakeMotorName = "IntakeMotor"
+kIntakeMotorPIDSlot = 0
+kIntakeMotorPGain = 0.1
+kIntakeMotorIGain = 0
+kIntakeMotorDGain = 0
 kIntakeMotorInverted = False
 kIndexerMotorId = 19
 kIndexerMotorName = "IndexerMotor"
+kIndexerMotorPIDSlot = 0
+kIndexerMotorPGain = 0.1
+kIndexerMotorIGain = 0
+kIndexerMotorDGain = 0
 kStagingMotorId = 20
 kStagingMotorName = "StagingMotor"
+kStagingMotorPIDSlot = 0
+kStagingMotorPGain = 0.1
+kStagingMotorIGain = 0
+kStagingMotorDGain = 0
 
 # Encoders
 kFrontLeftSteerEncoderId = 40
@@ -285,6 +300,15 @@ k100MillisecondsPerSecond = 10 / 1  # there are 10 groups of 100 milliseconds pe
    CTRE reports velocities in units of (quantity / 100 milliseconds)
    This factor is used to convert to (quantity / 1 second)
 """
+
+kTalonVelocityPerRPM = (
+    kTalonEncoderPulsesPerRevolution / kSecondsPerMinute
+) / k100MillisecondsPerSecond
+"""(pulses / 100 milliseconds) / RPM"""
+
+kTalonVelocityPerAngularVelocity = kTalonVelocityPerRPM * kRPMPerAngularVelocity
+"""(pulses / 100 milliseconds) / (radians / second)"""
+
 kConfigurationTimeoutLimit = int(5 * kMillisecondsPerSecond)
 """milliseconds"""
 
@@ -322,16 +346,16 @@ To determine encoder offsets (with robot ON and DISABLED):
   7. Click "Self-Test Snapshot"
   8. Record value from line: "Absolute Position (unsigned):"
 """
-kFrontLeftAbsoluteEncoderOffset = 0.264
+kFrontLeftAbsoluteEncoderOffset = 248.115
 """degrees"""
 
-kFrontRightAbsoluteEncoderOffset = 0.879
+kFrontRightAbsoluteEncoderOffset = 241.611
 """degrees"""
 
-kBackLeftAbsoluteEncoderOffset = 179.736
+kBackLeftAbsoluteEncoderOffset = 12.008
 """degrees"""
 
-kBackRightAbsoluteEncoderOffset = 0.352
+kBackRightAbsoluteEncoderOffset = 288.545
 """degrees"""
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
@@ -381,6 +405,11 @@ kAutoTargetOffset = Translation2d(2, 0)
 """[meters, meters]"""
 
 kAuto5BallFilename = "5ba"
+kAutoTimeFromStopToShoot = 0.5
+"""seconds"""
+kAutoTimeFromShootToMove = 1
+"""seconds"""
+kAutoTerminalWaitTime = 2
 
 # Target relative drive
 kTargetRelativeDriveAnglePGain = 1
@@ -472,9 +501,6 @@ kSimBackLeftDriveMotorPort = 4
 kSimBackLeftSteerMotorPort = 5
 kSimBackRightDriveMotorPort = 6
 kSimBackRightSteerMotorPort = 7
-kSimIntakeMotorPort = 8
-kSimStagingMotorPort = 18
-kSimIndexerMotorPort = 19
 
 
 kSimFrontLeftDriveEncoderPorts = (0, 1)
@@ -512,8 +538,6 @@ kCameraServoDGain = 0.0
 # Climber Constants
 kLeftClimberMotorCanID = 24
 kRightClimberMotorCanID = 25
-kSimRightClimberMotorID = 16
-kSimLeftClimberMotorID = 17
 kLeftClimberBrakePCMID = 0
 kRightClimberBrakePCMID = 1
 kLeftClimberInverted = True
@@ -546,7 +570,10 @@ kRightClimberPivotSolenoidForwardActuationID = 2
 kLeftClimberPivotSolenoidForwardActuationID = 3
 kLeftClimberPivotSolenoidBackwardActuationID = 12
 kRightClimberPivotSolenoidBackwardActuationID = 13
+kClimberMotorPIDSlot = 0
 kClimberMotorPGain = 0.025
+kClimberMotorIGain = 0
+kClimberMotorDGain = 0
 kClimberMiddleRungCapturePosition = 344502
 kClimberMiddleRungHangPosition = 250502
 kClimberHangingPosition = 95102  # Not currently used
@@ -558,37 +585,28 @@ kHoodMotorId = 21
 kTurretMotorId = 22
 kShootingMotorId = 23
 
-kSimTurretMotorPort = 9
-kSimShootingMotorPort = 15
-kSimHoodMotorPort = 16
-
-kSimTurretMinimumLimitSwitchPort = 0
-kSimTurretMaximumLimitSwitchPort = 1
-kSimHoodMinimumSwitchPort = 2
-kSimHoodMaximumSwitchPort = 3
-
-kShootingPIDSlot = 0
-kShootingPGain = 0.7
-kShootingIGain = 0
-kShootingDGain = 0
+kShootingMotorPIDSlot = 0
+kShootingMotorPGain = 0.7
+kShootingMotorIGain = 0
+kShootingMotorDGain = 0
 kShootingMotorInverted = True
 
 kShootingMappingFunction = (
     lambda x: 16.41 * math.pow(math.e, 0.3662 * x) + 532
 )  # derived from testing at multiple points, distance is input variable and exponential curve of best fit
 
-kTurretPIDSlot = 0
-kTurretPGain = 0.06
-kTurretIGain = 0
-kTurretDGain = 0
+kTurretMotorPIDSlot = 0
+kTurretMotorPGain = 0.06
+kTurretMotorIGain = 0
+kTurretMotorDGain = 0
 kTurretMotorInverted = False
 
 kTurretGearRatio = (1 / 5) * (24 / 200)
 
-kHoodPIDSlot = 0
-kHoodPGain = 0.15
-kHoodIGain = 0
-kHoodDGain = 0
+kHoodMotorPIDSlot = 0
+kHoodMotorPGain = 0.15
+kHoodMotorIGain = 0
+kHoodMotorDGain = 0
 kHoodMotorInverted = True
 
 kHoodGearRatio = (1 / 5) * (13 / 360)
@@ -634,9 +652,9 @@ kOffsetAngleRange = Rotation2d.fromDegrees(3)
 kMotorBaseKey = "motors"
 kPredictiveAimGain = 0.1
 
-# Fender Shot
-kFenderHoodAngle = Rotation2d.fromDegrees(0)
-kFenderWheelSpeed = 600
+# Tarmac Shot
+kTarmacHoodAngle = Rotation2d.fromDegrees(8)
+kTarmacWheelSpeed = 550
 """rotations / minute """
 
 # Intake Camera
@@ -663,8 +681,8 @@ kDriveToBallDGain = 0.2
 kAutoBallIntakeName = "autoBallIntake"
 
 kShootBallButtonName = "shootBall"
-kFenderShotButtonName = "fenderShot"
-kManualModeToggleButtonName = "toggleManualModeShooter"
+kTarmacShotButtonName = "shootTarmac"
+kAutomaticShotButtonName = "automaticShooting"
 kTurretAngleOffsetAxisName = "turretOffset"
 kShootingDistanceOffsetAxisName = "distanceOffset"
 
@@ -675,10 +693,3 @@ kIntakeReversedKey = "intake/reversed"
 kIntakeSystemStateKey = "intakeState"
 kIndexerSystemStateKey = "indexerState"
 # Names are stored further up, about line 335
-
-# Intake Sensors
-kForwardSensorIndexer = True
-kForwardSensorStaging = False
-
-kSimIndexerSensorId = 16
-kSimStagingSensorId = 17
