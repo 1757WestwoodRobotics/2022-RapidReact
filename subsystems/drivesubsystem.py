@@ -447,6 +447,7 @@ class DriveSubsystem(SubsystemBase):
         Called periodically when it can be called. Updates the robot's
         odometry with sensor data.
         """
+
         self.odometry.update(
             self.gyro.getRotation2d(),
             self.frontLeftModule.getState(),
@@ -456,9 +457,28 @@ class DriveSubsystem(SubsystemBase):
         )
         robotPose = self.odometry.getPose()
 
+        robotPoseArray = [robotPose.X(), robotPose.Y(), robotPose.rotation().radians()]
+
+        if SmartDashboard.getBoolean(
+            constants.kRobotVisionPoseArrayKeys.validKey, False
+        ):
+            visionPose = Pose2d(
+                *SmartDashboard.getNumberArray(
+                    constants.kRobotVisionPoseArrayKeys.valueKey, robotPoseArray
+                )
+            )
+            weightedPose = Pose2d(
+                visionPose.X() * constants.kRobotVisionPoseWeight
+                + robotPose.X() * (1 - constants.kRobotVisionPoseWeight),
+                visionPose.Y() * constants.kRobotVisionPoseWeight
+                + robotPose.Y() * (1 - constants.kRobotVisionPoseWeight),
+                visionPose.rotation() * constants.kRobotVisionPoseWeight
+                + robotPose.rotation() * (1 - constants.kRobotVisionPoseWeight),
+            )
+            self.odometry.resetPosition(weightedPose, self.gyro.getRotation2d())
+
         SmartDashboard.putNumberArray(
-            constants.kRobotPoseArrayKeys.valueKey,
-            [robotPose.X(), robotPose.Y(), robotPose.rotation().radians()],
+            constants.kRobotPoseArrayKeys.valueKey, robotPoseArray
         )
         SmartDashboard.putBoolean(constants.kRobotPoseArrayKeys.validKey, True)
 

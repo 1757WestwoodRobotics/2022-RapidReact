@@ -128,7 +128,10 @@ class LimelightSim:
         targetAngle = convenientmath.rotationFromTranslation(
             targetInLimelight.translation()
         )
-        targetDistance = limelightPose.translation().distance(targetPose.translation())
+        targetDistance = (
+            limelightPose.translation().distance(targetPose.translation())
+            - constants.kSimTargetUpperHubRadius
+        )  # distance to edge of hub is calculated
         targetVerticalAngle = (
             convenientmath.rotationFromTranslation(
                 Translation2d(
