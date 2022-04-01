@@ -259,8 +259,3 @@ class VisionSubsystem(SubsystemBase):
             SmartDashboard.putBoolean(
                 constants.kRobotVisionPoseArrayKeys.validKey, True
             )
-
-        if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
-            print(
-                f"ta: {self.trackingModule.getTargetAngle().degrees():.0f}* td: {self.trackingModule.getTargetDistance():.1f} tfa: {self.trackingModule.getTargetFacingAngle().degrees():.0f}*"
-            )
