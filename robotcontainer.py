@@ -33,6 +33,7 @@ from commands.resetgyro import ResetGyro
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
+from commands.defensestate import DefenseState
 
 from commands.indexer.holdball import HoldBall
 from commands.intake.autoballintake import AutoBallIntake
@@ -215,6 +216,10 @@ class RobotContainer:
         commands2.button.JoystickButton(*self.operatorInterface.resetGyro).whenPressed(
             ResetGyro(self.drive, Pose2d(0, 0, 0))
         )
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.defenseStateControl
+        ).whileHeld(DefenseState(self.drive))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.driveToTargetControl
