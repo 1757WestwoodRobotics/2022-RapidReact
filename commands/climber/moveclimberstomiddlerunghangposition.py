@@ -15,6 +15,7 @@ class MoveLeftClimberToMiddleRungHangPosition(CommandBase):
         self.climber.leftClimber.deactivateBrake()
 
     def execute(self) -> None:
+        self.climber.leftClimber.retractPiston()
         self.climber.leftClimber.setClimberMidExtension()
 
     def end(self, _interrupted: bool) -> None:
@@ -42,6 +43,7 @@ class MoveRightClimberToMiddleRungHangPosition(CommandBase):
         self.addRequirements(climber)
 
     def initialize(self) -> None:
+        self.climber.rightClimber.retractPiston()
         self.climber.rightClimber.deactivateBrake()
 
     def execute(self) -> None:
