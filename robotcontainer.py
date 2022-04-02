@@ -3,8 +3,10 @@ from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
 
+
 import constants
 
+from commands.resetdrive import ResetDrive
 from commands.complexauto import ComplexAuto
 from commands.indexer.feedforward import FeedForward
 from commands.drivedistance import DriveDistance
@@ -22,15 +24,16 @@ from commands.climber.holdcimbersposition import (
     HoldBothClimbersPosition,
     HoldLeftClimberPosition,
 )
-from commands.climber.holdcimbersposition import HoldRightClimberPosition
-from commands.climber.pistonactuation import (
-    PivotLeftPistonToTilted,
-    PivotRightPistonToTilted,
-    PivotLeftPistonToVertical,
-    PivotRightPistonToVertical,
+from commands.climber.moveclimberstofullhangingposition import (
+    MoveLeftClimberToFullHangingPosition,
+    MoveRightClimberToFullHangingPosition,
 )
+from commands.climber.moveclimberstonextrungcaptureposition import (
+    MoveLeftClimberToNextRungCapturePosition,
+    MoveRightClimberToNextRungCapturePosition,
+)
+from commands.climber.holdcimbersposition import HoldRightClimberPosition
 
-from commands.resetdrive import ResetDrive
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
@@ -257,21 +260,22 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.holdBothClimbersPosition
         ).whenPressed(HoldBothClimbersPosition(self.leftClimber, self.rightClimber))
-        commands2.button.JoystickButton(
-            *self.operatorInterface.tiltLeftClimberPiston
-        ).whenPressed(PivotLeftPistonToTilted(self.leftClimber))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.tiltRightClimberPiston
-        ).whenPressed(PivotRightPistonToTilted(self.rightClimber))
+            *self.operatorInterface.leftClimberToNextRungCapturePosition
+        ).whenPressed(MoveLeftClimberToNextRungCapturePosition(self.leftClimber))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.leftClimberPiston
-        ).whenPressed(PivotLeftPistonToVertical(self.leftClimber))
+            *self.operatorInterface.rightClimberToNextRungCapturePosition
+        ).whenPressed(MoveRightClimberToNextRungCapturePosition(self.rightClimber))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.rightClimberPiston
-        ).whenPressed(PivotRightPistonToVertical(self.rightClimber))
+            *self.operatorInterface.leftClimberToHangingPosition
+        ).whenPressed(MoveLeftClimberToFullHangingPosition(self.leftClimber))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.rightClimberToNextRungCapturePosition
+        ).whenPressed(MoveRightClimberToFullHangingPosition(self.rightClimber))
 
         commands2.button.JoystickButton(
             *self.operatorInterface.autoBallIntakeControl

@@ -564,10 +564,12 @@ kMoveBothClimbersToMiddleRungHangPositionName = (
 kHoldBothClimbersPositionName = "holdBothClimbersPosition"
 kRightClimberMotorName = "climber_right"
 kLeftClimberMotorName = "climber_left"
-kPivotRightClimberToTilted = "pivotRightClimberToTilted"
-kPivotLeftClimberToTilted = "pivotLeftClimberToTilted"
-kPivotRightClimberToVertical = "pivotRightClimberToVertical"
-kPivotLeftClimberToVertical = "pivotLeftClimberToVertical"
+kRightClimberToNextRungCapturePositionButtonName = (
+    "rightClimberToNextRungCapturePosition"
+)
+kLeftClimberToNextRungCapturePositionButtonName = "leftClimberToNextRungCapturePosition"
+kRightClimberToHangingPositionButtonName = "rightClimberToHangingPosition"
+kLeftClimberToHangingPositionButtonName = "leftClimberToHangingPosition"
 kLeftClimberEncoderTicksKey = "Left Encoder"
 kRightClimberEncoderTicksKey = "Right Encoder"
 kRightClimberPivotSolenoidForwardActuationID = 2
