@@ -123,20 +123,20 @@ class OperatorInterface:
             constants.kHoldBothClimbersPositionName
         )
 
-        self.tiltRightClimberPiston = getButtonBindingOfName(
-            constants.kPivotRightClimberToTilted
+        self.rightClimberToNextRungCapturePosition = getButtonBindingOfName(
+            constants.kRightClimberToNextRungCapturePositionButtonName
         )
 
-        self.tiltLeftClimberPiston = getButtonBindingOfName(
-            constants.kPivotLeftClimberToTilted
+        self.leftClimberToNextRungCapturePosition = getButtonBindingOfName(
+            constants.kLeftClimberToNextRungCapturePositionButtonName
         )
 
-        self.rightClimberPiston = getButtonBindingOfName(
-            constants.kPivotRightClimberToVertical
+        self.rightClimberToHangingPosition = getButtonBindingOfName(
+            constants.kRightClimberToHangingPositionButtonName
         )
 
-        self.leftClimberPiston = getButtonBindingOfName(
-            constants.kPivotLeftClimberToVertical
+        self.leftClimberToHangingPosition = getButtonBindingOfName(
+            constants.kLeftClimberToHangingPositionButtonName
         )
         self.deployIntakeControl = getAxisBindingOfName(
             constants.kDeployIntakeButtonName
