@@ -90,28 +90,28 @@
     },
     "right button set, middle top (ThrustmasterT16000M)"
   ],
-  "pivotLeftClimberToTilted": [
+  "leftClimberToNextRungCapturePosition": [
     1,
     {
       "Button": 12
     },
     "left button set, middle top (ThrustmasterT16000M)"
   ],
-  "pivotLeftClimberToVertical": [
+  "leftClimberToHangingPosition": [
     1,
     {
       "Button": 15
     },
     "left button set, middle bottom (ThrustmasterT16000M)"
   ],
-  "pivotRightClimberToTilted": [
+  "rightClimberToNextRungCapturePosition": [
     1,
     {
       "Button": 13
     },
     "left button set, right top (ThrustmasterT16000M)"
   ],
-  "pivotRightClimberToVertical": [
+  "rightClimberToHangingPosition": [
     1,
     {
       "Button": 14
