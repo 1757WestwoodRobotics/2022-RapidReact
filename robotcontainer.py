@@ -29,7 +29,8 @@ from commands.climber.pistonactuation import (
     PivotLeftPistonToVertical,
     PivotRightPistonToVertical,
 )
-from commands.resetgyro import ResetGyro
+
+from commands.resetdrive import ResetDrive
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
@@ -228,7 +229,7 @@ class RobotContainer:
         )
 
         commands2.button.JoystickButton(*self.operatorInterface.resetGyro).whenPressed(
-            ResetGyro(self.drive, Pose2d(0, 0, 0))
+            ResetDrive(self.drive, Pose2d(0, 0, 0))
         )
 
         commands2.button.JoystickButton(
