@@ -93,10 +93,12 @@ class ClimberModule:
         )
 
     def setClimberTiltedExtension(self) -> None:
-        self.climbMotor.setPosition(constants.kClimberTiledExtensionMax)
+        self.climberMotor.set(
+            ControlMode.Position, constants.kClimberTiltedExtensionMax
+        )
 
     def setClimberHangingExtension(self) -> None:
-        self.climbMotor.setPosition(constants.kClimberHangingPosition)
+        self.climberMotor.set(ControlMode.Position, constants.kClimberHangingPosition)
 
     def setClimberMidExtension(self) -> None:
         self.climberMotor.set(

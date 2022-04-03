@@ -19,7 +19,7 @@ class MoveLeftClimberToFullHangingPosition(CommandBase):
         self.climber.leftClimber.setClimberHangingExtension()
 
     def end(self, _interrupted: bool) -> None:
-        self.climber.leftClimber.climbMotor.neutralOutput()
+        self.climber.leftClimber.climberMotor.neutralOutput()
         self.climber.leftClimber.activateBrake()
 
     # pylint: disable-next=no-self-use
@@ -27,7 +27,7 @@ class MoveLeftClimberToFullHangingPosition(CommandBase):
         return (
             abs(
                 (
-                    self.climber.leftClimber.climbMotor.getPosition()
+                    self.climber.leftClimber.climberMotor.getSelectedSensorPosition()
                     - constants.kClimberHangingPosition
                 )
             )
@@ -50,7 +50,7 @@ class MoveRightClimberToFullHangingPosition(CommandBase):
         self.climber.rightClimber.setClimberHangingExtension()
 
     def end(self, _interrupted: bool) -> None:
-        self.climber.rightClimber.climbMotor.neutralOutput()
+        self.climber.rightClimber.climberMotor.neutralOutput()
         self.climber.rightClimber.activateBrake()
 
     # pylint: disable-next=no-self-use
@@ -58,7 +58,7 @@ class MoveRightClimberToFullHangingPosition(CommandBase):
         return (
             abs(
                 (
-                    self.climber.rightClimber.climbMotor.getPosition()
+                    self.climber.rightClimber.climberMotor.getSelectedSensorPosition()
                     - constants.kClimberHangingPosition
                 )
             )
