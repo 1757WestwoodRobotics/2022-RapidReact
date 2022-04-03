@@ -670,11 +670,11 @@ kIntakeGearRatio = 36 / 24
 kIndexerGearRatio = 5 / 1
 kStagingGearRatio = 5 / 1
 
-kIntakeSpeed = 500
+kIntakeSpeed = 3000
 """rpm"""
-kStagingSpeed = 800
+kStagingSpeed = 1200
 """rpm"""
-kIndexerSpeed = 800
+kIndexerSpeed = 1200
 """rpm"""
 
 kIntakeSolenoidChannelId = 4
