@@ -124,21 +124,29 @@ class IndexerSubsystem(SubsystemBase):
         if self.state == self.Mode.FeedForward:
             self.indexerMotor.set(
                 ControlMode.Velocity,
-                constants.kIndexerSpeed * constants.kTalonVelocityPerRPM,
+                constants.kIndexerSpeed
+                * constants.kIndexerGearRatio
+                * constants.kTalonVelocityPerRPM,
             )
             self.stagingMotor.set(
                 ControlMode.Velocity,
-                constants.kStagingSpeed * constants.kTalonVelocityPerRPM,
+                constants.kStagingSpeed
+                * constants.kStagingGearRatio
+                * constants.kTalonVelocityPerRPM,
             )
         elif self.state == self.Mode.Holding:
             if not (self.indexerSensor() == 0 and self.stagingSensor() == 0):
                 self.indexerMotor.set(
                     ControlMode.Velocity,
-                    constants.kIndexerSpeed * constants.kTalonVelocityPerRPM,
+                    constants.kIndexerSpeed
+                    * constants.kIndexerGearRatio
+                    * constants.kTalonVelocityPerRPM,
                 )
                 self.stagingMotor.set(
                     ControlMode.Velocity,
-                    -constants.kStagingSpeed * constants.kTalonVelocityPerRPM,
+                    -constants.kStagingSpeed
+                    * constants.kStagingGearRatio
+                    * constants.kTalonVelocityPerRPM,
                 )
             else:
                 self.indexerMotor.set(ControlMode.Velocity, 0)
@@ -146,11 +154,15 @@ class IndexerSubsystem(SubsystemBase):
         elif self.state == self.Mode.Reversed:
             self.indexerMotor.set(
                 ControlMode.Velocity,
-                -constants.kIndexerSpeed * constants.kTalonVelocityPerRPM,
+                -constants.kIndexerSpeed
+                * constants.kIndexerGearRatio
+                * constants.kTalonVelocityPerRPM,
             )
             self.stagingMotor.set(
                 ControlMode.Velocity,
-                -constants.kStagingSpeed * constants.kTalonVelocityPerRPM,
+                -constants.kStagingSpeed
+                * constants.kStagingGearRatio
+                * constants.kTalonVelocityPerRPM,
             )
         elif self.state == self.Mode.Off:
             self.indexerMotor.neutralOutput()

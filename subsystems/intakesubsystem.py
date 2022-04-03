@@ -71,13 +71,17 @@ class IntakeSubsystem(SubsystemBase):
             self.intakeSolenoid.set(True)
             self.intakeMotor.set(
                 ControlMode.Velocity,
-                constants.kIntakeSpeed * constants.kTalonVelocityPerRPM,
+                constants.kIntakeSpeed
+                * constants.kIntakeGearRatio
+                * constants.kTalonVelocityPerRPM,
             )
         elif self.state == self.Mode.Reversed:
             self.intakeSolenoid.set(True)
             self.intakeMotor.set(
                 ControlMode.Velocity,
-                -constants.kIntakeSpeed * constants.kTalonVelocityPerRPM,
+                -constants.kIntakeSpeed
+                * constants.kIntakeGearRatio
+                * constants.kTalonVelocityPerRPM,
             )
         elif self.state == self.Mode.Retracted:
             self.intakeSolenoid.set(False)
