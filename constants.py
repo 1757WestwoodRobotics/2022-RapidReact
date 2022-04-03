@@ -596,7 +596,7 @@ kShootingMotorDGain = 0
 kShootingMotorInverted = True
 
 kShootingMappingFunction = (
-    lambda x: 16.41 * math.pow(math.e, 0.3662 * x) + 532
+    lambda x: 3663 - 449 * x + 168 * x * x
 )  # derived from testing at multiple points, distance is input variable and exponential curve of best fit
 
 kTurretMotorPIDSlot = 0
@@ -616,7 +616,7 @@ kHoodMotorInverted = True
 kHoodGearRatio = (1 / 5) * (13 / 360)
 
 kHoodMappingFunction = (
-    lambda x: 11.04 * math.pow(math.e, 0.1004 * x) + -11.06
+    lambda x: 8.65 - 1.04 * x + 0.268 * x * x
 )  # see above for derivation method
 
 kTurretMotorName = "shooting_turret"
