@@ -7,12 +7,12 @@ from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
 
+from commands.resetdrive import ResetDrive
 from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
 from commands.indexer.feedforward import FeedForward
 from commands.indexer.holdball import HoldBall
 from commands.followtrajectory import FollowTrajectory
-from commands.resetgyro import ResetGyro
 
 import constants
 
@@ -73,7 +73,7 @@ class FiveBRStandard(SequentialCommandGroup):
         )
 
         super().__init__(
-            ResetGyro(drive, pathA.sample(0).pose),
+            ResetDrive(drive, pathA.sample(0).pose),
             DeployIntake(intake),
             FollowTrajectory(drive, pathA),  # pickup ball 2
             RetractIntake(intake),

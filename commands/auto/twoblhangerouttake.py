@@ -13,9 +13,9 @@ from commands.intake.retractintake import RetractIntake
 from commands.followtrajectory import FollowTrajectory
 from commands.indexer.feedforward import FeedForward
 from commands.indexer.holdball import HoldBall
-from commands.resetgyro import ResetGyro
 from commands.normalballpath import NormalBallPath
 from commands.reverseballpath import ReverseBallPath
+from commands.resetdrive import ResetDrive
 
 import constants
 
@@ -54,7 +54,7 @@ class TwoBLHangerOuttake(SequentialCommandGroup):
         )
 
         super().__init__(
-            ResetGyro(drive, pathA.sample(0).pose),
+            ResetDrive(drive, pathA.sample(0).pose),
             DeployIntake(intake),
             FollowTrajectory(drive, pathA),  # pickup ball 2
             WaitCommand(constants.kAutoTimeFromStopToShoot),
