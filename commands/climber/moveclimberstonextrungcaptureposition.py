@@ -19,7 +19,7 @@ class MoveLeftClimberToNextRungCapturePosition(CommandBase):
         self.climber.leftClimber.setClimberTiltedExtension()
 
     def end(self, _interrupted: bool) -> None:
-        self.climber.leftClimber.climbMotor.neutralOutput()
+        self.climber.leftClimber.climberMotor.neutralOutput()
         self.climber.leftClimber.activateBrake()
 
     # pylint: disable-next=no-self-use
@@ -27,8 +27,8 @@ class MoveLeftClimberToNextRungCapturePosition(CommandBase):
         return (
             abs(
                 (
-                    self.climber.leftClimber.climbMotor.getPosition()
-                    - constants.kClimberTiledExtensionMax
+                    self.climber.leftClimber.climberMotor.getSelectedSensorPosition()
+                    - constants.kClimberTiltedExtensionMax
                 )
             )
             < constants.kClimberExtensionPositionThreshold
@@ -50,7 +50,7 @@ class MoveRightClimberToNextRungCapturePosition(CommandBase):
         self.climber.rightClimber.setClimberTiltedExtension()
 
     def end(self, _interrupted: bool) -> None:
-        self.climber.rightClimber.climbMotor.neutralOutput()
+        self.climber.rightClimber.climberMotor.neutralOutput()
         self.climber.rightClimber.activateBrake()
 
     # pylint: disable-next=no-self-use
@@ -58,8 +58,8 @@ class MoveRightClimberToNextRungCapturePosition(CommandBase):
         return (
             abs(
                 (
-                    self.climber.rightClimber.climbMotor.getPosition()
-                    - constants.kClimberTiledExtensionMax
+                    self.climber.rightClimber.climberMotor.getSelectedSensorPosition()
+                    - constants.kClimberTiltedExtensionMax
                 )
             )
             < constants.kClimberExtensionPositionThreshold
