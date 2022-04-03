@@ -70,7 +70,7 @@ class ClimberModule:
         ):
             return
         self.climberMotor.configReverseSoftLimitThreshold(
-            constants.kClimberMiddleRungHangPosition
+            constants.kClimberHangingPosition
         )
         self.climberMotor.configReverseSoftLimitEnable(True)
         self.extendPiston()

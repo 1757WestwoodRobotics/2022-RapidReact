@@ -274,7 +274,7 @@ class RobotContainer:
         ).whenPressed(MoveLeftClimberToFullHangingPosition(self.leftClimber))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.rightClimberToNextRungCapturePosition
+            *self.operatorInterface.rightClimberToHangingPosition
         ).whenPressed(MoveRightClimberToFullHangingPosition(self.rightClimber))
 
         commands2.button.JoystickButton(

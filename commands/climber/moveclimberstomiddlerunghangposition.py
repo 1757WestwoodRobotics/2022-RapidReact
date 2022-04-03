@@ -28,7 +28,7 @@ class MoveLeftClimberToMiddleRungHangPosition(CommandBase):
             abs(
                 (
                     self.climber.leftClimber.climberMotor.getSelectedSensorPosition()
-                    - constants.kClimberMiddleRungHangPosition
+                    - constants.kClimberHangingPosition
                 )
             )
             < constants.kClimberRetractionPositionThreshold
@@ -43,10 +43,10 @@ class MoveRightClimberToMiddleRungHangPosition(CommandBase):
         self.addRequirements(climber)
 
     def initialize(self) -> None:
-        self.climber.rightClimber.retractPiston()
         self.climber.rightClimber.deactivateBrake()
 
     def execute(self) -> None:
+        self.climber.rightClimber.retractPiston()
         self.climber.rightClimber.setClimberHangingExtension()
 
     def end(self, _interrupted: bool) -> None:
@@ -59,7 +59,7 @@ class MoveRightClimberToMiddleRungHangPosition(CommandBase):
             abs(
                 (
                     self.climber.rightClimber.climberMotor.getSelectedSensorPosition()
-                    - constants.kClimberMiddleRungHangPosition
+                    - constants.kClimberHangingPosition
                 )
             )
             < constants.kClimberRetractionPositionThreshold
