@@ -17,8 +17,13 @@ class AimShooterToTarget(CommandBase):
         self.addRequirements([self.shooter])
 
     def execute(self) -> None:
-        self.shooter.setHoodAngle(Rotation2d.fromDegrees(8))
-        self.shooter.setWheelSpeed(550)
+        distance = SmartDashboard.getNumber(
+            constants.kTargetDistanceRelativeToRobotKeys.valueKey, 0
+        )
+        hoodAngle = constants.kHoodMappingFunction(distance)
+        wheelSpeed = constants.kShootingMappingFunction(distance)
+        self.shooter.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
+        self.shooter.setWheelSpeed(wheelSpeed)
 
         if SmartDashboard.getBoolean(
             constants.kTargetAngleRelativeToRobotKeys.validKey, False
