@@ -666,6 +666,9 @@ kIntakeCameraTiltAngle = Rotation2d.fromDegrees(90 - 25)
 kIntakeCameraHeightInMeters = 0.5
 kIntakeCameraCenterOffsetInMeters = 0.2
 kIsIntakeCameraCentered = False
+kIntakeGearRatio = 36 / 24
+kIndexerGearRatio = 5 / 1
+kStagingGearRatio = 5 / 1
 
 kIntakeSpeed = 500
 """rpm"""
