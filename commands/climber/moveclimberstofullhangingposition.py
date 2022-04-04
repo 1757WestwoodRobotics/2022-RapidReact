@@ -1,5 +1,4 @@
-from commands1 import WaitCommand
-from commands2 import CommandBase, SequentialCommandGroup
+from commands2 import CommandBase, SequentialCommandGroup, WaitCommand
 from subsystems.climbers.leftclimbersubsystem import LeftClimber
 from subsystems.climbers.rightclimbersubsystem import RightClimber
 import constants
