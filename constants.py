@@ -580,6 +580,7 @@ kClimberMotorPIDSlot = 0
 kClimberMotorPGain = 0.025
 kClimberMotorIGain = 0
 kClimberMotorDGain = 0
+kClimberRetractionWaitTime = 2
 kClimberMiddleRungCapturePosition = 344502
 kClimberMiddleRungHangPosition = 250502
 kClimberTiltedExtensionMax = 208623
