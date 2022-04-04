@@ -64,7 +64,7 @@ class RightClimberPivotVertical(CommandBase):
         return True
 
 
-class MoveRightClimberToFullHangingPosition(CommandBase):
+class RetractRightClimberToFullHangingPosition(CommandBase):
     def __init__(self, climber: RightClimber) -> None:
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
@@ -98,7 +98,17 @@ class MoveLeftClimberToFullHangingPosition(SequentialCommandGroup):
     def __init__(self, climber: LeftClimber):
         super().__init__(
             LeftClimberPivotVertical(climber),
-            WaitCommand(2),
+            WaitCommand(constants.kClimberRetractionWaitTime),
             RetractLeftClimberToFullHangingPosition(climber),
+        )
+        self.setName(__class__.__name__)
+
+
+class MoveRightClimberToFullHangingPosition(SequentialCommandGroup):
+    def __init__(self, climber: RightClimber):
+        super().__init__(
+            RightClimberPivotVertical(climber),
+            WaitCommand(constants.kClimberRetractionWaitTime),
+            RetractRightClimberToFullHangingPosition(climber),
         )
         self.setName(__class__.__name__)
