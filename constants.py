@@ -630,6 +630,7 @@ kShootingManualModeKey = "shooting/manualMode"
 kShootingFlywheelOnTargetKey = "shooting/wheelOnTarget"
 kShootingHoodOnTargetKey = "shooting/hoodOnTarget"
 kShootingTurretOnTargetKey = "shooting/turretOnTarget"
+kReadyToFireKey = "readyToFire"
 
 kHoodStartingAngle = 0
 
@@ -646,7 +647,7 @@ kHoodSoftLimitBuffer = Rotation2d.fromDegrees(0.5)
 
 kTurretAngleTolerence = Rotation2d.fromDegrees(2)
 kHoodAngleTolerence = Rotation2d.fromDegrees(1)
-kWheelSpeedTolerence = 20
+kWheelSpeedTolerence = 100
 
 kOffsetDistanceRange = 1
 """meters"""
