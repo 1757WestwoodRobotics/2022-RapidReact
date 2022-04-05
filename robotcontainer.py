@@ -45,7 +45,6 @@ from commands.shooter.aimshootermanual import AimShooterManually
 from commands.shooter.tarmacshot import TarmacShot
 
 from commands.auto.fivebrstandard import FiveBRStandard
-from commands.auto.twoblhangerbounce import TwoBLHangerbounce
 from commands.auto.fourblnoninvasive import FourBLNoninvasive
 from commands.auto.twoblhangerouttake import TwoBLHangerOuttake
 
@@ -111,9 +110,6 @@ class RobotContainer:
 
         # A routine that follows a set trajectory
         self.fiveBRStandard = FiveBRStandard(self.drive, self.intake, self.indexer)
-        self.twoBLHangerbounce = TwoBLHangerbounce(
-            self.drive, self.intake, self.indexer
-        )
         self.twoBLHangerOuttake = TwoBLHangerOuttake(
             self.drive, self.intake, self.indexer
         )
@@ -127,7 +123,6 @@ class RobotContainer:
         # Add commands to the autonomous command chooser
         self.chooser.addOption("Complex Auto", self.complexAuto)
         self.chooser.addOption("Target Auto", self.driveToTarget)
-        self.chooser.addOption("2 Ball Left Hangerbounce Auto", self.twoBLHangerbounce)
         self.chooser.addOption(
             "2 Ball Left Hanger Outtake Auto", self.twoBLHangerOuttake
         )
