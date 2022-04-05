@@ -53,6 +53,18 @@ class TwoBLHangerOuttake(SequentialCommandGroup):
             )
         )
 
+        pathC = TrajectoryUtil.fromPathweaverJson(
+            path.join(
+                path.dirname(path.realpath(__file__)),
+                "..",
+                "..",
+                "deploy",
+                "pathplanner",
+                "generatedJSON",
+                "2bL-hangerouttake-c.wpilib.json",
+            )
+        )
+
         super().__init__(
             ResetDrive(drive, pathA.sample(0).pose),
             DeployIntake(intake),
@@ -64,6 +76,7 @@ class TwoBLHangerOuttake(SequentialCommandGroup):
             HoldBall(indexer),
             DeployIntake(intake),
             FollowTrajectory(drive, pathB),  # grab the red ball
+            FollowTrajectory(drive, pathC),
             ReverseBallPath(intake, indexer),
             WaitCommand(
                 constants.kAutoTimeFromShootToMove
