@@ -2,6 +2,7 @@ import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
+from commands.auto.threebrstandard import ThreeBRStandard
 
 import constants
 
@@ -118,6 +119,9 @@ class RobotContainer:
         self.fourBLNoninvasive = FourBLNoninvasive(
             self.shooter, self.drive, self.intake, self.indexer
         )
+        self.threeBRStandard = ThreeBRStandard(
+            self.shooter, self.drive, self.intake, self.indexer
+        )
 
         # Chooser
         self.chooser = wpilib.SendableChooser()
@@ -130,6 +134,7 @@ class RobotContainer:
         )
         self.chooser.addOption("4 Ball Left Noninvasive Auto", self.fourBLNoninvasive)
         self.chooser.addOption("5 Ball Right Standard Auto", self.fiveBRStandard)
+        self.chooser.addOption("3 Ball Right Standard Auto", self.threeBRStandard)
         self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
 
         # Put the chooser on the dashboard
