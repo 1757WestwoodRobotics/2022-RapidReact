@@ -80,7 +80,7 @@ class FiveBRMovements(SequentialCommandGroup):
         )
 
         super().__init__(
-            ResetDrive(drive, pathA.sample(0).pose),
+            ResetDrive(drive, pathA.initialPose()),
             DeployIntake(intake),
             FollowTrajectory(drive, pathA),  # pickup ball 2
             RetractIntake(intake),
