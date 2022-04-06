@@ -2,7 +2,6 @@ import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
-from commands.auto.threebrstandard import ThreeBRStandard
 
 import constants
 
@@ -48,6 +47,7 @@ from commands.shooter.tarmacshot import TarmacShot
 from commands.auto.fivebrstandard import FiveBRStandard
 from commands.auto.fourblnoninvasive import FourBLNoninvasive
 from commands.auto.twoblhangerouttake import TwoBLHangerOuttake
+from commands.auto.threebrstandard import ThreeBRStandard
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
