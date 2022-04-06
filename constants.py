@@ -580,7 +580,8 @@ kClimberMotorPIDSlot = 0
 kClimberMotorPGain = 0.025
 kClimberMotorIGain = 0
 kClimberMotorDGain = 0
-kClimberRetractionWaitTime = 2
+kClimberRetractionWaitTime = 2  # seconds
+# Next are all in Falcon encoder ticks
 kClimberMiddleRungCapturePosition = 344502
 kClimberMiddleRungHangPosition = 250502
 kClimberTiltedExtensionMax = 208623
