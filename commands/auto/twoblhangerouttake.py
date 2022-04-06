@@ -1,7 +1,8 @@
 from os import path
 
-from commands2 import SequentialCommandGroup, WaitCommand
+from commands2 import SequentialCommandGroup, WaitCommand, ParallelCommandGroup
 from wpimath.trajectory import TrajectoryConfig, TrajectoryUtil
+from commands.shooter.aimshootertotarget import AimShooterToTarget
 
 
 from subsystems.drivesubsystem import DriveSubsystem
@@ -18,9 +19,10 @@ from commands.reverseballpath import ReverseBallPath
 from commands.resetdrive import ResetDrive
 
 import constants
+from subsystems.shootersubsystem import ShooterSubsystem
 
 
-class TwoBLHangerOuttake(SequentialCommandGroup):
+class TwoBLHangerOuttakeMovements(SequentialCommandGroup):
     def __init__(
         self, drive: DriveSubsystem, intake: IntakeSubsystem, indexer: IndexerSubsystem
     ):
@@ -83,4 +85,19 @@ class TwoBLHangerOuttake(SequentialCommandGroup):
             ),  # Make sure it gets ejected
             NormalBallPath(intake, indexer),
             RetractIntake(intake),
+        )
+
+
+class TwoBLHangerOuttake(ParallelCommandGroup):
+    def __init__(
+        self,
+        shooter: ShooterSubsystem,
+        drive: DriveSubsystem,
+        intake: IntakeSubsystem,
+        indexer: IndexerSubsystem,
+    ):
+        self.setName(__class__.__name__)
+        super().__init__(
+            AimShooterToTarget(shooter),
+            TwoBLHangerOuttakeMovements(drive, intake, indexer),
         )

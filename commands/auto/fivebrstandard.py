@@ -1,7 +1,8 @@
 from os import path
 
-from commands2 import SequentialCommandGroup, WaitCommand
+from commands2 import ParallelCommandGroup, SequentialCommandGroup, WaitCommand
 from wpimath.trajectory import TrajectoryConfig, TrajectoryUtil
+from commands.shooter.aimshootertotarget import AimShooterToTarget
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.intakesubsystem import IntakeSubsystem
@@ -15,15 +16,20 @@ from commands.indexer.holdball import HoldBall
 from commands.followtrajectory import FollowTrajectory
 
 import constants
+from subsystems.shootersubsystem import ShooterSubsystem
 
 
-class FiveBRStandard(SequentialCommandGroup):
+class FiveBRMovements(SequentialCommandGroup):
     def __init__(
-        self, drive: DriveSubsystem, intake: IntakeSubsystem, indexer: IndexerSubsystem
+        self,
+        drive: DriveSubsystem,
+        intake: IntakeSubsystem,
+        indexer: IndexerSubsystem,
     ):
 
         trajectoryConfig = TrajectoryConfig(
-            constants.kMaxForwardLinearVelocity, constants.kMaxForwardLinearAcceleration
+            constants.kMaxForwardLinearVelocity,
+            constants.kMaxForwardLinearAcceleration,
         )
         trajectoryConfig.setKinematics(drive.kinematics)
 
@@ -97,4 +103,18 @@ class FiveBRStandard(SequentialCommandGroup):
             RetractIntake(intake),
             WaitCommand(constants.kAutoTimeFromStopToShoot),
             FeedForward(indexer),  # shoot balls 4 and 5
+        )
+
+
+class FiveBRStandard(ParallelCommandGroup):
+    def __init__(
+        self,
+        shooter: ShooterSubsystem,
+        drive: DriveSubsystem,
+        intake: IntakeSubsystem,
+        indexer: IndexerSubsystem,
+    ):
+        self.setName(__class__.__name__)
+        super().__init__(
+            AimShooterToTarget(shooter), FiveBRMovements(drive, intake, indexer)
         )

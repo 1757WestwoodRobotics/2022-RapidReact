@@ -109,12 +109,14 @@ class RobotContainer:
         self.driveToTarget = DriveToTarget(self.drive, constants.kAutoTargetOffset)
 
         # A routine that follows a set trajectory
-        self.fiveBRStandard = FiveBRStandard(self.drive, self.intake, self.indexer)
+        self.fiveBRStandard = FiveBRStandard(
+            self.shooter, self.drive, self.intake, self.indexer
+        )
         self.twoBLHangerOuttake = TwoBLHangerOuttake(
-            self.drive, self.intake, self.indexer
+            self.shooter, self.drive, self.intake, self.indexer
         )
         self.fourBLNoninvasive = FourBLNoninvasive(
-            self.drive, self.intake, self.indexer
+            self.shooter, self.drive, self.intake, self.indexer
         )
 
         # Chooser
