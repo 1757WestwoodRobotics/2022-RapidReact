@@ -459,11 +459,10 @@ class DriveSubsystem(SubsystemBase):
 
         robotPoseArray = [robotPose.X(), robotPose.Y(), robotPose.rotation().radians()]
 
-        if (
+        if not RobotState.isAutonomous() and (
             SmartDashboard.getBoolean(
                 constants.kRobotVisionPoseArrayKeys.validKey, False
             )
-            and not RobotState.isAutonomous()
         ):
             visionPose = Pose2d(
                 *SmartDashboard.getNumberArray(
