@@ -1,7 +1,8 @@
 from os import path
 
-from commands2 import SequentialCommandGroup, WaitCommand
+from commands2 import ParallelCommandGroup, SequentialCommandGroup, WaitCommand
 from wpimath.trajectory import TrajectoryConfig, TrajectoryUtil
+from commands.shooter.aimshootertotarget import AimShooterToTarget
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.intakesubsystem import IntakeSubsystem
@@ -15,9 +16,10 @@ from commands.indexer.holdball import HoldBall
 from commands.resetdrive import ResetDrive
 
 import constants
+from subsystems.shootersubsystem import ShooterSubsystem
 
 
-class FourBLNoninvasive(SequentialCommandGroup):
+class FourBLNoninvasiveMovements(SequentialCommandGroup):
     def __init__(
         self, drive: DriveSubsystem, intake: IntakeSubsystem, indexer: IndexerSubsystem
     ):
@@ -78,4 +80,19 @@ class FourBLNoninvasive(SequentialCommandGroup):
             FeedForward(indexer),
             WaitCommand(constants.kAutoTimeFromShootToMove),
             HoldBall(indexer),
+        )
+
+
+class FourBLNoninvasive(ParallelCommandGroup):
+    def __init__(
+        self,
+        shooter: ShooterSubsystem,
+        drive: DriveSubsystem,
+        intake: IntakeSubsystem,
+        indexer: IndexerSubsystem,
+    ):
+        self.setName(__class__.__name__)
+        super().__init__(
+            AimShooterToTarget(shooter),
+            FourBLNoninvasiveMovements(drive, intake, indexer),
         )
