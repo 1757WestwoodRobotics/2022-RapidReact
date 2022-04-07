@@ -582,16 +582,22 @@ kClimberMotorIGain = 0
 kClimberMotorDGain = 0
 kClimberRetractionWaitTime = 2
 """seconds"""
+
 kClimberMiddleRungCapturePosition = 344502
 """encoder ticks"""
+
 kClimberMiddleRungHangPosition = 250502
 """encoder ticks"""
+
 kClimberTiltedExtensionMax = 208623
 """encoder ticks"""
+
 kClimberHangingPosition = 95102
 """encoder ticks"""
+
 kClimberRetractionPositionThreshold = 3500
 """encoder ticks"""
+
 kClimberExtensionPositionThreshold = 2000
 """encoder ticks"""
 
