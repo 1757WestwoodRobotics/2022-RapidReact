@@ -46,6 +46,7 @@ from commands.intake.retractintake import RetractIntake
 from commands.shooter.aimshootertotarget import AimShooterToTarget
 from commands.shooter.aimshootermanual import AimShooterManually
 from commands.shooter.tarmacshot import TarmacShot
+from commands.shooter.stopaimsystem import StopMovingParts
 
 from commands.auto.fivebrstandard import FiveBRStandard
 from commands.auto.fourblnoninvasive import FourBLNoninvasive
@@ -286,6 +287,10 @@ class RobotContainer:
         commands2.button.JoystickButton(*self.operatorInterface.shootBall).whenHeld(
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
+
+        commands2.button.JoystickButton(
+            *self.operatorInterface.stopMovingParts
+        ).toggleWhenPressed(StopMovingParts(self.indexer, self.shooter))
 
         SmartDashboardButton(constants.kShootingManualModeKey).whileHeld(
             AimShooterManually(self.shooter)

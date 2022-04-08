@@ -9,7 +9,7 @@ class LeftClimberPivotVertical(CommandBase):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
         self.climber = climber
-        self.addRequirements(climber)
+        self.addRequirements([self.climber])
 
     def initialize(self) -> None:
         self.climber.leftClimber.retractPiston()
@@ -24,7 +24,7 @@ class RetractLeftClimberToFullHangingPosition(CommandBase):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
         self.climber = climber
-        self.addRequirements(climber)
+        self.addRequirements([self.climber])
 
     def initialize(self) -> None:
         self.climber.leftClimber.deactivateBrake()
@@ -54,7 +54,7 @@ class RightClimberPivotVertical(CommandBase):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
         self.climber = climber
-        self.addRequirements(climber)
+        self.addRequirements([self.climber])
 
     def initialize(self) -> None:
         self.climber.rightClimber.retractPiston()
@@ -69,7 +69,7 @@ class RetractRightClimberToFullHangingPosition(CommandBase):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
         self.climber = climber
-        self.addRequirements(climber)
+        self.addRequirements([self.climber])
 
     def initialize(self) -> None:
         self.climber.rightClimber.deactivateBrake()

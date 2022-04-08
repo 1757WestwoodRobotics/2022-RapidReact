@@ -23,7 +23,7 @@ class DriveDistance(CommandBase):
         self.speedFactor = math.copysign(speedFactor, distance * speedFactor)
         self.axis = axis
         self.drive = drive
-        self.addRequirements(drive)
+        self.addRequirements([self.drive])
         self.targetPose = None
         self.distanceToTarget = None
 

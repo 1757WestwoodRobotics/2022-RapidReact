@@ -8,7 +8,7 @@ class HoldLeftClimberPosition(CommandBase):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
         self.climber = climber
-        self.addRequirements(climber)
+        self.addRequirements([self.climber])
 
     def initialize(self) -> None:
         self.climber.leftClimber.climberMotor.neutralOutput()
@@ -20,7 +20,7 @@ class HoldRightClimberPosition(CommandBase):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
         self.climber = climber
-        self.addRequirements(climber)
+        self.addRequirements([self.climber])
 
     def initialize(self) -> None:
         self.climber.rightClimber.climberMotor.neutralOutput()
