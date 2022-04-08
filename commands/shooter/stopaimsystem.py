@@ -23,3 +23,7 @@ class StopMovingParts(ParallelCommandGroup):
     def __init__(self, indexer: IndexerSubsystem, shooter: ShooterSubsystem):
         super().__init__(StopIndexer(indexer), StopAimSystem(shooter))
         self.setName(__class__.__name__)
+
+    # pylint: disable-next=no-self-use
+    def isFinished(self) -> bool:
+        return False

@@ -583,6 +583,9 @@ kClimberMotorDGain = 0
 kClimberRetractionWaitTime = 2
 """seconds"""
 
+kClimberPauseBeforeMovement = 2
+"""seconds"""
+
 kClimberMiddleRungCapturePosition = 344502
 """encoder ticks"""
 

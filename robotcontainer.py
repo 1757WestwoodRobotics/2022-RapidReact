@@ -252,6 +252,8 @@ class RobotContainer:
             MoveBothClimbersToMiddleRungCapturePosition(
                 self.leftClimber, self.rightClimber
             )
+        ).whenPressed(
+            StopMovingParts(self.indexer, self.shooter)
         )
         commands2.button.JoystickButton(
             *self.operatorInterface.moveBothClimbersToMiddleRungHangPosition
@@ -287,10 +289,6 @@ class RobotContainer:
         commands2.button.JoystickButton(*self.operatorInterface.shootBall).whenHeld(
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.stopMovingParts
-        ).toggleWhenPressed(StopMovingParts(self.indexer, self.shooter))
 
         SmartDashboardButton(constants.kShootingManualModeKey).whileHeld(
             AimShooterManually(self.shooter)
