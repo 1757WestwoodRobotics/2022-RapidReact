@@ -12,6 +12,7 @@ import constants
 class ShooterSubsystem(SubsystemBase):
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
+        self.setName(__class__.__name__)
         # actuators
         # TURRET
         self.turretMotor = createMotor(constants.kTurretMotorId)
