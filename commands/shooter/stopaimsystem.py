@@ -4,20 +4,7 @@ from wpimath.geometry import Rotation2d
 from subsystems.shootersubsystem import ShooterSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
 
-
-class StopIndexer(CommandBase):
-    def __init__(self, indexer: IndexerSubsystem) -> None:
-        CommandBase.__init__(self)
-        self.setName(__class__.__name__)
-        self.indexer = indexer
-        self.addRequirements([self.indexer])
-
-    def execute(self) -> None:
-        self.indexer.motorsOff()
-
-    # pylint: disable-next=no-self-use
-    def isFinished(self) -> bool:
-        return True
+from commands.indexer.stopindexer import StopIndexer
 
 
 class StopAimSystem(CommandBase):
@@ -34,5 +21,5 @@ class StopAimSystem(CommandBase):
 
 class StopMovingParts(ParallelCommandGroup):
     def __init__(self, indexer: IndexerSubsystem, shooter: ShooterSubsystem):
-        self.setName(__class__.__name__)
         super().__init__(StopIndexer(indexer), StopAimSystem(shooter))
+        self.setName(__class__.__name__)
