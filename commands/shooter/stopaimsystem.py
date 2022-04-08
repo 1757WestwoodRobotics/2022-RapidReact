@@ -1,7 +1,8 @@
 from commands2 import CommandBase, ParallelCommandGroup
+from wpimath.geometry import Rotation2d
+
 from subsystems.shootersubsystem import ShooterSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
-from wpimath.geometry import Rotation2d
 
 
 class StopIndexer(CommandBase):
@@ -14,6 +15,7 @@ class StopIndexer(CommandBase):
     def execute(self) -> None:
         self.indexer.motorsOff()
 
+    # pylint: disable-next=no-self-use
     def isFinished(self) -> bool:
         return True
 
