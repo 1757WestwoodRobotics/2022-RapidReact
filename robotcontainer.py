@@ -92,6 +92,7 @@ class RobotContainer:
         # A simple auto routine that drives forward a specified distance, and then stops.
         self.simpleAuto = commands2.ParallelCommandGroup(
             commands2.SequentialCommandGroup(
+                ResetDrive(self.drive),
                 HoldBall(self.indexer),
                 DeployIntake(self.intake),
                 DriveDistance(
