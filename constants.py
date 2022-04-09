@@ -616,7 +616,7 @@ kShootingMotorDGain = 0
 kShootingMotorInverted = True
 
 kShootingMappingFunction = (
-    lambda x: 3663 - 449 * x + 168 * x * x
+    lambda x: 3663 - 449 * x + 168 * x * x + 100
 )  # derived from testing at multiple points, distance is input variable and exponential curve of best fit
 
 kTurretMotorPIDSlot = 0

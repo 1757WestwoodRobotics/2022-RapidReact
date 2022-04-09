@@ -260,27 +260,25 @@ class ShooterSubsystem(SubsystemBase):
         )
 
     def rotateTurret(self, angle: Rotation2d) -> None:
+        print(f"Angle: {angle}")
         if (
-            angle.radians() > constants.kTurretMaximumAngle.radians()
-            or angle.radians() < constants.kTurretMinimumAngle.radians()
+            angle.radians()
+            > constants.kTurretMaximumAngle.radians()
+            - constants.kTurretSoftLimitBuffer.radians()
+            or angle.radians()
+            < constants.kTurretMinimumAngle.radians()
+            + constants.kTurretSoftLimitBuffer.radians()
         ):
+            print("OUT")
             return
 
         self.targetTurretAngle = angle
         encoderPulses = (
-            max(
-                (
-                    constants.kTurretMinimumAngle + constants.kTurretSoftLimitBuffer
-                ).radians(),
-                min(
-                    angle.radians(),
-                    constants.kTurretMaximumAngle.radians()
-                    - constants.kTurretSoftLimitBuffer.radians(),
-                ),
-            )
+            angle.radians()
             * constants.kTalonEncoderPulsesPerRadian
             / constants.kTurretGearRatio
         )
+        print(f"pulses: {encoderPulses}")
         self.turretMotor.set(ControlMode.Position, encoderPulses)
 
     def getTurretRotation(self) -> Rotation2d:
@@ -296,6 +294,7 @@ class ShooterSubsystem(SubsystemBase):
     def trackTurret(self, relativeAngle: float):
         """relativeAngle: radians"""
         rotation = self.getTurretRotation() + Rotation2d(relativeAngle)
+        print(rotation)
         self.rotateTurret(
             optimizeAngle(constants.kTurretRelativeForwardAngle, rotation)
         )

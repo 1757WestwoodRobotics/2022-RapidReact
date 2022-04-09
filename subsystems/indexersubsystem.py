@@ -117,8 +117,8 @@ class IndexerSubsystem(SubsystemBase):
             return
         print(f"{constants.kStagingMotorName} Falcon Initialization Complete")
 
-        self.indexerSensor = self.stagingMotor.isFwdLimitSwitchClosed
-        self.stagingSensor = self.stagingMotor.isRevLimitSwitchClosed
+        self.indexerSensor = self.stagingMotor.isRevLimitSwitchClosed
+        self.stagingSensor = self.stagingMotor.isFwdLimitSwitchClosed
         self.state = self.Mode.Holding
 
     def periodic(self) -> None:

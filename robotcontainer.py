@@ -93,12 +93,14 @@ class RobotContainer:
         self.simpleAuto = commands2.ParallelCommandGroup(
             commands2.SequentialCommandGroup(
                 HoldBall(self.indexer),
+                DeployIntake(self.intake),
                 DriveDistance(
                     4 * constants.kWheelCircumference,
                     constants.kAutoDriveSpeedFactor,
                     DriveDistance.Axis.X,
                     self.drive,
                 ),
+                RetractIntake(self.intake),
                 commands2.WaitCommand(2),
                 FeedForward(self.indexer),
                 commands2.WaitCommand(2),
