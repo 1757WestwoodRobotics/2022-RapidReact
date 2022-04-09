@@ -1,29 +1,36 @@
 from os import path
 
-from commands2 import SequentialCommandGroup, WaitCommand
+from commands2 import ParallelCommandGroup, SequentialCommandGroup, WaitCommand
 from wpimath.trajectory import TrajectoryConfig, TrajectoryUtil
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
+from subsystems.shootersubsystem import ShooterSubsystem
 
+from commands.resetdrive import ResetDrive
 from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
 from commands.indexer.feedforward import FeedForward
 from commands.indexer.holdball import HoldBall
 from commands.followtrajectory import FollowTrajectory
-from commands.resetgyro import ResetGyro
+from commands.shooter.aimshootertotarget import AimShooterToTarget
+
 
 import constants
 
 
-class FiveBRStandard(SequentialCommandGroup):
+class FiveBRMovements(SequentialCommandGroup):
     def __init__(
-        self, drive: DriveSubsystem, intake: IntakeSubsystem, indexer: IndexerSubsystem
+        self,
+        drive: DriveSubsystem,
+        intake: IntakeSubsystem,
+        indexer: IndexerSubsystem,
     ):
 
         trajectoryConfig = TrajectoryConfig(
-            constants.kMaxForwardLinearVelocity, constants.kMaxForwardLinearAcceleration
+            constants.kMaxForwardLinearVelocity,
+            constants.kMaxForwardLinearAcceleration,
         )
         trajectoryConfig.setKinematics(drive.kinematics)
 
@@ -73,7 +80,7 @@ class FiveBRStandard(SequentialCommandGroup):
         )
 
         super().__init__(
-            ResetGyro(drive, pathA.sample(0).pose),
+            ResetDrive(drive, pathA.initialPose()),
             DeployIntake(intake),
             FollowTrajectory(drive, pathA),  # pickup ball 2
             RetractIntake(intake),
@@ -97,4 +104,18 @@ class FiveBRStandard(SequentialCommandGroup):
             RetractIntake(intake),
             WaitCommand(constants.kAutoTimeFromStopToShoot),
             FeedForward(indexer),  # shoot balls 4 and 5
+        )
+
+
+class FiveBRStandard(ParallelCommandGroup):
+    def __init__(
+        self,
+        shooter: ShooterSubsystem,
+        drive: DriveSubsystem,
+        intake: IntakeSubsystem,
+        indexer: IndexerSubsystem,
+    ):
+        self.setName(__class__.__name__)
+        super().__init__(
+            AimShooterToTarget(shooter), FiveBRMovements(drive, intake, indexer)
         )

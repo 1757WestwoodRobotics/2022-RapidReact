@@ -1,5 +1,6 @@
 from enum import Enum, auto
 from commands2 import SubsystemBase
+from wpilib import SmartDashboard
 from ctre import ControlMode, LimitSwitchNormal, LimitSwitchSource
 from util.ctrecheck import ctreCheckError
 from util.simfalcon import createMotor
@@ -121,6 +122,7 @@ class IndexerSubsystem(SubsystemBase):
         self.state = self.Mode.Holding
 
     def periodic(self) -> None:
+        SmartDashboard.putBoolean(constants.kReadyToFireKey, self.stagingSensor() == 0)
         if self.state == self.Mode.FeedForward:
             self.indexerMotor.set(
                 ControlMode.Velocity,

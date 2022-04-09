@@ -442,11 +442,11 @@ kDriveToTargetAngularVelocityTolerance = 5 * kRadiansPerDegree / 1
 """radians / second"""
 
 # Trajectory Following
-kTrajectoryPositionPGain = 3.0
+kTrajectoryPositionPGain = 2.0
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
-kTrajectoryAnglePGain = 1.5
+kTrajectoryAnglePGain = 0.7
 kTrajectoryAngleIGain = 0
 kTrajectoryAngleDGain = 0
 
@@ -581,12 +581,28 @@ kClimberMotorPGain = 0.025
 kClimberMotorIGain = 0
 kClimberMotorDGain = 0
 kClimberRetractionWaitTime = 2
+"""seconds"""
+
+kClimberPauseBeforeMovement = 2
+"""seconds"""
+
 kClimberMiddleRungCapturePosition = 344502
+"""encoder ticks"""
+
 kClimberMiddleRungHangPosition = 250502
+"""encoder ticks"""
+
 kClimberTiltedExtensionMax = 208623
+"""encoder ticks"""
+
 kClimberHangingPosition = 95102
+"""encoder ticks"""
+
 kClimberRetractionPositionThreshold = 3500
+"""encoder ticks"""
+
 kClimberExtensionPositionThreshold = 2000
+"""encoder ticks"""
 
 # shooter parameters
 kHoodMotorId = 21
@@ -600,7 +616,7 @@ kShootingMotorDGain = 0
 kShootingMotorInverted = True
 
 kShootingMappingFunction = (
-    lambda x: 16.41 * math.pow(math.e, 0.3662 * x) + 532
+    lambda x: 3663 - 449 * x + 168 * x * x
 )  # derived from testing at multiple points, distance is input variable and exponential curve of best fit
 
 kTurretMotorPIDSlot = 0
@@ -620,7 +636,7 @@ kHoodMotorInverted = True
 kHoodGearRatio = (1 / 5) * (13 / 360)
 
 kHoodMappingFunction = (
-    lambda x: 11.04 * math.pow(math.e, 0.1004 * x) + -11.06
+    lambda x: 8.65 - 1.04 * x + 0.268 * x * x
 )  # see above for derivation method
 
 kTurretMotorName = "shooting_turret"
@@ -634,12 +650,14 @@ kShootingManualModeKey = "shooting/manualMode"
 kShootingFlywheelOnTargetKey = "shooting/wheelOnTarget"
 kShootingHoodOnTargetKey = "shooting/hoodOnTarget"
 kShootingTurretOnTargetKey = "shooting/turretOnTarget"
+kReadyToFireKey = "readyToFire"
+kStopMovingPartsButtonName = "stopMovingParts"
 
 kHoodStartingAngle = 0
 
 kTurretMaximumAngle = Rotation2d.fromDegrees(160)
 kTurretMinimumAngle = Rotation2d.fromDegrees(-160)
-kTurretSoftLimitBuffer = Rotation2d.fromDegrees(5)
+kTurretSoftLimitBuffer = Rotation2d.fromDegrees(40)
 
 kTurretRelativeForwardAngle = Rotation2d.fromDegrees(0)
 kTurretOffsetFromRobotAngle = Rotation2d.fromDegrees(180)  # shooter 0 is robot 180
@@ -650,7 +668,7 @@ kHoodSoftLimitBuffer = Rotation2d.fromDegrees(0.5)
 
 kTurretAngleTolerence = Rotation2d.fromDegrees(2)
 kHoodAngleTolerence = Rotation2d.fromDegrees(1)
-kWheelSpeedTolerence = 20
+kWheelSpeedTolerence = 100
 
 kOffsetDistanceRange = 1
 """meters"""

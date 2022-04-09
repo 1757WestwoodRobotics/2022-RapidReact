@@ -1,29 +1,36 @@
 from os import path
 
-from commands2 import SequentialCommandGroup, WaitCommand
+from commands2 import ParallelCommandGroup, SequentialCommandGroup, WaitCommand
 from wpimath.trajectory import TrajectoryConfig, TrajectoryUtil
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
+from subsystems.shootersubsystem import ShooterSubsystem
 
+from commands.resetdrive import ResetDrive
 from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
-from commands.followtrajectory import FollowTrajectory
 from commands.indexer.feedforward import FeedForward
 from commands.indexer.holdball import HoldBall
-from commands.resetgyro import ResetGyro
+from commands.followtrajectory import FollowTrajectory
+from commands.shooter.aimshootertotarget import AimShooterToTarget
+
 
 import constants
 
 
-class TwoBLHangerbounce(SequentialCommandGroup):
+class ThreeBRStandardMovements(SequentialCommandGroup):
     def __init__(
-        self, drive: DriveSubsystem, intake: IntakeSubsystem, indexer: IndexerSubsystem
+        self,
+        drive: DriveSubsystem,
+        intake: IntakeSubsystem,
+        indexer: IndexerSubsystem,
     ):
 
         trajectoryConfig = TrajectoryConfig(
-            constants.kMaxForwardLinearVelocity, constants.kMaxForwardLinearAcceleration
+            constants.kMaxForwardLinearVelocity,
+            constants.kMaxForwardLinearAcceleration,
         )
         trajectoryConfig.setKinematics(drive.kinematics)
 
@@ -35,7 +42,7 @@ class TwoBLHangerbounce(SequentialCommandGroup):
                 "deploy",
                 "pathplanner",
                 "generatedJSON",
-                "2bL-hangerbounce-a.wpilib.json",
+                "5bR-standard-a.wpilib.json",
             )
         )
         pathB = TrajectoryUtil.fromPathweaverJson(
@@ -46,18 +53,37 @@ class TwoBLHangerbounce(SequentialCommandGroup):
                 "deploy",
                 "pathplanner",
                 "generatedJSON",
-                "2bL-hangerbounce-b.wpilib.json",
+                "5bR-standard-b.wpilib.json",
             )
         )
 
         super().__init__(
-            ResetGyro(drive, pathA.sample(0).pose),
+            ResetDrive(drive, pathA.initialPose()),
             DeployIntake(intake),
             FollowTrajectory(drive, pathA),  # pickup ball 2
             RetractIntake(intake),
             WaitCommand(constants.kAutoTimeFromStopToShoot),
-            FeedForward(indexer),
+            FeedForward(indexer),  # shoot balls 1 and 2
             WaitCommand(constants.kAutoTimeFromShootToMove),
+            DeployIntake(intake),
             HoldBall(indexer),
-            FollowTrajectory(drive, pathB),  # hit red ball out of way
+            FollowTrajectory(drive, pathB),  # pickup ball 3
+            RetractIntake(intake),
+            WaitCommand(constants.kAutoTimeFromStopToShoot),
+            FeedForward(indexer),  # shoot ball 3
+        )
+
+
+class ThreeBRStandard(ParallelCommandGroup):
+    def __init__(
+        self,
+        shooter: ShooterSubsystem,
+        drive: DriveSubsystem,
+        intake: IntakeSubsystem,
+        indexer: IndexerSubsystem,
+    ):
+        self.setName(__class__.__name__)
+        super().__init__(
+            AimShooterToTarget(shooter),
+            ThreeBRStandardMovements(drive, intake, indexer),
         )

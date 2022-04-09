@@ -6,6 +6,7 @@ import commands2.button
 
 import constants
 
+from commands.resetdrive import ResetDrive
 from commands.complexauto import ComplexAuto
 from commands.indexer.feedforward import FeedForward
 from commands.drivedistance import DriveDistance
@@ -33,7 +34,6 @@ from commands.climber.moveclimberstonextrungcaptureposition import (
 )
 from commands.climber.holdcimbersposition import HoldRightClimberPosition
 
-from commands.resetgyro import ResetGyro
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
@@ -46,11 +46,12 @@ from commands.intake.retractintake import RetractIntake
 from commands.shooter.aimshootertotarget import AimShooterToTarget
 from commands.shooter.aimshootermanual import AimShooterManually
 from commands.shooter.tarmacshot import TarmacShot
+from commands.shooter.stopaimsystem import StopMovingParts
 
 from commands.auto.fivebrstandard import FiveBRStandard
-from commands.auto.twoblhangerbounce import TwoBLHangerbounce
 from commands.auto.fourblnoninvasive import FourBLNoninvasive
 from commands.auto.twoblhangerouttake import TwoBLHangerOuttake
+from commands.auto.threebrstandard import ThreeBRStandard
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
@@ -113,15 +114,17 @@ class RobotContainer:
         self.driveToTarget = DriveToTarget(self.drive, constants.kAutoTargetOffset)
 
         # A routine that follows a set trajectory
-        self.fiveBRStandard = FiveBRStandard(self.drive, self.intake, self.indexer)
-        self.twoBLHangerbounce = TwoBLHangerbounce(
-            self.drive, self.intake, self.indexer
+        self.fiveBRStandard = FiveBRStandard(
+            self.shooter, self.drive, self.intake, self.indexer
         )
         self.twoBLHangerOuttake = TwoBLHangerOuttake(
-            self.drive, self.intake, self.indexer
+            self.shooter, self.drive, self.intake, self.indexer
         )
         self.fourBLNoninvasive = FourBLNoninvasive(
-            self.drive, self.intake, self.indexer
+            self.shooter, self.drive, self.intake, self.indexer
+        )
+        self.threeBRStandard = ThreeBRStandard(
+            self.shooter, self.drive, self.intake, self.indexer
         )
 
         # Chooser
@@ -130,12 +133,12 @@ class RobotContainer:
         # Add commands to the autonomous command chooser
         self.chooser.addOption("Complex Auto", self.complexAuto)
         self.chooser.addOption("Target Auto", self.driveToTarget)
-        self.chooser.addOption("2 Ball Left Hangerbounce Auto", self.twoBLHangerbounce)
         self.chooser.addOption(
             "2 Ball Left Hanger Outtake Auto", self.twoBLHangerOuttake
         )
         self.chooser.addOption("4 Ball Left Noninvasive Auto", self.fourBLNoninvasive)
         self.chooser.addOption("5 Ball Right Standard Auto", self.fiveBRStandard)
+        self.chooser.addOption("3 Ball Right Standard Auto", self.threeBRStandard)
         self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
 
         # Put the chooser on the dashboard
@@ -232,7 +235,7 @@ class RobotContainer:
         )
 
         commands2.button.JoystickButton(*self.operatorInterface.resetGyro).whenPressed(
-            ResetGyro(self.drive, Pose2d(0, 0, 0))
+            ResetDrive(self.drive, Pose2d(0, 0, 0))
         )
 
         commands2.button.JoystickButton(
@@ -249,6 +252,8 @@ class RobotContainer:
             MoveBothClimbersToMiddleRungCapturePosition(
                 self.leftClimber, self.rightClimber
             )
+        ).whenPressed(
+            StopMovingParts(self.indexer, self.shooter)
         )
         commands2.button.JoystickButton(
             *self.operatorInterface.moveBothClimbersToMiddleRungHangPosition

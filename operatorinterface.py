@@ -156,6 +156,10 @@ class OperatorInterface:
 
         self.turboSpeed = getButtonBindingOfName(constants.kTurboSpeedButtonName)
 
+        self.stopMovingParts = getButtonBindingOfName(
+            constants.kStopMovingPartsButtonName
+        )
+
         self.chassisControls = HolonomicInput(
             Invert(
                 Deadband(
