@@ -405,7 +405,7 @@ kAutoTargetOffset = Translation2d(2, 0)
 """[meters, meters]"""
 
 kAuto5BallFilename = "5ba"
-kAutoTimeFromStopToShoot = 0.5
+kAutoTimeFromStopToShoot = 1
 """seconds"""
 kAutoTimeFromShootToMove = 1
 """seconds"""
@@ -446,7 +446,7 @@ kTrajectoryPositionPGain = 2.0
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
-kTrajectoryAnglePGain = 0.7
+kTrajectoryAnglePGain = 1.3
 kTrajectoryAngleIGain = 0
 kTrajectoryAngleDGain = 0
 
@@ -616,7 +616,7 @@ kShootingMotorDGain = 0
 kShootingMotorInverted = True
 
 kShootingMappingFunction = (
-    lambda x: 3663 - 449 * x + 168 * x * x + 100
+    lambda x: 3663 - 449 * x + 168 * x * x + 175
 )  # derived from testing at multiple points, distance is input variable and exponential curve of best fit
 
 kTurretMotorPIDSlot = 0
