@@ -101,10 +101,12 @@ class FiveBRMovements(SequentialCommandGroup):
             WaitCommand(
                 constants.kAutoTerminalWaitTime
             ),  # wait for user ball in terminal
-            FollowTrajectory(drive, pathD),  # go back to shooting range
             RetractIntake(intake),
+            FollowTrajectory(drive, pathD),  # go back to shooting range
             WaitCommand(constants.kAutoTimeFromStopToShoot),
             FeedForward(indexer),  # shoot balls 4 and 5
+            WaitCommand(constants.kAutoTimeFromShootToMove),
+            HoldBall(indexer),
         )
 
 
