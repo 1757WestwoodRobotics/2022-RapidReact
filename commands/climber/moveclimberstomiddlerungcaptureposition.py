@@ -21,7 +21,7 @@ class MoveLeftClimberToMiddleRungCapturePosition(CommandBase):
 
     def execute(self) -> None:
         self.climber.leftClimber.retractPiston()
-        self.climber.leftClimber.setClimberFullExtension()
+        # self.climber.leftClimber.setClimberFullExtension()
 
     def end(self, _interrupted: bool) -> None:
         self.climber.leftClimber.climberMotor.neutralOutput()
@@ -52,7 +52,7 @@ class MoveRightClimberToMiddleRungCapturePosition(CommandBase):
 
     def execute(self) -> None:
         self.climber.rightClimber.retractPiston()
-        self.climber.rightClimber.setClimberFullExtension()
+        # self.climber.rightClimber.setClimberFullExtension()
 
     def end(self, _interrupted: bool) -> None:
         self.climber.rightClimber.climberMotor.neutralOutput()

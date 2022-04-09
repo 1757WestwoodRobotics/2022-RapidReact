@@ -251,11 +251,12 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.moveBothClimbersToMiddleRungCapturePosition
         ).whenPressed(
-            MoveBothClimbersToMiddleRungCapturePosition(
-                self.leftClimber, self.rightClimber
+            commands2.ParallelCommandGroup(
+                MoveBothClimbersToMiddleRungCapturePosition(
+                    self.leftClimber, self.rightClimber
+                ),
+                StopMovingParts(self.indexer, self.shooter),
             )
-        ).whenPressed(
-            StopMovingParts(self.indexer, self.shooter)
         )
         commands2.button.JoystickButton(
             *self.operatorInterface.moveBothClimbersToMiddleRungHangPosition
