@@ -446,7 +446,7 @@ kTrajectoryPositionPGain = 2.0
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
-kTrajectoryAnglePGain = 1.3
+kTrajectoryAnglePGain = 1.5
 kTrajectoryAngleIGain = 0
 kTrajectoryAngleDGain = 0
 

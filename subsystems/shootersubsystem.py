@@ -54,6 +54,7 @@ class ShooterSubsystem(SubsystemBase):
             self.turretMotor.setInverted(constants.kTurretMotorInverted),
         ):
             return
+        self.turretMotor.setNeutralMode(NeutralMode.Brake)
         # SHOOTER
         self.shootingMotor = createMotor(constants.kShootingMotorId)
         print(f"Initializing Falcon: {constants.kShootingMotorName}")

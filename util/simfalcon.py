@@ -3,6 +3,7 @@ from ctre import (
     ErrorCode,
     LimitSwitchNormal,
     LimitSwitchSource,
+    NeutralMode,
     WPI_TalonFX,
 )
 from wpilib import RobotBase, SmartDashboard
@@ -116,6 +117,9 @@ class SimFalcon:  # a simulated Falcon 500
 
     def getSelectedSensorPosition(self, pidIdx: int = 0) -> float:
         return self.motor.getSelectedSensorPosition(pidIdx)
+
+    def setNeutralMode(self, mode: NeutralMode) -> None:
+        self.motor.setNeutralMode(mode)
 
     def setSelectedSensorPosition(
         self, sensorPos: float, pidIdx: int = 0, timeoutMs: int = 50
