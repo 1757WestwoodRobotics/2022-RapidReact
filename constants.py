@@ -651,6 +651,7 @@ kShootingFlywheelOnTargetKey = "shooting/wheelOnTarget"
 kShootingHoodOnTargetKey = "shooting/hoodOnTarget"
 kShootingTurretOnTargetKey = "shooting/turretOnTarget"
 kReadyToFireKey = "readyToFire"
+kDualBallKey = "doubleBall"
 kStopMovingPartsButtonName = "stopMovingParts"
 
 kHoodStartingAngle = 0

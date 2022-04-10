@@ -123,6 +123,10 @@ class IndexerSubsystem(SubsystemBase):
 
     def periodic(self) -> None:
         SmartDashboard.putBoolean(constants.kReadyToFireKey, self.stagingSensor() == 0)
+        SmartDashboard.putBoolean(
+            constants.kDualBallKey,
+            self.indexerSensor() == 0 and self.stagingSensor() == 0,
+        )
         if self.state == self.Mode.FeedForward:
             self.indexerMotor.set(
                 ControlMode.Velocity,
