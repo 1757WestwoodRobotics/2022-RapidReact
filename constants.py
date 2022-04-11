@@ -409,7 +409,7 @@ kAutoTimeFromStopToShoot = 1
 """seconds"""
 kAutoTimeFromShootToMove = 1
 """seconds"""
-kAutoTerminalWaitTime = 2
+kAutoTerminalWaitTime = 3
 
 # Target relative drive
 kTargetRelativeDriveAnglePGain = 1
@@ -446,7 +446,7 @@ kTrajectoryPositionPGain = 2.0
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
-kTrajectoryAnglePGain = 1.5
+kTrajectoryAnglePGain = 1.8
 kTrajectoryAngleIGain = 0
 kTrajectoryAngleDGain = 0
 
