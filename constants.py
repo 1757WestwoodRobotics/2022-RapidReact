@@ -583,7 +583,7 @@ kClimberMotorDGain = 0
 kClimberRetractionWaitTime = 2
 """seconds"""
 
-kClimberPauseBeforeMovement = -0.5
+kClimberPauseBeforeMovement = 0.5
 """seconds"""
 
 kClimberMiddleRungCapturePosition = 344502
