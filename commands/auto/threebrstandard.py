@@ -73,7 +73,7 @@ class ThreeBRStandardMovements(SequentialCommandGroup):
             RetractIntake(intake),
             FeedForward(indexer),  # shoot ball 3
             WaitCommand(constants.kAutoWaitDuration),
-            HoldBall(indexer)
+            HoldBall(indexer),
         )
 
 
