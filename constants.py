@@ -405,11 +405,11 @@ kAutoTargetOffset = Translation2d(2, 0)
 """[meters, meters]"""
 
 kAuto5BallFilename = "5ba"
-kAutoTimeFromStopToShoot = 0.5
+kAutoTimeFromStopToShoot = 1
 """seconds"""
 kAutoTimeFromShootToMove = 1
 """seconds"""
-kAutoTerminalWaitTime = 2
+kAutoTerminalWaitTime = 3
 
 # Target relative drive
 kTargetRelativeDriveAnglePGain = 1
@@ -446,7 +446,7 @@ kTrajectoryPositionPGain = 2.0
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
-kTrajectoryAnglePGain = 0.7
+kTrajectoryAnglePGain = 1.8
 kTrajectoryAngleIGain = 0
 kTrajectoryAngleDGain = 0
 
@@ -583,6 +583,9 @@ kClimberMotorDGain = 0
 kClimberRetractionWaitTime = 2
 """seconds"""
 
+kClimberPauseBeforeMovement = 0.5
+"""seconds"""
+
 kClimberMiddleRungCapturePosition = 344502
 """encoder ticks"""
 
@@ -613,7 +616,7 @@ kShootingMotorDGain = 0
 kShootingMotorInverted = True
 
 kShootingMappingFunction = (
-    lambda x: 3663 - 449 * x + 168 * x * x
+    lambda x: 3663 - 449 * x + 168 * x * x + 175
 )  # derived from testing at multiple points, distance is input variable and exponential curve of best fit
 
 kTurretMotorPIDSlot = 0
@@ -648,6 +651,8 @@ kShootingFlywheelOnTargetKey = "shooting/wheelOnTarget"
 kShootingHoodOnTargetKey = "shooting/hoodOnTarget"
 kShootingTurretOnTargetKey = "shooting/turretOnTarget"
 kReadyToFireKey = "readyToFire"
+kDualBallKey = "doubleBall"
+kStopMovingPartsButtonName = "stopMovingParts"
 
 kHoodStartingAngle = 0
 

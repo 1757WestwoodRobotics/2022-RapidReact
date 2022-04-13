@@ -12,6 +12,7 @@ import constants
 class ShooterSubsystem(SubsystemBase):
     def __init__(self) -> None:
         SubsystemBase.__init__(self)
+        self.setName(__class__.__name__)
         # actuators
         # TURRET
         self.turretMotor = createMotor(constants.kTurretMotorId)
@@ -53,6 +54,7 @@ class ShooterSubsystem(SubsystemBase):
             self.turretMotor.setInverted(constants.kTurretMotorInverted),
         ):
             return
+        self.turretMotor.setNeutralMode(NeutralMode.Brake)
         # SHOOTER
         self.shootingMotor = createMotor(constants.kShootingMotorId)
         print(f"Initializing Falcon: {constants.kShootingMotorName}")
@@ -260,23 +262,18 @@ class ShooterSubsystem(SubsystemBase):
 
     def rotateTurret(self, angle: Rotation2d) -> None:
         if (
-            angle.radians() > constants.kTurretMaximumAngle.radians()
-            or angle.radians() < constants.kTurretMinimumAngle.radians()
+            angle.radians()
+            > constants.kTurretMaximumAngle.radians()
+            - constants.kTurretSoftLimitBuffer.radians()
+            or angle.radians()
+            < constants.kTurretMinimumAngle.radians()
+            + constants.kTurretSoftLimitBuffer.radians()
         ):
             return
 
         self.targetTurretAngle = angle
         encoderPulses = (
-            max(
-                (
-                    constants.kTurretMinimumAngle + constants.kTurretSoftLimitBuffer
-                ).radians(),
-                min(
-                    angle.radians(),
-                    constants.kTurretMaximumAngle.radians()
-                    - constants.kTurretSoftLimitBuffer.radians(),
-                ),
-            )
+            angle.radians()
             * constants.kTalonEncoderPulsesPerRadian
             / constants.kTurretGearRatio
         )

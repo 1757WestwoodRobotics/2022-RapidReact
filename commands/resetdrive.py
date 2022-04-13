@@ -10,7 +10,7 @@ class ResetDrive(CommandBase):
         self.setName(__class__.__name__)
         self.drive = drive
         self.position = position
-        self.addRequirements(drive)
+        self.addRequirements([self.drive])
 
     def initialize(self) -> None:
         print(f"Command: {self.getName()}")

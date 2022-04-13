@@ -81,29 +81,32 @@ class FiveBRMovements(SequentialCommandGroup):
 
         super().__init__(
             ResetDrive(drive, pathA.initialPose()),
+            HoldBall(indexer),
             DeployIntake(intake),
             FollowTrajectory(drive, pathA),  # pickup ball 2
-            RetractIntake(intake),
             WaitCommand(constants.kAutoTimeFromStopToShoot),
+            RetractIntake(intake),
             FeedForward(indexer),  # shoot balls 1 and 2
             WaitCommand(constants.kAutoTimeFromShootToMove),
             DeployIntake(intake),
             HoldBall(indexer),
             FollowTrajectory(drive, pathB),  # pickup ball 3
-            RetractIntake(intake),
             WaitCommand(constants.kAutoTimeFromStopToShoot),
+            RetractIntake(intake),
             FeedForward(indexer),  # shoot ball 3
             WaitCommand(constants.kAutoTimeFromShootToMove),
-            DeployIntake(intake),
             HoldBall(indexer),
+            DeployIntake(intake),
             FollowTrajectory(drive, pathC),  # go to terminal, pickup terminal ball
             WaitCommand(
                 constants.kAutoTerminalWaitTime
             ),  # wait for user ball in terminal
-            FollowTrajectory(drive, pathD),  # go back to shooting range
             RetractIntake(intake),
+            FollowTrajectory(drive, pathD),  # go back to shooting range
             WaitCommand(constants.kAutoTimeFromStopToShoot),
             FeedForward(indexer),  # shoot balls 4 and 5
+            WaitCommand(constants.kAutoTimeFromShootToMove),
+            HoldBall(indexer),
         )
 
 

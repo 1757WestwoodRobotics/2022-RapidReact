@@ -46,6 +46,7 @@ from commands.intake.retractintake import RetractIntake
 from commands.shooter.aimshootertotarget import AimShooterToTarget
 from commands.shooter.aimshootermanual import AimShooterManually
 from commands.shooter.tarmacshot import TarmacShot
+from commands.shooter.stopaimsystem import StopMovingParts
 
 from commands.auto.fivebrstandard import FiveBRStandard
 from commands.auto.fourblnoninvasive import FourBLNoninvasive
@@ -91,13 +92,16 @@ class RobotContainer:
         # A simple auto routine that drives forward a specified distance, and then stops.
         self.simpleAuto = commands2.ParallelCommandGroup(
             commands2.SequentialCommandGroup(
+                ResetDrive(self.drive),
                 HoldBall(self.indexer),
+                DeployIntake(self.intake),
                 DriveDistance(
                     4 * constants.kWheelCircumference,
                     constants.kAutoDriveSpeedFactor,
                     DriveDistance.Axis.X,
                     self.drive,
                 ),
+                RetractIntake(self.intake),
                 commands2.WaitCommand(2),
                 FeedForward(self.indexer),
                 commands2.WaitCommand(2),
@@ -248,8 +252,11 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.moveBothClimbersToMiddleRungCapturePosition
         ).whenPressed(
-            MoveBothClimbersToMiddleRungCapturePosition(
-                self.leftClimber, self.rightClimber
+            commands2.ParallelCommandGroup(
+                MoveBothClimbersToMiddleRungCapturePosition(
+                    self.leftClimber, self.rightClimber
+                ),
+                StopMovingParts(self.indexer, self.shooter),
             )
         )
         commands2.button.JoystickButton(

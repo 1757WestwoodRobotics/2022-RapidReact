@@ -146,6 +146,13 @@
     },
     "left button on top of joystick (ThrustmasterT16000M)"
   ],
+  "stopMovingParts": [
+    1,
+    {
+      "Button": 8
+    },
+    "right button set, left bottom (ThrustmasterT16000M)"
+  ],
   "targetRelativeCoordinateModeControl": [
     0,
     {

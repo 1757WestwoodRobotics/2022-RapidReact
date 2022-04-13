@@ -1,4 +1,9 @@
-from commands2 import CommandBase, ParallelCommandGroup
+from commands2 import (
+    CommandBase,
+    ParallelCommandGroup,
+    SequentialCommandGroup,
+    WaitCommand,
+)
 from subsystems.climbers.leftclimbersubsystem import LeftClimber
 from subsystems.climbers.rightclimbersubsystem import RightClimber
 import constants
@@ -9,7 +14,7 @@ class MoveLeftClimberToMiddleRungCapturePosition(CommandBase):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
         self.climber = climber
-        self.addRequirements(climber)
+        self.addRequirements([self.climber])
 
     def initialize(self) -> None:
         self.climber.leftClimber.deactivateBrake()
@@ -40,7 +45,7 @@ class MoveRightClimberToMiddleRungCapturePosition(CommandBase):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
         self.climber = climber
-        self.addRequirements(climber)
+        self.addRequirements([self.climber])
 
     def initialize(self) -> None:
         self.climber.rightClimber.deactivateBrake()
@@ -66,10 +71,20 @@ class MoveRightClimberToMiddleRungCapturePosition(CommandBase):
         )
 
 
-class MoveBothClimbersToMiddleRungCapturePosition(ParallelCommandGroup):
+class MoveBothClimbersToMiddleRungCapturePositionMovements(ParallelCommandGroup):
     def __init__(self, leftClimber: LeftClimber, rightClimber: RightClimber):
         super().__init__(
             MoveLeftClimberToMiddleRungCapturePosition(leftClimber),
             MoveRightClimberToMiddleRungCapturePosition(rightClimber),
         )
         self.setName(__class__.__name__)
+
+
+class MoveBothClimbersToMiddleRungCapturePosition(SequentialCommandGroup):
+    def __init__(self, leftclimber: LeftClimber, rightclimber: RightClimber):
+        super().__init__(
+            WaitCommand(constants.kClimberPauseBeforeMovement),
+            MoveBothClimbersToMiddleRungCapturePositionMovements(
+                leftclimber, rightclimber
+            ),
+        )
