@@ -14,8 +14,9 @@ from commands.drivetotarget import DriveToTarget
 from commands.targetrelativedrive import TargetRelativeDrive
 from commands.robotrelativedrive import RobotRelativeDrive
 from commands.absoluterelativedrive import AbsoluteRelativeDrive
+from commands.climber.pivotclimbersformid import PivotBothClimbersToVertical
 from commands.climber.moveclimberstomiddlerungcaptureposition import (
-    MoveBothClimbersToMiddleRungCapturePosition,
+    MoveBothClimbersToMiddleRungCapturePositionMovements,
 )
 from commands.climber.moveclimberstomiddlerunghangposition import (
     MoveBothClimbersToMiddleRungHangPosition,
@@ -250,13 +251,18 @@ class RobotContainer:
         ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
 
         commands2.button.JoystickButton(
+            *self.operatorInterface.pivotBothClimbers
+        ).whenPressed(
+            PivotBothClimbersToVertical(self.leftClimber, self.rightClimber),
+        ).whenPressed(
+            StopMovingParts(self.indexer, self.shooter)
+        )
+
+        commands2.button.JoystickButton(
             *self.operatorInterface.moveBothClimbersToMiddleRungCapturePosition
         ).whenPressed(
-            commands2.ParallelCommandGroup(
-                MoveBothClimbersToMiddleRungCapturePosition(
-                    self.leftClimber, self.rightClimber
-                ),
-                StopMovingParts(self.indexer, self.shooter),
+            MoveBothClimbersToMiddleRungCapturePositionMovements(
+                self.leftClimber, self.rightClimber
             )
         )
         commands2.button.JoystickButton(

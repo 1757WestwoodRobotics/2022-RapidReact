@@ -104,6 +104,13 @@
     },
     "left button set, middle bottom (ThrustmasterT16000M)"
   ],
+  "pivotBothClimbers": [
+    1,
+    {
+      "Button": 8
+    },
+    "right button set, left bottom (ThrustmasterT16000M)"
+  ],
   "rightClimberToNextRungCapturePosition": [
     1,
     {

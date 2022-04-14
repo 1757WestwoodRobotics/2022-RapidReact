@@ -554,6 +554,7 @@ kMoveRightClimberToMiddleRungCapturePositionName = (
 kMoveBothClimbersToMiddleRungCapturePositionName = (
     "moveBothClimbersToMiddleRungCapturePosition"
 )
+kPivotBothClimbersButtonName = "pivotBothClimbers"
 kMoveLeftClimberToMiddleRungHangPositionName = "moveLeftClimberToMiddleRungHangPosition"
 kMoveRightClimberToMiddleRungHangPositionName = (
     "moveRightClimberToMiddleRungHangPosition"
