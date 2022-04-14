@@ -1,3 +1,4 @@
+from commands2 import WaitCommand
 import wpilib
 from wpimath.geometry import Pose2d
 import commands2
@@ -253,7 +254,10 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.pivotBothClimbers
         ).whenPressed(
-            PivotBothClimbersToVertical(self.leftClimber, self.rightClimber),
+            commands2.SequentialCommandGroup(
+                WaitCommand(constants.kClimberPauseBeforeMovement),
+                PivotBothClimbersToVertical(self.leftClimber, self.rightClimber),
+            ),
         ).whenPressed(
             StopMovingParts(self.indexer, self.shooter)
         )

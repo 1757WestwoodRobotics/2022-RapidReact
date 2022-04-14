@@ -584,7 +584,7 @@ kClimberMotorDGain = 0
 kClimberRetractionWaitTime = 2
 """seconds"""
 
-kClimberPauseBeforeMovement = 0.5
+kClimberPauseBeforeMovement = 1
 """seconds"""
 
 kClimberMiddleRungCapturePosition = 344502
@@ -617,7 +617,7 @@ kShootingMotorDGain = 0
 kShootingMotorInverted = True
 
 kShootingMappingFunction = (
-    lambda x: 3663 - 449 * x + 168 * x * x + 175
+    lambda x: 3663 - 449 * x + 168 * x * x + 125
 )  # derived from testing at multiple points, distance is input variable and exponential curve of best fit
 
 kTurretMotorPIDSlot = 0
@@ -668,9 +668,9 @@ kHoodMaximum = Rotation2d.fromDegrees(18)
 kHoodMinimum = Rotation2d.fromDegrees(-5)
 kHoodSoftLimitBuffer = Rotation2d.fromDegrees(0.5)
 
-kTurretAngleTolerence = Rotation2d.fromDegrees(2)
+kTurretAngleTolerence = Rotation2d.fromDegrees(5)
 kHoodAngleTolerence = Rotation2d.fromDegrees(1)
-kWheelSpeedTolerence = 100
+kWheelSpeedTolerence = 300
 
 kOffsetDistanceRange = 1
 """meters"""
