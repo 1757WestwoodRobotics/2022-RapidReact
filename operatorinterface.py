@@ -115,6 +115,10 @@ class OperatorInterface:
             constants.kMoveBothClimbersToMiddleRungCapturePositionName
         )
 
+        self.pivotBothClimbers = getButtonBindingOfName(
+            constants.kPivotBothClimbersButtonName
+        )
+
         self.moveBothClimbersToMiddleRungHangPosition = getButtonBindingOfName(
             constants.kMoveBothClimbersToMiddleRungHangPositionName
         )
