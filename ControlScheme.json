@@ -146,12 +146,26 @@
     },
     "A (Xbox)"
   ],
-  "shootTarmac": [
+  "decreaseShooterSpeed": [
     1,
     {
       "Button": 3
     },
     "left button on top of joystick (ThrustmasterT16000M)"
+  ],
+  "increaseShooterSpeed": [
+    1,
+    {
+      "Button": 4
+    },
+    "right button top of joystick"
+  ],
+  "resetShooterSpeed": [
+    1,
+    {
+      "Button": 2
+    },
+    "bottom button top of joystick"
   ],
   "stopMovingParts": [
     1,
