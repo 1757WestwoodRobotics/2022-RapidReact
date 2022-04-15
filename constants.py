@@ -409,7 +409,7 @@ kAutoTimeFromStopToShoot = 1
 """seconds"""
 kAutoTimeFromShootToMove = 1
 """seconds"""
-kAutoTerminalWaitTime = 3
+kAutoTerminalWaitTime = 2
 
 # Target relative drive
 kTargetRelativeDriveAnglePGain = 1
@@ -473,8 +473,8 @@ kReverseBallPathName = "reverseBallPath"
 kXboxTriggerActivationThreshold = 0.5
 
 kTurboSpeedButtonName = "turboSpeed"
-kNormalSpeedMultiplier = 0.5  # half full on normal
-kTurboSpeedMultiplier = 1.0  # full speed!!!
+kNormalSpeedMultiplier = 0.45  # half full on normal
+kTurboSpeedMultiplier = 0.90  # full speed!!!
 
 # Simulation Parameters
 kSimTargetName = "SimTarget"
