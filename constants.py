@@ -720,7 +720,7 @@ kDecreaseShootingSpeedButtonName = "decreaseShooterSpeed"
 kResetShootingSpeedButtonName = "resetShooterSpeed"
 
 kWheelSpeedTweakKey = "shooterSpeedAdjustment"
-kWheelSpeedTweakAmount = 25
+kWheelSpeedTweakAmount = 10
 
 kIntakeRunningKey = "intake/running"
 kIntakeReversedKey = "intake/reversed"
