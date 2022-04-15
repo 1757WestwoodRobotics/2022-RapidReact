@@ -66,6 +66,10 @@ from subsystems.shootersubsystem import ShooterSubsystem
 from operatorinterface import OperatorInterface
 from util.helpfultriggerwrappers import AxisButton, SmartDashboardButton
 
+from commands.shooter.decreaseshooterspeed import DecreaseShooterSpeed
+from commands.shooter.increaseshooterspeed import IncreaseShooterSpeed
+from commands.shooter.resetshooteroffset import ResetShooterOffset
+
 
 class RobotContainer:
     """
@@ -308,8 +312,14 @@ class RobotContainer:
             AimShooterManually(self.shooter)
         )
 
-        commands2.button.JoystickButton(*self.operatorInterface.tarmacShot).whileHeld(
-            TarmacShot(self.shooter)
+        commands2.button.JoystickButton(
+            *self.operatorInterface.increaseSpeed
+        ).whenPressed(IncreaseShooterSpeed())
+        commands2.button.JoystickButton(
+            *self.operatorInterface.decreaseSpeed
+        ).whenPressed(DecreaseShooterSpeed())
+        commands2.button.JoystickButton(*self.operatorInterface.resetSpeed).whenPressed(
+            ResetShooterOffset()
         )
 
     def getAutonomousCommand(self) -> commands2.Command:

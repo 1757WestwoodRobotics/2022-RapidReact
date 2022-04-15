@@ -715,7 +715,12 @@ kShootBallButtonName = "shootBall"
 kTarmacShotButtonName = "shootTarmac"
 kTurretAngleOffsetAxisName = "turretOffset"
 kShootingDistanceOffsetAxisName = "distanceOffset"
+kIncreaseShootingSpeedButonName = "increaseShooterSpeed"
+kDecreaseShootingSpeedButtonName = "decreaseShooterSpeed"
+kResetShootingSpeedButtonName = "resetShooterSpeed"
 
+kWheelSpeedTweakKey = "shooterSpeedAdjustment"
+kWheelSpeedTweakAmount = 25
 
 kIntakeRunningKey = "intake/running"
 kIntakeReversedKey = "intake/reversed"
