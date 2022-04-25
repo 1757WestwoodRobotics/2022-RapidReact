@@ -363,6 +363,7 @@ kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
 kRobotVisionPoseWeight = 0.04  # 4% vision data
 
 kDriveVelocityKeys = "robotVelocity"
+kDriveAccelLimit = 7
 kRobotUpdatePeriod = 1 / 50
 """seconds"""
 

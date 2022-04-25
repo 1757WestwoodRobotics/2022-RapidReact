@@ -12,13 +12,13 @@ from ctre import (
 )
 from navx import AHRS
 from wpimath.geometry import Pose2d, Rotation2d, Translation2d
+from wpimath.filter import SlewRateLimiter
 from wpimath.kinematics import (
     ChassisSpeeds,
     SwerveModuleState,
     SwerveDrive4Kinematics,
     SwerveDrive4Odometry,
 )
-
 
 import constants
 from util import convenientmath
@@ -406,6 +406,9 @@ class DriveSubsystem(SubsystemBase):
         self.odometry = SwerveDrive4Odometry(self.kinematics, self.gyro.getRotation2d())
 
         self.printTimer = Timer()
+        self.vxLimiter = SlewRateLimiter(constants.kDriveAccelLimit)
+        self.vyLimiter = SlewRateLimiter(constants.kDriveAccelLimit)
+        self.omegaLimiter = SlewRateLimiter(constants.kDriveAccelLimit)
 
     def resetSwerveModules(self):
         for module in self.modules:
@@ -571,10 +574,16 @@ class DriveSubsystem(SubsystemBase):
             else:
                 robotChassisSpeeds = ChassisSpeeds()
 
-        SmartDashboard.putNumberArray(
-            constants.kDriveVelocityKeys,
-            [robotChassisSpeeds.vx, robotChassisSpeeds.vy, robotChassisSpeeds.omega],
+        limitedChassisSpeeds = ChassisSpeeds(
+            self.vxLimiter.calculate(robotChassisSpeeds.vx),
+            self.vyLimiter.calculate(robotChassisSpeeds.vy),
+            self.omegaLimiter.calculate(robotChassisSpeeds.omega),
         )
 
-        moduleStates = self.kinematics.toSwerveModuleStates(robotChassisSpeeds)
+        SmartDashboard.putNumberArray(
+            constants.kDriveVelocityKeys,
+            [limitedChassisSpeeds.vx, limitedChassisSpeeds.vy, limitedChassisSpeeds.omega],
+        )
+
+        moduleStates = self.kinematics.toSwerveModuleStates(limitedChassisSpeeds)
         self.applyStates(moduleStates)
