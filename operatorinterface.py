@@ -115,6 +115,10 @@ class OperatorInterface:
             constants.kMoveBothClimbersToMiddleRungCapturePositionName
         )
 
+        self.pivotBothClimbers = getButtonBindingOfName(
+            constants.kPivotBothClimbersButtonName
+        )
+
         self.moveBothClimbersToMiddleRungHangPosition = getButtonBindingOfName(
             constants.kMoveBothClimbersToMiddleRungHangPositionName
         )
@@ -150,7 +154,15 @@ class OperatorInterface:
 
         self.shootBall = getButtonBindingOfName(constants.kShootBallButtonName)
 
-        self.tarmacShot = getButtonBindingOfName(constants.kTarmacShotButtonName)
+        self.increaseSpeed = getButtonBindingOfName(
+            constants.kIncreaseShootingSpeedButonName
+        )
+        self.decreaseSpeed = getButtonBindingOfName(
+            constants.kDecreaseShootingSpeedButtonName
+        )
+        self.resetSpeed = getButtonBindingOfName(
+            constants.kResetShootingSpeedButtonName
+        )
 
         self.defenseStateControl = getButtonBindingOfName("defenseStateControl")
 

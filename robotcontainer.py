@@ -1,3 +1,4 @@
+from commands2 import WaitCommand
 import wpilib
 from wpimath.geometry import Pose2d
 import commands2
@@ -14,8 +15,9 @@ from commands.drivetotarget import DriveToTarget
 from commands.targetrelativedrive import TargetRelativeDrive
 from commands.robotrelativedrive import RobotRelativeDrive
 from commands.absoluterelativedrive import AbsoluteRelativeDrive
+from commands.climber.pivotclimbersformid import PivotBothClimbersToVertical
 from commands.climber.moveclimberstomiddlerungcaptureposition import (
-    MoveBothClimbersToMiddleRungCapturePosition,
+    MoveBothClimbersToMiddleRungCapturePositionMovements,
 )
 from commands.climber.moveclimberstomiddlerunghangposition import (
     MoveBothClimbersToMiddleRungHangPosition,
@@ -63,6 +65,10 @@ from subsystems.shootersubsystem import ShooterSubsystem
 
 from operatorinterface import OperatorInterface
 from util.helpfultriggerwrappers import AxisButton, SmartDashboardButton
+
+from commands.shooter.decreaseshooterspeed import DecreaseShooterSpeed
+from commands.shooter.increaseshooterspeed import IncreaseShooterSpeed
+from commands.shooter.resetshooteroffset import ResetShooterOffset
 
 
 class RobotContainer:
@@ -250,13 +256,21 @@ class RobotContainer:
         ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
 
         commands2.button.JoystickButton(
+            *self.operatorInterface.pivotBothClimbers
+        ).whenPressed(
+            commands2.SequentialCommandGroup(
+                WaitCommand(constants.kClimberPauseBeforeMovement),
+                PivotBothClimbersToVertical(self.leftClimber, self.rightClimber),
+            ),
+        ).whenPressed(
+            StopMovingParts(self.indexer, self.shooter)
+        )
+
+        commands2.button.JoystickButton(
             *self.operatorInterface.moveBothClimbersToMiddleRungCapturePosition
         ).whenPressed(
-            commands2.ParallelCommandGroup(
-                MoveBothClimbersToMiddleRungCapturePosition(
-                    self.leftClimber, self.rightClimber
-                ),
-                StopMovingParts(self.indexer, self.shooter),
+            MoveBothClimbersToMiddleRungCapturePositionMovements(
+                self.leftClimber, self.rightClimber
             )
         )
         commands2.button.JoystickButton(
@@ -298,8 +312,14 @@ class RobotContainer:
             AimShooterManually(self.shooter)
         )
 
-        commands2.button.JoystickButton(*self.operatorInterface.tarmacShot).whileHeld(
-            TarmacShot(self.shooter)
+        commands2.button.JoystickButton(
+            *self.operatorInterface.increaseSpeed
+        ).whenPressed(IncreaseShooterSpeed())
+        commands2.button.JoystickButton(
+            *self.operatorInterface.decreaseSpeed
+        ).whenPressed(DecreaseShooterSpeed())
+        commands2.button.JoystickButton(*self.operatorInterface.resetSpeed).whenPressed(
+            ResetShooterOffset()
         )
 
     def getAutonomousCommand(self) -> commands2.Command:

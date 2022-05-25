@@ -24,7 +24,9 @@ class AimShooterToTarget(CommandBase):
                 constants.kTargetDistanceRelativeToRobotKeys.valueKey, 0
             )
             hoodAngle = constants.kHoodMappingFunction(distance)
-            wheelSpeed = constants.kShootingMappingFunction(distance)
+            wheelSpeed = constants.kShootingMappingFunction(
+                distance
+            ) + SmartDashboard.getNumber(constants.kWheelSpeedTweakKey, 0)
             self.shooter.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
             self.shooter.setWheelSpeed(wheelSpeed)
 

@@ -145,6 +145,8 @@ class ShooterSubsystem(SubsystemBase):
         self.targetHoodAngle = Rotation2d()
         self.targetWheelSpeed = 0
 
+        SmartDashboard.putNumber(constants.kWheelSpeedTweakKey, 0)
+
     def setAsStartingPosition(self) -> None:
         self.hoodMotor.setSelectedSensorPosition(constants.kHoodStartingAngle)
         if (

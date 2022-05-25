@@ -1,8 +1,6 @@
 from commands2 import (
     CommandBase,
     ParallelCommandGroup,
-    SequentialCommandGroup,
-    WaitCommand,
 )
 from subsystems.climbers.leftclimbersubsystem import LeftClimber
 from subsystems.climbers.rightclimbersubsystem import RightClimber
@@ -78,13 +76,3 @@ class MoveBothClimbersToMiddleRungCapturePositionMovements(ParallelCommandGroup)
             MoveRightClimberToMiddleRungCapturePosition(rightClimber),
         )
         self.setName(__class__.__name__)
-
-
-class MoveBothClimbersToMiddleRungCapturePosition(SequentialCommandGroup):
-    def __init__(self, leftclimber: LeftClimber, rightclimber: RightClimber):
-        super().__init__(
-            WaitCommand(constants.kClimberPauseBeforeMovement),
-            MoveBothClimbersToMiddleRungCapturePositionMovements(
-                leftclimber, rightclimber
-            ),
-        )
