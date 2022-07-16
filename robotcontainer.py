@@ -3,6 +3,7 @@ import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
+from commands.tankdrive import TankDrive
 
 
 import constants
@@ -219,12 +220,13 @@ class RobotContainer:
         commands2.button.JoystickButton(
             *self.operatorInterface.fieldRelativeCoordinateModeControl
         ).toggleWhenPressed(
-            RobotRelativeDrive(
-                self.drive,
-                self.operatorInterface.chassisControls.forwardsBackwards,
-                self.operatorInterface.chassisControls.sideToSide,
-                self.operatorInterface.chassisControls.rotationX,
-            )
+            TankDrive(self.drive, self.operatorInterface.chassisControls.forwardsBackwards, self.operatorInterface.chassisControls.rotationY)
+            # RobotRelativeDrive(
+            #     self.drive,
+            #     self.operatorInterface.chassisControls.forwardsBackwards,
+            #     self.operatorInterface.chassisControls.sideToSide,
+            #     self.operatorInterface.chassisControls.rotationX,
+            # )
         )
 
         commands2.button.JoystickButton(
