@@ -585,5 +585,5 @@ class DriveSubsystem(SubsystemBase):
             [limitedChassisSpeeds.vx, limitedChassisSpeeds.vy, limitedChassisSpeeds.omega],
         )
 
-        moduleStates = self.kinematics.toSwerveModuleStates(limitedChassisSpeeds)
+        moduleStates = self.kinematics.toSwerveModuleStates(robotChassisSpeeds)
         self.applyStates(moduleStates)
