@@ -142,11 +142,11 @@ class OperatorInterface:
         self.leftClimberToHangingPosition = getButtonBindingOfName(
             constants.kLeftClimberToHangingPositionButtonName
         )
-        self.deployIntakeControl = getAxisBindingOfName(
+        self.deployIntakeControl = getButtonBindingOfName(
             constants.kDeployIntakeButtonName
         )
 
-        self.reverseBallPath = getAxisBindingOfName(constants.kReverseBallPathName)
+        self.reverseBallPath = getButtonBindingOfName(constants.kReverseBallPathName)
 
         self.autoBallIntakeControl = getButtonBindingOfName(
             constants.kAutoBallIntakeName
