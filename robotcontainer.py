@@ -176,31 +176,26 @@ class RobotContainer:
         and then passing it to a JoystickButton.
         """
 
-        AxisButton(
-            self.operatorInterface.deployIntakeControl,
-            constants.kXboxTriggerActivationThreshold,
+        commands2.button.JoystickButton(
+            *self.operatorInterface.deployIntakeControl,
         ).whenHeld(DeployIntake(self.intake)).whenReleased(RetractIntake(self.intake))
 
         (
-            AxisButton(
-                self.operatorInterface.deployIntakeControl,
-                constants.kXboxTriggerActivationThreshold,
+            commands2.button.JoystickButton(
+                *self.operatorInterface.deployIntakeControl,
             ).and_(
-                AxisButton(
-                    self.operatorInterface.reverseBallPath,
-                    constants.kXboxTriggerActivationThreshold,
+                commands2.button.JoystickButton(
+                    *self.operatorInterface.reverseBallPath,
                 )
             )
         ).whenActive(ReverseBallPath(self.intake, self.indexer))
 
         (
-            AxisButton(
-                self.operatorInterface.deployIntakeControl,
-                constants.kXboxTriggerActivationThreshold,
+            commands2.button.JoystickButton(
+                *self.operatorInterface.deployIntakeControl,
             ).and_(
-                AxisButton(
-                    self.operatorInterface.reverseBallPath,
-                    constants.kXboxTriggerActivationThreshold,
+                commands2.button.JoystickButton(
+                    *self.operatorInterface.reverseBallPath,
                 ).not_()
             )
         ).whenActive(
