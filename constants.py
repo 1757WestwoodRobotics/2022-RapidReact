@@ -752,4 +752,5 @@ foxglove_sub_topics = {
     "shooting/WheelSpeed": (kShootingWheelSpeedKey, FoxglovePublisher.FoxgloveType.Number),
     "shooting/HoodAngle": (kShootingHoodAngleKey, FoxglovePublisher.FoxgloveType.Number),
     "shooting/TurretAngle": (kShootingTurretAngleKey, FoxglovePublisher.FoxgloveType.Number),
+    "RobotPose": (kRobotPoseArrayKeys.valueKey, FoxglovePublisher.FoxgloveType.Pose2d)
 }
