@@ -3,8 +3,10 @@
 import typing
 import wpilib
 import commands2
+from foxglove import FoxglovePublisher
 
 from robotcontainer import RobotContainer
+import constants
 
 
 class MentorBot(commands2.TimedCommandRobot):
@@ -65,4 +67,5 @@ class MentorBot(commands2.TimedCommandRobot):
 
 
 if __name__ == "__main__":
-    wpilib.run(MentorBot)
+    foxglove_pub = FoxglovePublisher(**constants.foxglove_sub_topics)
+    foxglove_pub.run_bot(MentorBot)

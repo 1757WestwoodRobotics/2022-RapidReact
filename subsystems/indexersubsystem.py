@@ -140,6 +140,10 @@ class IndexerSubsystem(SubsystemBase):
                 * constants.kStagingGearRatio
                 * constants.kTalonVelocityPerRPM,
             )
+            SmartDashboard.putBoolean(constants.kIndexerMotorRunning, True)
+            SmartDashboard.putBoolean(constants.kStagingMotorRunning, True)
+            SmartDashboard.putBoolean(constants.kIndexerMotorReversed, False)
+            SmartDashboard.putBoolean(constants.kStagingMotorReversed, False)
         elif self.state == self.Mode.Holding:
             if not (self.indexerSensor() == 0 and self.stagingSensor() == 0):
                 self.indexerMotor.set(
@@ -154,9 +158,17 @@ class IndexerSubsystem(SubsystemBase):
                     * constants.kStagingGearRatio
                     * constants.kTalonVelocityPerRPM,
                 )
+                SmartDashboard.putBoolean(constants.kIndexerMotorRunning, True)
+                SmartDashboard.putBoolean(constants.kStagingMotorRunning, True)
+                SmartDashboard.putBoolean(constants.kIndexerMotorReversed, False)
+                SmartDashboard.putBoolean(constants.kStagingMotorReversed, True)
             else:
                 self.indexerMotor.set(ControlMode.Velocity, 0)
                 self.stagingMotor.set(ControlMode.Velocity, 0)
+                SmartDashboard.putBoolean(constants.kIndexerMotorRunning, False)
+                SmartDashboard.putBoolean(constants.kStagingMotorRunning, False)
+                SmartDashboard.putBoolean(constants.kIndexerMotorReversed, False)
+                SmartDashboard.putBoolean(constants.kStagingMotorReversed, False)
         elif self.state == self.Mode.Reversed:
             self.indexerMotor.set(
                 ControlMode.Velocity,
@@ -170,9 +182,15 @@ class IndexerSubsystem(SubsystemBase):
                 * constants.kStagingGearRatio
                 * constants.kTalonVelocityPerRPM,
             )
+            SmartDashboard.putBoolean(constants.kIndexerMotorRunning, True)
+            SmartDashboard.putBoolean(constants.kStagingMotorRunning, True)
+            SmartDashboard.putBoolean(constants.kIndexerMotorReversed, True)
+            SmartDashboard.putBoolean(constants.kStagingMotorReversed, True)
         elif self.state == self.Mode.Off:
             self.indexerMotor.neutralOutput()
             self.stagingMotor.neutralOutput()
+            SmartDashboard.putBoolean(constants.kIndexerMotorRunning, False)
+            SmartDashboard.putBoolean(constants.kStagingMotorRunning, False)
 
     # Switches direction to reverse the ball path
     def motorsOff(self) -> None:

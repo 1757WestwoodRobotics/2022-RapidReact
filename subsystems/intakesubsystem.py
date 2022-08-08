@@ -2,6 +2,7 @@ from enum import Enum, auto
 from commands2 import SubsystemBase
 from wpilib import PneumaticsModuleType, Solenoid
 from ctre import ControlMode
+import wpilib
 from util.ctrecheck import ctreCheckError
 from util.simfalcon import createMotor
 import constants
@@ -75,6 +76,8 @@ class IntakeSubsystem(SubsystemBase):
                 * constants.kIntakeGearRatio
                 * constants.kTalonVelocityPerRPM,
             )
+            wpilib.SmartDashboard.putBoolean(constants.kIntakeRunningKey, True)
+            wpilib.SmartDashboard.putBoolean(constants.kIntakeReversedKey, False)
         elif self.state == self.Mode.Reversed:
             self.intakeSolenoid.set(True)
             self.intakeMotor.set(
@@ -83,11 +86,14 @@ class IntakeSubsystem(SubsystemBase):
                 * constants.kIntakeGearRatio
                 * constants.kTalonVelocityPerRPM,
             )
+            wpilib.SmartDashboard.putBoolean(constants.kIntakeReversedKey, True)
         elif self.state == self.Mode.Retracted:
             self.intakeSolenoid.set(False)
             self.intakeMotor.set(
                 ControlMode.Velocity, 0
             )  # drive to 0 instead of neutral to help make sure the rollers have stopped by the time the intake is in the retracted position
+            wpilib.SmartDashboard.putBoolean(constants.kIntakeRunningKey, False)
+            wpilib.SmartDashboard.putBoolean(constants.kIntakeReversedKey, False)
 
     def reverseIntake(self) -> None:
         self.state = self.Mode.Reversed

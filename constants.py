@@ -26,6 +26,7 @@ Swerve Module Layout:
 import math
 from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.system.plant import DCMotor
+from foxglove import FoxglovePublisher
 
 from util.keyorganization import OptionalValueKeys
 
@@ -727,4 +728,28 @@ kIntakeReversedKey = "intake/reversed"
 
 kIntakeSystemStateKey = "intakeState"
 kIndexerSystemStateKey = "indexerState"
+
+kStagingMotorRunning = "staging/running"
+kStagingMotorReversed = "staging/reversed"
+
+kIndexerMotorRunning = "indexer/running"
+kIndexerMotorReversed = "indexer/reversed"
 # Names are stored further up, about line 335
+
+foxglove_sub_topics = {
+    "IntakeRunning": (kIntakeRunningKey, FoxglovePublisher.FoxgloveType.Bool),
+    "IntakeReversed": (kIntakeReversedKey, FoxglovePublisher.FoxgloveType.Bool),
+    "ReadyToFire": (kReadyToFireKey, FoxglovePublisher.FoxgloveType.Bool),
+    "DualBall": (kDualBallKey, FoxglovePublisher.FoxgloveType.Bool),
+    "StagingRunning": (kStagingMotorRunning, FoxglovePublisher.FoxgloveType.Bool),
+    "StagingReversed": (kStagingMotorReversed, FoxglovePublisher.FoxgloveType.Bool),
+    "IndexerRunning": (kIndexerMotorRunning, FoxglovePublisher.FoxgloveType.Bool),
+    "IndexerReversed": (kIndexerMotorReversed, FoxglovePublisher.FoxgloveType.Bool),
+    "shooting/TurretOnTarget": (kShootingTurretOnTargetKey, FoxglovePublisher.FoxgloveType.Bool),
+    "shooting/HoodOnTarget": (kShootingHoodOnTargetKey, FoxglovePublisher.FoxgloveType.Bool),
+    "shooting/FlyWheelOnTarget": (kShootingFlywheelOnTargetKey, FoxglovePublisher.FoxgloveType.Bool),
+    "shooting/ManualMode": (kShootingManualModeKey, FoxglovePublisher.FoxgloveType.Bool),
+    "shooting/WheelSpeed": (kShootingWheelSpeedKey, FoxglovePublisher.FoxgloveType.Number),
+    "shooting/HoodAngle": (kShootingHoodAngleKey, FoxglovePublisher.FoxgloveType.Number),
+    "shooting/TurretAngle": (kShootingTurretAngleKey, FoxglovePublisher.FoxgloveType.Number),
+}

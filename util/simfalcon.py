@@ -127,7 +127,7 @@ class SimFalcon:  # a simulated Falcon 500
         return self.motor.setSelectedSensorPosition(sensorPos, pidIdx, timeoutMs)
 
     def getSelectedSensorVelocity(self, pidIdx: int = 0) -> float:
-        return self.motor.getSelectedSensorVelocity(pidIdx)
+        return self.motor.get() * constants.kTalonEncoderPulsesPerRadian * DCMotor.falcon500().freeSpeed / constants.k100MillisecondsPerSecond
 
     def neutralOutput(self):
         self.motor.neutralOutput()
