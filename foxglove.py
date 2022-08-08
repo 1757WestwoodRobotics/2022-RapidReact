@@ -114,7 +114,7 @@ class FoxglovePublisher:
                                     },
                                     "frame_id": "field",
                                     "pose": {
-                                        "position": {"x": x, "y": 0, "z": y},
+                                        "position": {"x": x, "y": y, "z": 0},
                                         "orientation": {
                                             "x": rot[0],
                                             "y": rot[1],

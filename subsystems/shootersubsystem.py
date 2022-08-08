@@ -186,6 +186,7 @@ class ShooterSubsystem(SubsystemBase):
                 * constants.kTalonEncoderPulsesPerRadian,
             ),
         )
+
         if not SmartDashboard.getBoolean(constants.kShootingManualModeKey, True):
             SmartDashboard.putNumber(
                 constants.kShootingWheelSpeedKey, self.getWheelSpeed()
@@ -204,6 +205,22 @@ class ShooterSubsystem(SubsystemBase):
         )
         SmartDashboard.putBoolean(
             constants.kShootingTurretOnTargetKey, self.turretOnTarget()
+        )
+        [x, y, t] = SmartDashboard.getNumberArray(
+            constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0]
+        )
+        SmartDashboard.putNumberArray(
+            constants.kShootingTurretPoseKey,
+            [x, y, self.getTurretRotation().radians() + t],
+        )
+
+        SmartDashboard.putNumberArray(
+            constants.kTargetStaticPoseArrayKeys,
+            [
+                constants.kSimDefaultTargetLocation.X(),
+                constants.kSimDefaultTargetLocation.Y(),
+                constants.kSimDefaultTargetLocation.rotation().radians(),
+            ],
         )
 
     def wheelOnTarget(self) -> bool:

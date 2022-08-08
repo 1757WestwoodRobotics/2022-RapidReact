@@ -648,6 +648,7 @@ kHoodMotorName = "shooting_hood"
 kShootingWheelSpeedKey = "shooting/wheelSpeed"
 kShootingHoodAngleKey = "shooting/hoodAngle"
 kShootingTurretAngleKey = "shooting/turretAngle"
+kShootingTurretPoseKey = "shooting/turretPose"
 kShootingManualModeKey = "shooting/manualMode"
 kShootingFlywheelOnTargetKey = "shooting/wheelOnTarget"
 kShootingHoodOnTargetKey = "shooting/hoodOnTarget"
@@ -734,6 +735,8 @@ kStagingMotorReversed = "staging/reversed"
 
 kIndexerMotorRunning = "indexer/running"
 kIndexerMotorReversed = "indexer/reversed"
+
+kTargetStaticPoseArrayKeys = "targetPose"
 # Names are stored further up, about line 335
 
 foxglove_sub_topics = {
@@ -752,5 +755,7 @@ foxglove_sub_topics = {
     "shooting/WheelSpeed": (kShootingWheelSpeedKey, FoxglovePublisher.FoxgloveType.Number),
     "shooting/HoodAngle": (kShootingHoodAngleKey, FoxglovePublisher.FoxgloveType.Number),
     "shooting/TurretAngle": (kShootingTurretAngleKey, FoxglovePublisher.FoxgloveType.Number),
-    "RobotPose": (kRobotPoseArrayKeys.valueKey, FoxglovePublisher.FoxgloveType.Pose2d)
+    "RobotPose": (kRobotPoseArrayKeys.valueKey, FoxglovePublisher.FoxgloveType.Pose2d),
+    "TurretPose": (kShootingTurretPoseKey, FoxglovePublisher.FoxgloveType.Pose2d),
+    "TargetPose": (kTargetStaticPoseArrayKeys, FoxglovePublisher.FoxgloveType.Pose2d)
 }
