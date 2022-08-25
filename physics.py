@@ -11,7 +11,7 @@
 
 import typing
 from wpilib import RobotController, SmartDashboard
-from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim
+from wpilib.simulation import EncoderSim, PWMSim, SimDeviceSim, PowerDistributionSim
 from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Translation2d
 from wpimath.system.plant import DCMotor
 import wpimath.kinematics
@@ -284,6 +284,8 @@ class PhysicsEngine:
         self.limelightSim = LimelightSim()
         self.intakeCameraSim = IntakeCameraSim()
 
+        self.pdhSim = PowerDistributionSim()
+
         self.sim_initialized = False
 
     # pylint: disable-next=unused-argument
@@ -308,6 +310,9 @@ class PhysicsEngine:
                 constants.kSimBallName
             )
             simBallObject.setPose(constants.kSimDefaultBallLocation)
+
+            for i in range(24):
+                self.pdhSim.setCurrent(i, 1.0)
 
         self.gyroYaw.set(-self.driveSim.getHeading().degrees())
 

@@ -56,6 +56,7 @@ from commands.auto.twoblhangerouttake import TwoBLHangerOuttake
 from commands.auto.threebrstandard import ThreeBRStandard
 
 from subsystems.drivesubsystem import DriveSubsystem
+from subsystems.systemlog import SystemLogSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
 from subsystems.climbers.leftclimbersubsystem import LeftClimber
 from subsystems.climbers.rightclimbersubsystem import RightClimber
@@ -92,6 +93,7 @@ class RobotContainer:
         self.shooter = ShooterSubsystem()
         self.intake = IntakeSubsystem()
         self.indexer = IndexerSubsystem()
+        self.log = SystemLogSubsystem()
 
         # Autonomous routines
 

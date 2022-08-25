@@ -737,6 +737,9 @@ kIndexerMotorRunning = "indexer/running"
 kIndexerMotorReversed = "indexer/reversed"
 
 kTargetStaticPoseArrayKeys = "targetPose"
+
+kRobotPowerChannelsKey = "powerDistribution"
+kRobotVoltageChannelKey = "powerVoltage"
 # Names are stored further up, about line 335
 
 foxglove_sub_topics = {
@@ -757,5 +760,7 @@ foxglove_sub_topics = {
     "shooting/TurretAngle": (kShootingTurretAngleKey, FoxglovePublisher.FoxgloveType.Number),
     "RobotPose": (kRobotPoseArrayKeys.valueKey, FoxglovePublisher.FoxgloveType.Pose2d),
     "TurretPose": (kShootingTurretPoseKey, FoxglovePublisher.FoxgloveType.Pose2d),
-    "TargetPose": (kTargetStaticPoseArrayKeys, FoxglovePublisher.FoxgloveType.Pose2d)
+    "TargetPose": (kTargetStaticPoseArrayKeys, FoxglovePublisher.FoxgloveType.Pose2d),
+    "PowerChannels": (kRobotPowerChannelsKey, FoxglovePublisher.FoxgloveType.NumberArray),
+    "Voltage": (kRobotVoltageChannelKey, FoxglovePublisher.FoxgloveType.Number),
 }

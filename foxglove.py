@@ -2,7 +2,8 @@ import asyncio, json, time
 from enum import Enum, auto
 from typing import Tuple
 
-import wpilib
+import wpilib, cv2, logging, queue
+from logging.handlers import QueueHandler
 
 
 from foxglove_websocket import run_cancellable
@@ -17,10 +18,18 @@ class FoxglovePublisher:
         Bool = auto()
         Number = auto()
         Pose2d = auto()
+        NumberArray = auto()
+        VideoFeed = auto()
 
     def __init__(self, **topic_sub: Tuple[str, FoxgloveType]):
         print(topic_sub)
         self.topics = topic_sub
+
+        self.log_q = queue.Queue()
+        self.ch = QueueHandler(self.log_q)
+        self.ch.setLevel(logging.DEBUG)
+
+
 
     async def foxglove_serv(self):
         print("initialization of foxglove...")
@@ -38,6 +47,15 @@ class FoxglovePublisher:
             table = wpilib.SmartDashboard
 
             self.topic_map = {}
+            self.videoStreams = {}
+
+            self.log_chan = await server.add_channel({"topic": "Log", "encoding": "json", "schemaName": "foxglove.Log"})
+
+            robotpy_logger = logging.getLogger("robotpy")
+            user_logger = logging.getLogger("your.robot")
+
+            robotpy_logger.addHandler(self.ch)
+            user_logger.addHandler(self.ch)
 
             for name in self.topics:
                 val = self.topics[name]
@@ -79,9 +97,45 @@ class FoxglovePublisher:
                             "schemaName": "foxglove.PoseInFrame",
                         }
                     )
+                elif type == FoxglovePublisher.FoxgloveType.NumberArray:
+                    self.topic_map[name] = await server.add_channel(
+                        {
+                            "topic": f"/{name}",
+                            "encoding": "json",
+                            "schemaName": "NumberArray",
+                            "schema": json.dumps(
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "val": {
+                                            "type": "array",
+                                            "items": {"type": "number"},
+                                        }
+                                    },
+                                }
+                            ),
+                        }
+                    )
+                elif type == FoxglovePublisher.FoxgloveType.VideoFeed:
+                    try:
+                        self.videoStreams[name] = cv2.VideoCapture(val[0])
+                        self.topic_map[name] = await server.add_channel(
+                            {
+                                "topic": f"/{name}",
+                                "encoding": "json",
+                                "schemaName": "foxglove.CompressedImage",
+                            }
+                        )
+                    except e:
+                        print(e)
 
             while True:
                 await asyncio.sleep(0.05)
+
+                try:
+                    m = self.log_q.get_nowait()
+                except queue.Empty:
+                    pass
                 for name in self.topics:
                     val = self.topics[name][0]
                     type = self.topics[name][1]
@@ -125,8 +179,36 @@ class FoxglovePublisher:
                                 }
                             ).encode("utf8"),
                         )
+                    elif type == FoxglovePublisher.FoxgloveType.VideoFeed:
+                        _, frame = self.videoStreams[name].read()
+                        _, imbuff = cv2.imencode(".jpg", frame)
+                        await server.send_message(
+                            self.topic_map[name],
+                            time.time_ns(),
+                            json.dumps(
+                                {
+                                    "timestamp": {
+                                        "sec": int(time.time()),
+                                        "nsec": time.time_ns() % 1e9,
+                                    },
+                                    "data": imbuff.tolist(),
+                                    "format": "jpeg"
+                                }
+                            ).encode("utf8"),
+                        )
+                    elif type == FoxglovePublisher.FoxgloveType.NumberArray:
+                        await server.send_message(
+                            self.topic_map[name],
+                            time.time_ns(),
+                            json.dumps({"val": table.getNumberArray(val, 0)}).encode("utf8"),
+                        )
 
     def run_bot(self, bot):
+        robotpy_logger = logging.getLogger("robotpy")
+        user_logger = logging.getLogger("your.robot")
+
+        robotpy_logger.addHandler(self.ch)
+        user_logger.addHandler(self.ch)
         async def bot_cmd():
             loop = asyncio.get_running_loop()
             await loop.run_in_executor(None, wpilib.run, bot)
