@@ -408,7 +408,6 @@ class DriveSubsystem(SubsystemBase):
         self.printTimer = Timer()
         self.vxLimiter = SlewRateLimiter(constants.kDriveAccelLimit)
         self.vyLimiter = SlewRateLimiter(constants.kDriveAccelLimit)
-        self.omegaLimiter = SlewRateLimiter(constants.kDriveAccelLimit)
 
     def resetSwerveModules(self):
         for module in self.modules:
@@ -544,6 +543,11 @@ class DriveSubsystem(SubsystemBase):
     def arcadeDriveWithSpeeds(
         self, chassisSpeeds: ChassisSpeeds, coordinateMode: CoordinateMode
     ) -> None:
+        targetAngle = Rotation2d(
+            SmartDashboard.getNumber(
+                constants.kTargetAngleRelativeToRobotKeys.valueKey, 0
+            )
+        )
 
         robotChassisSpeeds = None
         if coordinateMode is DriveSubsystem.CoordinateMode.RobotRelative:
@@ -559,11 +563,6 @@ class DriveSubsystem(SubsystemBase):
             if SmartDashboard.getBoolean(
                 constants.kTargetAngleRelativeToRobotKeys.validKey, False
             ):
-                targetAngle = Rotation2d(
-                    SmartDashboard.getNumber(
-                        constants.kTargetAngleRelativeToRobotKeys.valueKey, 0
-                    )
-                )
                 robotSpeeds = Translation2d(chassisSpeeds.vx, chassisSpeeds.vy)
                 targetAlignedSpeeds = robotSpeeds.rotateBy(targetAngle)
                 robotChassisSpeeds = ChassisSpeeds(
@@ -574,15 +573,24 @@ class DriveSubsystem(SubsystemBase):
             else:
                 robotChassisSpeeds = ChassisSpeeds()
 
-        limitedChassisSpeeds = ChassisSpeeds(
+        absoluteDampedSpeeds = Translation2d(
             self.vxLimiter.calculate(robotChassisSpeeds.vx),
             self.vyLimiter.calculate(robotChassisSpeeds.vy),
-            self.omegaLimiter.calculate(robotChassisSpeeds.omega),
+        ).rotateBy(-targetAngle)
+
+        limitedChassisSpeeds = ChassisSpeeds(
+            absoluteDampedSpeeds.X(),
+            absoluteDampedSpeeds.Y(),
+            robotChassisSpeeds.omega,
         )
 
         SmartDashboard.putNumberArray(
             constants.kDriveVelocityKeys,
-            [limitedChassisSpeeds.vx, limitedChassisSpeeds.vy, limitedChassisSpeeds.omega],
+            [
+                limitedChassisSpeeds.vx,
+                limitedChassisSpeeds.vy,
+                limitedChassisSpeeds.omega,
+            ],
         )
 
         moduleStates = self.kinematics.toSwerveModuleStates(limitedChassisSpeeds)
