@@ -202,7 +202,7 @@ class RobotContainer:
             NormalBallPath(self.intake, self.indexer)
         )  # when let go of just the reverse button, go back to normal ball path
 
-        commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whenHeld(
+        commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whileHeld(
             AbsoluteRelativeDrive(
                 self.drive,
                 lambda: self.operatorInterface.chassisControls.forwardsBackwards()
