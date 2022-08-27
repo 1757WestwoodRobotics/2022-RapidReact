@@ -175,7 +175,7 @@
     "right button set, left bottom (ThrustmasterT16000M)"
   ],
   "targetRelativeCoordinateModeControl": [
-    0,
+    1,
     {
       "Button": 4
     },
