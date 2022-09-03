@@ -1,11 +1,12 @@
+from typing import Tuple
 from commands2 import CommandBase
 from wpilib import SmartDashboard
-from wpimath.geometry import Rotation2d, Pose2d, Transform2d
+from wpimath.geometry import Rotation2d, Pose2d, Transform2d, Translation2d
 
 from subsystems.shootersubsystem import ShooterSubsystem
 import constants
 from util.angleoptimize import optimizeAngle
-from util.convenientmath import rotationFromTranslation
+from util.convenientmath import Interpolator, rotationFromTranslation, number
 
 
 class AimShooterToTarget(CommandBase):
@@ -15,6 +16,35 @@ class AimShooterToTarget(CommandBase):
         self.setName(__class__.__name__)
         self.shooter = shooter
         self.addRequirements([self.shooter])
+
+        self.time_interp = Interpolator(constants.kTimeOfFlightList)
+
+    def distanceAngleOffsets(self) -> Tuple[number, Rotation2d]:
+        distance = SmartDashboard.getNumber(
+            constants.kTargetDistanceRelativeToRobotKeys.valueKey, 0
+        )
+        robotVel = Transform2d(
+            *SmartDashboard.getNumberArray(constants.kDriveVelocityKeys, [0, 0, 0])
+        )
+
+        ttf = self.time_interp.interpolate(distance)
+        deltaTranslation = Translation2d(robotVel.X() * -ttf, robotVel.Y() * -ttf)
+        deltaDistance = deltaTranslation.distance(Translation2d(0, 0))
+
+        currentPose = Pose2d(
+            *SmartDashboard.getNumberArray(
+                constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0]
+            )
+        )
+
+        staticDifference = Transform2d(currentPose, constants.kSimDefaultTargetLocation)
+        oldAngle = rotationFromTranslation(staticDifference.translation())
+        newAngle = rotationFromTranslation(
+            staticDifference.translation() + deltaTranslation
+        )
+        deltaAngle = newAngle - oldAngle
+
+        return (deltaDistance, deltaAngle)
 
     def execute(self) -> None:
         currentPose = Pose2d(
@@ -26,18 +56,23 @@ class AimShooterToTarget(CommandBase):
         staticDifference = Transform2d(currentPose, constants.kSimDefaultTargetLocation)
         staticRotation = rotationFromTranslation(staticDifference.translation())
 
+        distance = staticDifference.translation().norm()
+        distanceChange, angleChange = self.distanceAngleOffsets()
+
+        hoodAngle = constants.kHoodMappingFunction(distance + distanceChange)
+        wheelSpeed = constants.kShootingMappingFunction(
+            distance + distanceChange
+        ) + SmartDashboard.getNumber(constants.kWheelSpeedTweakKey, 0)
+        self.shooter.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
+        self.shooter.setWheelSpeed(wheelSpeed)
+
         if SmartDashboard.getBoolean(
             constants.kReadyToFireKey, False
         ):  # only rotate turret when ball in place
             self.shooter.rotateTurret(
-                optimizeAngle(constants.kTurretRelativeForwardAngle, staticRotation)
+                optimizeAngle(
+                    constants.kTurretRelativeForwardAngle,
+                    staticRotation + angleChange,
+                )
                 + constants.kTurretOffsetFromRobotAngle
             )
-
-        distance = staticDifference.translation().norm()
-        hoodAngle = constants.kHoodMappingFunction(distance)
-        wheelSpeed = constants.kShootingMappingFunction(
-            distance
-        ) + SmartDashboard.getNumber(constants.kWheelSpeedTweakKey, 0)
-        self.shooter.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
-        self.shooter.setWheelSpeed(wheelSpeed)

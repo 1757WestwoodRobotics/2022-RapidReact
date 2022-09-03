@@ -457,6 +457,7 @@ class DriveSubsystem(SubsystemBase):
         Called periodically when it can be called. Updates the robot's
         odometry with sensor data.
         """
+        pastPose = self.odometry.getPose()
 
         pastPose = self.odometry.getPose()
 
