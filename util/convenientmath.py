@@ -53,3 +53,20 @@ def map_range(
     return (value - inputMin) * (outputMax - outputMin) / (
         inputMax - inputMin
     ) + outputMin
+
+
+class Interpolator:
+    def __init__(self, vals: typing.List[typing.Tuple[number, number]]) -> None:
+        self.vals = vals
+
+    def interpolate(self, val: number):
+        smallest = (0, 0)
+        greatest = (math.inf, math.inf)
+        for key in self.vals:
+            if smallest[0] < key[0] and key[0] <= val:
+                smallest = key
+
+            if val <= key[0] and key[0] < greatest[0]:
+                greatest = key
+
+        return map_range(val, smallest[0], greatest[0], smallest[1], greatest[1])
