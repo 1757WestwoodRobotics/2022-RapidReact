@@ -16,7 +16,6 @@ class PivotLeftClimberToVertical(CommandBase):
     def execute(self) -> None:
         self.climber.leftClimber.retractPiston()
 
-    # pylint: disable-next=no-self-use
     def isFinished(self) -> bool:
         return True
 
@@ -31,7 +30,6 @@ class PivotRightClimberToVertical(CommandBase):
     def execute(self) -> None:
         self.climber.rightClimber.retractPiston()
 
-    # pylint: disable-next=no-self-use
     def isFinished(self) -> bool:
         return True
 

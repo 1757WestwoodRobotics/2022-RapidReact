@@ -15,10 +15,8 @@ class ReverseIndexer(CommandBase):
     def execute(self) -> None:
         self.indexer.reversePath()
 
-    # pylint: disable-next=no-self-use
     def end(self, _interrupted: bool) -> None:
         print("... DONE")
 
-    # pylint: disable-next=no-self-use
     def isFinished(self) -> bool:
         return True

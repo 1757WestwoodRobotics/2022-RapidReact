@@ -25,7 +25,6 @@ class MoveLeftClimberToMiddleRungCapturePosition(CommandBase):
         self.climber.leftClimber.climberMotor.neutralOutput()
         self.climber.leftClimber.activateBrake()
 
-    # pylint: disable-next=no-self-use
     def isFinished(self) -> bool:
         return (
             abs(
@@ -56,7 +55,6 @@ class MoveRightClimberToMiddleRungCapturePosition(CommandBase):
         self.climber.rightClimber.climberMotor.neutralOutput()
         self.climber.rightClimber.activateBrake()
 
-    # pylint: disable-next=no-self-use
     def isFinished(self) -> bool:
         return (
             abs(
