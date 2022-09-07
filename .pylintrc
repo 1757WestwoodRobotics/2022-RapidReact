@@ -92,7 +92,8 @@ disable=raw-checker-failed,
         missing-class-docstring,
         line-too-long,
         duplicate-code,
-        no-else-return
+        no-else-return,
+        unnecessary-lambda-assignment
 
 # Enable the message, report, category or checker with the given id(s). You can
 # either give multiple identifier separated by comma (,) or put this option
