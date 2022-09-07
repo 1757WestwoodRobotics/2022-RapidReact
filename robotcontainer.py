@@ -69,8 +69,6 @@ from operatorinterface import OperatorInterface
 from util.helpfultriggerwrappers import AxisButton, SmartDashboardButton
 
 
-
-
 class RobotContainer:
     """
     This class is where the bulk of the robot should be declared. Since Command-based is a
