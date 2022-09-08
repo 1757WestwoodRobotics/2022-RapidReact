@@ -25,6 +25,7 @@ Swerve Module Layout:
 
 import math
 from ctre import SupplyCurrentLimitConfiguration
+import numpy as np
 from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.system.plant import DCMotor
 
@@ -622,8 +623,9 @@ kShootingMotorIGain = 0
 kShootingMotorDGain = 0
 kShootingMotorInverted = True
 
-kShootingMappingFunction = (
-    lambda x: 3663 - 449 * x + 168 * x * x + 125
+# 17580 + -31987x + 29034x^2 + -13674x^3 + 3534x^4 + -472x^5 + 25.4x^6
+kShootingMappingFunction = np.poly1d(
+    [25.4, -172, -3534, -13674, 29034, -31987, 17580]
 )  # derived from testing at multiple points, distance is input variable and exponential curve of best fit
 
 kTurretMotorPIDSlot = 0
@@ -642,8 +644,9 @@ kHoodMotorInverted = True
 
 kHoodGearRatio = (1 / 5) * (13 / 360)
 
-kHoodMappingFunction = (
-    lambda x: 8.65 - 1.04 * x + 0.268 * x * x
+# 7.69 + -0.0644x + -0.036x^2 + 0.0297x^3
+kHoodMappingFunction = np.poly1d(
+    [0.02973, -0.036, -0.0644, 7.69]
 )  # see above for derivation method
 
 kTurretMotorName = "shooting_turret"
@@ -680,6 +683,16 @@ kWheelSpeedTolerence = 300
 
 kOffsetDistanceRange = 1
 """meters"""
+
+kTimeOfFlightList = [
+    (2.5, 1),
+    (3.0, 1.05),
+    (3.5, 1.1),
+    (4.0, 1.15),
+    (4.5, 1.32),
+    (5.0, 1.4),
+    (5.5, 1.52),
+]
 
 kOffsetAngleRange = Rotation2d.fromDegrees(3)
 
