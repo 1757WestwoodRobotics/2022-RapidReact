@@ -24,6 +24,5 @@ class DefenseState(CommandBase):
         setModuleTo(self.drive.backLeftModule, Rotation2d.fromDegrees(135))
         setModuleTo(self.drive.backRightModule, Rotation2d.fromDegrees(-135))
 
-    # pylint: disable-next=no-self-use
     def end(self, _interrupted: bool) -> None:
         print("... DONE")

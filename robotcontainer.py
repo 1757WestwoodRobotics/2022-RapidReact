@@ -10,6 +10,7 @@ import constants
 from commands.resetdrive import ResetDrive
 from commands.complexauto import ComplexAuto
 from commands.indexer.feedforward import FeedForward
+from commands.indexer.holdball import HoldBall
 from commands.drivedistance import DriveDistance
 from commands.drivetotarget import DriveToTarget
 from commands.targetrelativedrive import TargetRelativeDrive
@@ -41,14 +42,15 @@ from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
 from commands.defensestate import DefenseState
 
-from commands.indexer.holdball import HoldBall
 from commands.intake.autoballintake import AutoBallIntake
 from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
 from commands.shooter.aimshootertotarget import AimShooterToTarget
 from commands.shooter.aimshootermanual import AimShooterManually
-from commands.shooter.tarmacshot import TarmacShot
 from commands.shooter.stopaimsystem import StopMovingParts
+from commands.shooter.decreaseshooterspeed import DecreaseShooterSpeed
+from commands.shooter.increaseshooterspeed import IncreaseShooterSpeed
+from commands.shooter.resetshooteroffset import ResetShooterOffset
 
 from commands.auto.fivebrstandard import FiveBRStandard
 from commands.auto.fourblnoninvasive import FourBLNoninvasive
@@ -65,10 +67,6 @@ from subsystems.shootersubsystem import ShooterSubsystem
 
 from operatorinterface import OperatorInterface
 from util.helpfultriggerwrappers import AxisButton, SmartDashboardButton
-
-from commands.shooter.decreaseshooterspeed import DecreaseShooterSpeed
-from commands.shooter.increaseshooterspeed import IncreaseShooterSpeed
-from commands.shooter.resetshooteroffset import ResetShooterOffset
 
 
 class RobotContainer:

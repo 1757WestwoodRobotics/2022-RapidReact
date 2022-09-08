@@ -15,10 +15,8 @@ class ResetShooterOffset(CommandBase):
     def execute(self) -> None:
         SmartDashboard.putNumber(constants.kWheelSpeedTweakKey, 0)
 
-    # pylint: disable-next=no-self-use
     def end(self, _interrupted: bool) -> None:
         print("... DONE")
 
-    # pylint: disable-next=no-self-use
     def isFinished(self) -> bool:
         return True

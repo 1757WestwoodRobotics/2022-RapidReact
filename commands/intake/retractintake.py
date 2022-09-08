@@ -16,10 +16,8 @@ class RetractIntake(CommandBase):
     def execute(self) -> None:
         self.intake.retractIntake()
 
-    # pylint: disable-next=no-self-use
     def end(self, _interrupted: bool) -> None:
         print("... DONE")
 
-    # pylint: disable-next=no-self-use
     def isFinished(self) -> bool:
         return True
