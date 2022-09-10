@@ -33,8 +33,8 @@ class ThreeBRStandardMovements(SequentialCommandGroup):
         )
         trajectoryConfig.setKinematics(drive.kinematics)
 
-        pathA = trajectoryFromFile("5bR-standard-a.wpilib.json")
-        pathB = trajectoryFromFile("5bR-standard-b.wpilib.json")
+        pathA = trajectoryFromFile("5bR-standard-a")
+        pathB = trajectoryFromFile("5bR-standard-b")
 
         super().__init__(
             ResetDrive(drive, pathA.initialPose()),

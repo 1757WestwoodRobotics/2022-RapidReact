@@ -35,8 +35,8 @@ class TwoBLHubspitMovements(SequentialCommandGroup):
         )
         trajectoryConfig.setKinematics(drive.kinematics)
 
-        pathA = trajectoryFromFile("2bL-hubspit-a.wpilib.json")
-        pathB = trajectoryFromFile("2bL-hubspit-b.wpilib.json")
+        pathA = trajectoryFromFile("2bL-hubspit-a")
+        pathB = trajectoryFromFile("2bL-hubspit-b")
 
         super().__init__(
             ResetDrive(drive, pathA.initialPose()),

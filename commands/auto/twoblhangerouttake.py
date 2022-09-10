@@ -32,9 +32,9 @@ class TwoBLHangerOuttakeMovements(SequentialCommandGroup):
         )
         trajectoryConfig.setKinematics(drive.kinematics)
 
-        pathA = trajectoryFromFile("2bL-hangerouttake-a.wpilib.json")
-        pathB = trajectoryFromFile("2bL-hangerouttake-b.wpilib.json")
-        pathC = trajectoryFromFile("2bL-hangerouttake-c.wpilib.json")
+        pathA = trajectoryFromFile("2bL-hangerouttake-a")
+        pathB = trajectoryFromFile("2bL-hangerouttake-b")
+        pathC = trajectoryFromFile("2bL-hangerouttake-c")
 
         super().__init__(
             ResetDrive(drive, pathA.initialPose()),
