@@ -35,7 +35,7 @@ class FourBLNoninvasiveMovements(SequentialCommandGroup):
         pathC = trajectoryFromFile("4bL-noninvasive-c")
 
         super().__init__(
-            ResetDrive(drive, pathA.initialPose()),
+            ResetDrive(drive, pathA.getInitialState().pose),
             DeployIntake(intake),
             FollowTrajectory(drive, pathA),  # pickup ball 2
             WaitCommand(constants.kAutoTimeFromStopToShoot),

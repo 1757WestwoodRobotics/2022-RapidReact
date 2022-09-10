@@ -37,7 +37,7 @@ class ThreeBRStandardMovements(SequentialCommandGroup):
         pathB = trajectoryFromFile("5bR-standard-b")
 
         super().__init__(
-            ResetDrive(drive, pathA.initialPose()),
+            ResetDrive(drive, pathA.getInitialState().pose),
             HoldBall(indexer),
             DeployIntake(intake),
             FollowTrajectory(drive, pathA),  # pickup ball 2
