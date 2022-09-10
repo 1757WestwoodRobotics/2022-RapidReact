@@ -35,14 +35,14 @@ class OneBARunMovements(SequentialCommandGroup):
         path = trajectoryFromFile("One Ball Run")
 
         super().__init__(
-            ResetDrive(drive, path.initialPose()),
+            ResetDrive(drive, path.getInitialState().pose),
             HoldBall(indexer),
             RetractIntake(intake),
             FeedForward(indexer),  # shoot balls 1 and 2
             WaitCommand(constants.kAutoTimeFromShootToMove),
             FollowTrajectory(drive, path),  # pickup ball 2
             WaitCommand(constants.kAutoTimeFromStopToShoot),
-            HoldBall(indexer)
+            HoldBall(indexer),
         )
 
 

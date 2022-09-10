@@ -142,7 +142,9 @@ class RobotContainer:
             self.shooter, self.drive, self.intake, self.indexer
         )
         self.oneBLRun = OneBARun(self.shooter, self.drive, self.intake, self.indexer)
-        self.twoBLSpit = TwoBLHubspit(self.shooter, self.drive, self.intake, self.indexer)
+        self.twoBLSpit = TwoBLHubspit(
+            self.shooter, self.drive, self.intake, self.indexer
+        )
 
         # Chooser
         self.chooser = wpilib.SendableChooser()

@@ -1,11 +1,10 @@
 from os import path
-from wpimath.trajectory import Trajectory
-from pathplannerlib import PathPlanner
+from pathplannerlib import PathPlanner, PathPlannerTrajectory
 
 import constants
 
 
-def trajectoryFromFile(name: str) -> Trajectory:
+def trajectoryFromFile(name: str) -> PathPlannerTrajectory:
     return PathPlanner.loadPath(
         path.join(
             path.dirname(path.realpath(__file__)),
@@ -13,8 +12,8 @@ def trajectoryFromFile(name: str) -> Trajectory:
             "..",
             "deploy",
             "pathplanner",
-            name
+            name,
         ),
         constants.kMaxForwardLinearVelocity,
         constants.kMaxForwardLinearAcceleration,
-    ).asWPILibTrajectory()
+    )

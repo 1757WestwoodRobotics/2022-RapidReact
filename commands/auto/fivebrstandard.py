@@ -39,7 +39,7 @@ class FiveBRMovements(SequentialCommandGroup):
         pathD = trajectoryFromFile("5bR-standard-d")
 
         super().__init__(
-            ResetDrive(drive, pathA.initialPose()),
+            ResetDrive(drive, pathA.getInitialState().pose),
             HoldBall(indexer),
             DeployIntake(intake),
             FollowTrajectory(drive, pathA),  # pickup ball 2

@@ -39,7 +39,7 @@ class TwoBLHubspitMovements(SequentialCommandGroup):
         pathB = trajectoryFromFile("2bL-hubspit-b")
 
         super().__init__(
-            ResetDrive(drive, pathA.initialPose()),
+            ResetDrive(drive, pathA.getInitialState().pose),
             HoldBall(indexer),
             DeployIntake(intake),
             FollowTrajectory(drive, pathA),  # pickup balls 3 and 4

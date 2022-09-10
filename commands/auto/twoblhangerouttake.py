@@ -1,4 +1,3 @@
-
 from commands2 import ParallelCommandGroup, SequentialCommandGroup, WaitCommand
 from wpimath.trajectory import TrajectoryConfig
 
@@ -37,7 +36,7 @@ class TwoBLHangerOuttakeMovements(SequentialCommandGroup):
         pathC = trajectoryFromFile("2bL-hangerouttake-c")
 
         super().__init__(
-            ResetDrive(drive, pathA.initialPose()),
+            ResetDrive(drive, pathA.getInitialState().pose),
             DeployIntake(intake),
             FollowTrajectory(drive, pathA),  # pickup ball 2
             WaitCommand(constants.kAutoTimeFromStopToShoot),

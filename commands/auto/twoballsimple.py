@@ -35,7 +35,7 @@ class TwoBASimpleMovements(SequentialCommandGroup):
         path = trajectoryFromFile("2b-simple")
 
         super().__init__(
-            ResetDrive(drive, path.initialPose()),
+            ResetDrive(drive, path.getInitialState().pose),
             HoldBall(indexer),
             DeployIntake(intake),
             FollowTrajectory(drive, path),  # pickup ball 2
