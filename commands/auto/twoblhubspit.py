@@ -42,6 +42,7 @@ class TwoBLHubspitMovements(SequentialCommandGroup):
             ResetDrive(drive, pathA.initialPose()),
             HoldBall(indexer),
             DeployIntake(intake),
+            FollowTrajectory(drive, pathA),  # pickup balls 3 and 4
             WaitCommand(constants.kAutoTimeFromStopToShoot),
             FeedForward(indexer),  # shoot balls 1 and 2
             WaitCommand(constants.kAutoTimeFromShootToMove),
