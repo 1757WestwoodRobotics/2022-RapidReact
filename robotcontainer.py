@@ -3,6 +3,7 @@ import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
+from commands.auto.oneballandrun import OneBARun
 from commands.auto.twoballsimple import TwoBASimple
 
 
@@ -134,7 +135,10 @@ class RobotContainer:
         self.threeBRStandard = ThreeBRStandard(
             self.shooter, self.drive, self.intake, self.indexer
         )
-        self.twoBASimple = TwoBASimple(self.shooter,self.drive,self.intake,self.indexer)
+        self.twoBASimple = TwoBASimple(
+            self.shooter, self.drive, self.intake, self.indexer
+        )
+        self.oneBLRun = OneBARun(self.shooter, self.drive, self.intake, self.indexer)
 
         # Chooser
         self.chooser = wpilib.SendableChooser()
@@ -149,6 +153,7 @@ class RobotContainer:
         self.chooser.addOption("5 Ball Right Standard Auto", self.fiveBRStandard)
         self.chooser.addOption("3 Ball Right Standard Auto", self.threeBRStandard)
         self.chooser.addOption("Simple Auto - NO PATH", self.simpleAuto)
+        self.chooser.addOption("1 Ball Left and RUN", self.oneBLRun)
         self.chooser.setDefaultOption("Simple Auto", self.twoBASimple)
 
         # Put the chooser on the dashboard
