@@ -32,7 +32,7 @@ class TwoBASimpleMovements(SequentialCommandGroup):
         )
         trajectoryConfig.setKinematics(drive.kinematics)
 
-        path = trajectoryFromFile("2b-simple.wpilib.json")
+        path = trajectoryFromFile("2b-simple")
 
         super().__init__(
             ResetDrive(drive, path.initialPose()),

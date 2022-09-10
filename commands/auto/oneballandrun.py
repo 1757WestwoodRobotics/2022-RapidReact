@@ -32,7 +32,7 @@ class OneBARunMovements(SequentialCommandGroup):
         )
         trajectoryConfig.setKinematics(drive.kinematics)
 
-        path = trajectoryFromFile("One Ball Run.wpilib.json")
+        path = trajectoryFromFile("One Ball Run")
 
         super().__init__(
             ResetDrive(drive, path.initialPose()),

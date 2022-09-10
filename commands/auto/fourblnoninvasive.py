@@ -30,9 +30,9 @@ class FourBLNoninvasiveMovements(SequentialCommandGroup):
         )
         trajectoryConfig.setKinematics(drive.kinematics)
 
-        pathA = trajectoryFromFile("4bL-noninvasive-a.wpilib.json")
-        pathB = trajectoryFromFile("4bL-noninvasive-b.wpilib.json")
-        pathC = trajectoryFromFile("4bL-noninvasive-c.wpilib.json")
+        pathA = trajectoryFromFile("4bL-noninvasive-a")
+        pathB = trajectoryFromFile("4bL-noninvasive-b")
+        pathC = trajectoryFromFile("4bL-noninvasive-c")
 
         super().__init__(
             ResetDrive(drive, pathA.initialPose()),
