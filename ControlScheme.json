@@ -37,7 +37,7 @@
   "decreaseShooterSpeed": [
     1,
     {
-      "Button": 14
+      "Button": 4
     },
     "Bottom POV left (ThrustmasterTWCSThrottle)"
   ],
@@ -51,7 +51,7 @@
   "deployIntake": [
     1,
     {
-      "Button": 3
+      "Button": 1
     },
     "Ring (ThrustmasterTWCSThrottle)"
   ],
@@ -72,7 +72,7 @@
   "fieldRelativeCoordinateModeControl": [
     1,
     {
-      "Button": 5
+      "Button": 6
     },
     "Middle Down (ThrustmasterTWCSThrottle)"
   ],
@@ -86,12 +86,12 @@
   "increaseShooterSpeed": [
     1,
     {
-      "Button": 12
+      "Button": 5
     },
     "Bottom POV right (ThrustmasterTWCSThrottle)"
   ],
   "leftClimberToHangingPosition": [
-    1,
+    0,
     {
       "Button": 15
     },
@@ -135,19 +135,19 @@
   "resetShooterSpeed": [
     1,
     {
-      "Button": 11
+      "Button": 3
     },
     "Bottom POV up (ThrustmasterTWCSThrottle)"
   ],
   "reverseBallPath": [
-    0,
+    1,
     {
       "Button": 2
     },
     "Pinky (ThrustmasterTWCSThrottle)"
   ],
   "rightClimberToHangingPosition": [
-    1,
+    0,
     {
       "Button": 14
     },
@@ -177,7 +177,7 @@
   "targetRelativeCoordinateModeControl": [
     1,
     {
-      "Button": 4
+      "Button": 7
     },
     "Middle Up (ThrustmasterTWCSThrottle)"
   ],
