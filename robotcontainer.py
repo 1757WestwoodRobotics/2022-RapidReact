@@ -66,7 +66,7 @@ from subsystems.indexersubsystem import IndexerSubsystem
 from subsystems.shootersubsystem import ShooterSubsystem
 
 from operatorinterface import OperatorInterface
-from util.helpfultriggerwrappers import AxisButton, SmartDashboardButton
+from util.helpfultriggerwrappers import SmartDashboardButton
 
 
 class RobotContainer:
