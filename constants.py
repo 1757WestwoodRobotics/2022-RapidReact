@@ -24,6 +24,7 @@ Swerve Module Layout:
 """
 
 import math
+from ctre import SupplyCurrentLimitConfiguration
 from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.system.plant import DCMotor
 
@@ -241,6 +242,10 @@ kStagingMotorPIDSlot = 0
 kStagingMotorPGain = 0.1
 kStagingMotorIGain = 0
 kStagingMotorDGain = 0
+
+kDriveSupplyCurrentLimitConfiguration = SupplyCurrentLimitConfiguration(
+    enable=True, currentLimit=35, triggerThresholdCurrent=60, triggerThresholdTime=0.1
+)
 
 # Encoders
 kFrontLeftSteerEncoderId = 40
