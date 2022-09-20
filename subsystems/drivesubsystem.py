@@ -222,6 +222,14 @@ class CTRESwerveModule(SwerveModule):
             ),
         ):
             return
+        if not ctreCheckError(
+            "config_SupplyLim",
+            self.driveMotor.configSupplyCurrentLimit(
+                constants.kDriveSupplyCurrentLimitConfiguration,
+                constants.kConfigurationTimeoutLimit,
+            ),
+        ):
+            return
         print("   ... Done")
 
         print(f"   Configuring steer motor: CAN ID: {self.steerMotor.getDeviceID()}")
@@ -450,6 +458,8 @@ class DriveSubsystem(SubsystemBase):
         odometry with sensor data.
         """
 
+        pastPose = self.odometry.getPose()
+
         self.odometry.update(
             self.gyro.getRotation2d(),
             self.frontLeftModule.getState(),
@@ -458,6 +468,17 @@ class DriveSubsystem(SubsystemBase):
             self.backRightModule.getState(),
         )
         robotPose = self.odometry.getPose()
+
+        deltaPose = robotPose - pastPose
+        SmartDashboard.putNumberArray(
+            constants.kDriveVelocityKeys,
+            [
+                deltaPose.X()
+                / constants.kRobotUpdatePeriod,  # velocity is delta pose / delta time
+                deltaPose.Y() / constants.kRobotUpdatePeriod,
+                deltaPose.rotation().radians() / constants.kRobotUpdatePeriod,
+            ],
+        )
 
         robotPoseArray = [robotPose.X(), robotPose.Y(), robotPose.rotation().radians()]
 
@@ -573,25 +594,5 @@ class DriveSubsystem(SubsystemBase):
             else:
                 robotChassisSpeeds = ChassisSpeeds()
 
-        absoluteDampedSpeeds = Translation2d(
-            self.vxLimiter.calculate(robotChassisSpeeds.vx),
-            self.vyLimiter.calculate(robotChassisSpeeds.vy),
-        ).rotateBy(-targetAngle)
-
-        limitedChassisSpeeds = ChassisSpeeds(
-            absoluteDampedSpeeds.X(),
-            absoluteDampedSpeeds.Y(),
-            robotChassisSpeeds.omega,
-        )
-
-        SmartDashboard.putNumberArray(
-            constants.kDriveVelocityKeys,
-            [
-                limitedChassisSpeeds.vx,
-                limitedChassisSpeeds.vy,
-                limitedChassisSpeeds.omega,
-            ],
-        )
-
-        moduleStates = self.kinematics.toSwerveModuleStates(limitedChassisSpeeds)
+        moduleStates = self.kinematics.toSwerveModuleStates(robotChassisSpeeds)
         self.applyStates(moduleStates)
