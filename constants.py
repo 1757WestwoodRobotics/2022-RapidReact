@@ -371,6 +371,8 @@ kDriveVelocityKeys = "robotVelocity"
 kDriveAccelLimit = 7
 kRobotUpdatePeriod = 1 / 50
 """seconds"""
+kLimelightUpdatePeriod = 1 / 10
+"""seconds"""
 
 # Vision parameters
 kTargetAngleRelativeToRobotKeys = OptionalValueKeys("TargetAngleRelativeToRobot")
