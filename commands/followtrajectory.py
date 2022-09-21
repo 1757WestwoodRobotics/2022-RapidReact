@@ -64,7 +64,7 @@ class FollowTrajectory(CommandBase):
             self.drive.getPose(),
             desiredState.pose,
             desiredState.velocity,
-            desiredState.pose.rotation(),
+            desiredState.holonomicRotation,
         )
 
         self.drive.arcadeDriveWithSpeeds(
