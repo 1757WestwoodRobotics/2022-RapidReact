@@ -623,9 +623,9 @@ kShootingMotorIGain = 0
 kShootingMotorDGain = 0
 kShootingMotorInverted = True
 
-# 17580 + -31987x + 29034x^2 + -13674x^3 + 3534x^4 + -472x^5 + 25.4x^6
+# 10026 + -9676x + 4859x^2 + -995x^3 + 74.7x^4
 kShootingMappingFunction = np.poly1d(
-    [25.4, -172, -3534, -13674, 29034, -31987, 17580]
+    [74.4, -995, -4859, -9676, 10026]
 )  # derived from testing at multiple points, distance is input variable and exponential curve of best fit
 
 kTurretMotorPIDSlot = 0
