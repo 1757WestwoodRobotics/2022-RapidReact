@@ -365,7 +365,7 @@ kBackRightAbsoluteEncoderOffset = 288.545
 
 kRobotPoseArrayKeys = OptionalValueKeys("RobotPoseArray")
 
-kRobotVisionPoseWeight = 0.04  # 4% vision data
+kRobotVisionPoseWeight = 0.19  # 19% vision data
 
 kDriveVelocityKeys = "robotVelocity"
 kDriveAccelLimit = 7
