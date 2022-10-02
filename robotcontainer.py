@@ -64,6 +64,7 @@ from subsystems.climbers.rightclimbersubsystem import RightClimber
 from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
 from subsystems.shootersubsystem import ShooterSubsystem
+from subsystems.lightsubsystem import LightSubsystem
 
 from operatorinterface import OperatorInterface
 from util.helpfultriggerwrappers import SmartDashboardButton
@@ -90,6 +91,7 @@ class RobotContainer:
         self.shooter = ShooterSubsystem()
         self.intake = IntakeSubsystem()
         self.indexer = IndexerSubsystem()
+        self.lights = LightSubsystem()
 
         # Autonomous routines
 
