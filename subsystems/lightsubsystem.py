@@ -1,7 +1,6 @@
 from commands2 import SubsystemBase
 from ctre.led import CANdle, RgbFadeAnimation
-from wpilib import SmartDashboard
-from wpilib._wpilib import RobotBase
+from wpilib import SmartDashboard, RobotBase
 import constants
 
 
