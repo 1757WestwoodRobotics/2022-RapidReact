@@ -214,6 +214,9 @@ kLimelightCargoNetworkTableName = "limelight-cargo"
 # CANivore
 kCANivoreName = "canivore"
 
+# CANdle
+kCANdleID = 0
+
 # Motors
 kFrontLeftDriveMotorId = 10
 kFrontLeftSteerMotorId = 11
