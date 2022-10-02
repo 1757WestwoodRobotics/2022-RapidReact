@@ -27,7 +27,7 @@ class LightSubsystem(SubsystemBase):
                     ):  # two balls, on target
                         self.candle.setLEDs(0, 255, 0)  # green
                     else:
-                        self.candle.setLEDs(255, 255, 255)  # white
+                        self.candle.setLEDs(255, 0, 255)  # pink
                 else:  # only one ball
                     if SmartDashboard.getBoolean(
                         constants.kShootingTurretOnTargetKey, False
