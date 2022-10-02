@@ -18,11 +18,13 @@ class LightSubsystem(SubsystemBase):
         if RobotBase().isDisabled():
             self.candle.animate(self.disabledAnimation)
         else:
-            if SmartDashboard.getBoolean(constants.kReadyToFireKey, False):
-                if SmartDashboard.getBoolean(constants.kDualBallKey, False):
+            if SmartDashboard.getBoolean(constants.kReadyToFireKey, False):  # one ball
+                if SmartDashboard.getBoolean(
+                    constants.kDualBallKey, False
+                ):  # two balls
                     if SmartDashboard.getBoolean(
                         constants.kShootingTurretOnTargetKey, False
-                    ):
+                    ):  # two balls, on target
                         self.candle.setLEDs(0, 255, 0)  # green
                     else:
                         self.candle.setLEDs(255, 255, 255)  # white
