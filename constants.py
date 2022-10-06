@@ -642,7 +642,7 @@ kShootingMappingValues = [
     (4.51, 4916.666667),
     (4.7, 4800),
     (5.49, 6650),
-]  # derived from testing at multiple points, mapping from multiple distances to RPM
+]  # derived from testing at multiple points, mapping from multiple distances (m) to RPM
 
 kTurretMotorPIDSlot = 0
 kTurretMotorPGain = 0.06
@@ -680,7 +680,7 @@ kHoodMappingValues = [
     (4.51, 9.393333333),
     (4.7, 10),
     (5.49, 11),
-]  # see above for derivation method
+]  # derived from testing at multiple points, mapping from multiple distances (m) to hood angles (degrees)
 
 kTurretMotorName = "shooting_turret"
 kShootingMotorName = "shooting_shooting"
@@ -716,16 +716,6 @@ kWheelSpeedTolerence = 300
 
 kOffsetDistanceRange = 1
 """meters"""
-
-kTimeOfFlightList = [
-    (2.5, 1),
-    (3.0, 1.05),
-    (3.5, 1.1),
-    (4.0, 1.15),
-    (4.5, 1.32),
-    (5.0, 1.4),
-    (5.5, 1.52),
-]
 
 kOffsetAngleRange = Rotation2d.fromDegrees(3)
 

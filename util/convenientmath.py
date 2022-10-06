@@ -57,9 +57,11 @@ def map_range(
 
 class Interpolator:
     def __init__(self, vals: typing.List[typing.Tuple[number, number]]) -> None:
+        """uses a list of tuples of x/y coordinates, to interpolate linearly between them"""
         self.vals = vals
 
     def interpolate(self, val: number):
+        """samples at an x position the interpolated linear value between the two closest defined points"""
         smallest = (0, 0)
         greatest = (math.inf, math.inf)
         for key in self.vals:
