@@ -17,9 +17,9 @@ class AimShooterToTarget(CommandBase):
         self.shooter = shooter
         self.addRequirements([self.shooter])
 
-        self.time_interp = Interpolator(constants.kTimeOfFlightList)
+        self.timeInterp = Interpolator(constants.kTimeOfFlightList)
 
-    def distanceAngleOffsets(self) -> Tuple[number, Rotation2d]:
+    def calculateDistanceAndAngleOffsets(self) -> Tuple[number, Rotation2d]:
         distance = SmartDashboard.getNumber(
             constants.kTargetDistanceRelativeToRobotKeys.valueKey, 0
         )
@@ -27,8 +27,10 @@ class AimShooterToTarget(CommandBase):
             *SmartDashboard.getNumberArray(constants.kDriveVelocityKeys, [0, 0, 0])
         )
 
-        ttf = self.time_interp.interpolate(distance)
-        deltaTranslation = Translation2d(robotVel.X() * -ttf, robotVel.Y() * -ttf)
+        timeToHitTarget = self.timeInterp.interpolate(distance)
+        deltaTranslation = Translation2d(
+            robotVel.X() * -timeToHitTarget, robotVel.Y() * -timeToHitTarget
+        )
         deltaDistance = deltaTranslation.distance(Translation2d(0, 0))
 
         currentPose = Pose2d(
@@ -47,7 +49,7 @@ class AimShooterToTarget(CommandBase):
         return (deltaDistance, deltaAngle)
 
     def execute(self) -> None:
-        distanceChange, angleChange = self.distanceAngleOffsets()
+        distanceChange, angleChange = self.calculateDistanceAndAngleOffsets()
         if SmartDashboard.getBoolean(
             constants.kReadyToFireKey, False
         ):  # only start tracking when ready to fire

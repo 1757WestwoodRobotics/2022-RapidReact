@@ -459,8 +459,6 @@ class DriveSubsystem(SubsystemBase):
         """
         pastPose = self.odometry.getPose()
 
-        pastPose = self.odometry.getPose()
-
         self.odometry.update(
             self.gyro.getRotation2d(),
             self.frontLeftModule.getState(),

@@ -683,15 +683,17 @@ kWheelSpeedTolerence = 300
 kOffsetDistanceRange = 1
 """meters"""
 
-kTimeOfFlightList = [
-    (2.5, 1),
-    (3.0, 1.05),
-    (3.5, 1.1),
-    (4.0, 1.15),
-    (4.5, 1.32),
-    (5.0, 1.4),
-    (5.5, 1.52),
-]
+kTimeOfFlightList = (
+    [  # list of (distance,time) where distance (m) to time for ball to reach hub (s)
+        (2.5, 1),
+        (3.0, 1.05),
+        (3.5, 1.1),
+        (4.0, 1.15),
+        (4.5, 1.32),
+        (5.0, 1.4),
+        (5.5, 1.52),
+    ]
+)
 
 kOffsetAngleRange = Rotation2d.fromDegrees(3)
 
