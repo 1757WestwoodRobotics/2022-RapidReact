@@ -1,6 +1,6 @@
 from commands2 import SubsystemBase
 from ctre.led import CANdle, RgbFadeAnimation
-from wpilib import SmartDashboard, RobotBase
+from wpilib import SmartDashboard, RobotState
 import constants
 
 
@@ -14,7 +14,7 @@ class LightSubsystem(SubsystemBase):
         self.disabledAnimation = RgbFadeAnimation(1, 0.5)
 
     def periodic(self) -> None:
-        if RobotBase().isDisabled():
+        if RobotState.isDisabled():
             self.candle.animate(self.disabledAnimation)
         else:
             if SmartDashboard.getBoolean(constants.kReadyToFireKey, False):  # one ball
