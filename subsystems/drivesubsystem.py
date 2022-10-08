@@ -468,15 +468,17 @@ class DriveSubsystem(SubsystemBase):
         )
         robotPose = self.odometry.getPose()
 
-        deltaPose = robotPose - pastPose
+        velocity = self.kinematics.toChassisSpeeds(
+            (
+                self.frontLeftModule.getState(),
+                self.frontRightModule.getState(),
+                self.backLeftModule.getState(),
+                self.backRightModule.getState(),
+            )
+        )
         SmartDashboard.putNumberArray(
             constants.kDriveVelocityKeys,
-            [
-                deltaPose.X()
-                / constants.kRobotUpdatePeriod,  # velocity is delta pose / delta time
-                deltaPose.Y() / constants.kRobotUpdatePeriod,
-                deltaPose.rotation().radians() / constants.kRobotUpdatePeriod,
-            ],
+            [velocity.vx, velocity.vy, velocity.omega],
         )
 
         robotPoseArray = [robotPose.X(), robotPose.Y(), robotPose.rotation().radians()]
