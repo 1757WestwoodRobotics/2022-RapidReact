@@ -143,6 +143,12 @@ class LimelightTrackingModule(TrackingModule):
     def getTargetFacingAngle(self) -> typing.Optional[Rotation2d]:
         return self.targetFacingAngle
 
+    def setLEDS(self, on: bool) -> None:
+        self.limelightNetworkTable.putNumber(
+            constants.kLimelightLEDModeKey, 3 if on else 1
+        )
+        # https://docs.limelightvision.io/en/latest/networktables_api.html#camera-controls
+
     def update(self) -> None:
         targetValid = self.limelightNetworkTable.getNumber(
             constants.kLimelightTargetValidKey, constants.kLimelightTargetInvalidValue
@@ -193,6 +199,11 @@ class VisionSubsystem(SubsystemBase):
         Called periodically by the command framework. Updates the estimate of the target's pose from the tracking data.
         """
         self.updateTimer += constants.kRobotUpdatePeriod
+
+        if SmartDashboard.getBoolean(constants.kReadyToFireKey, False):
+            self.trackingModule.setLEDS(True)
+        else:
+            self.trackingModule.setLEDS(False)
 
         if self.updateTimer >= constants.kLimelightUpdatePeriod:
             self.updateTimer = 0

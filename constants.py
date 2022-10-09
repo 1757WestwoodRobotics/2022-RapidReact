@@ -206,6 +206,7 @@ kLimelightNetworkTableName = "limelight"
 kLimelightTargetValidKey = "tv"
 kLimelightTargetHorizontalAngleKey = "tx"
 kLimelightTargetVerticalAngleKey = "ty"
+kLimelightLEDModeKey = "ledMode"
 
 
 # Limelight (cargo)
