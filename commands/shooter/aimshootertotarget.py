@@ -28,10 +28,10 @@ class AimShooterToTarget(CommandBase):
         )
 
         timeToHitTarget = self.timeInterp.interpolate(distance)
-        deltaTranslation = Translation2d(
-            robotVel.X() * -timeToHitTarget, robotVel.Y() * -timeToHitTarget
+        ballExtraTranslation = Translation2d(
+            robotVel.X() * timeToHitTarget, robotVel.Y() * timeToHitTarget
         )
-        deltaDistance = deltaTranslation.distance(Translation2d(0, 0))
+        movementDistanceChange = ballExtraTranslation.distance(Translation2d(0, 0))
 
         currentPose = Pose2d(
             *SmartDashboard.getNumberArray(
@@ -42,11 +42,11 @@ class AimShooterToTarget(CommandBase):
         staticDifference = Transform2d(currentPose, constants.kSimDefaultTargetLocation)
         oldAngle = rotationFromTranslation(staticDifference.translation())
         newAngle = rotationFromTranslation(
-            staticDifference.translation() + deltaTranslation
+            staticDifference.translation() - ballExtraTranslation
         )
         deltaAngle = newAngle - oldAngle
 
-        return (deltaDistance, deltaAngle)
+        return (movementDistanceChange, deltaAngle)
 
     def execute(self) -> None:
         distanceChange, angleChange = self.calculateDistanceAndAngleOffsets()
