@@ -9,6 +9,7 @@ from subsystems.shootersubsystem import ShooterSubsystem
 from commands.auto.autohelper import trajectoryFromFile
 from commands.resetdrive import ResetDrive
 from commands.intake.deployintake import DeployIntake
+from commands.intake.retractintake import RetractIntake
 from commands.indexer.feedforward import FeedForward
 from commands.indexer.holdball import HoldBall
 from commands.followtrajectory import FollowTrajectory
@@ -36,13 +37,17 @@ class TwoBASimpleMovements(SequentialCommandGroup):
 
         super().__init__(
             ResetDrive(drive, path.getInitialState().pose),
-            HoldBall(indexer),
             DeployIntake(intake),
-            FollowTrajectory(drive, path),  # pickup ball 2
-            WaitCommand(constants.kAutoTimeFromStopToShoot),
+            HoldBall(indexer),
             FeedForward(indexer),  # shoot balls 1 and 2
+            WaitCommand(constants.kAutoTimeFromStopToShoot),
+            HoldBall(indexer),
+            FollowTrajectory(drive, path),  # pickup ball 3
+            WaitCommand(constants.kAutoTimeFromStopToShoot),
+            FeedForward(indexer),  # shoot ball 3
             WaitCommand(constants.kAutoTimeFromShootToMove),
             HoldBall(indexer),
+            RetractIntake(intake),
         )
 
 

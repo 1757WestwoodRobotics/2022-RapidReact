@@ -38,6 +38,10 @@ class TwoBLHangerOuttakeMovements(SequentialCommandGroup):
         super().__init__(
             ResetDrive(drive, pathA.getInitialState().pose),
             DeployIntake(intake),
+            WaitCommand(constants.kAutoTimeFromStopToShoot),
+            FeedForward(indexer),  # shoot balls 1 and 2
+            WaitCommand(constants.kAutoTimeFromShootToMove),
+            HoldBall(indexer),
             FollowTrajectory(drive, pathA),  # pickup ball 2
             WaitCommand(constants.kAutoTimeFromStopToShoot),
             FeedForward(indexer),

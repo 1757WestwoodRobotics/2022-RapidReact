@@ -9,6 +9,7 @@ from subsystems.shootersubsystem import ShooterSubsystem
 from commands.auto.autohelper import trajectoryFromFile
 from commands.resetdrive import ResetDrive
 from commands.intake.retractintake import RetractIntake
+from commands.intake.deployintake import DeployIntake
 from commands.indexer.feedforward import FeedForward
 from commands.indexer.holdball import HoldBall
 from commands.followtrajectory import FollowTrajectory
@@ -37,12 +38,14 @@ class OneBARunMovements(SequentialCommandGroup):
         super().__init__(
             ResetDrive(drive, path.getInitialState().pose),
             HoldBall(indexer),
-            RetractIntake(intake),
+            DeployIntake(intake),  # pickup ball 2
+            WaitCommand(constants.kAutoTimeFromStopToShoot),
             FeedForward(indexer),  # shoot balls 1 and 2
             WaitCommand(constants.kAutoTimeFromShootToMove),
-            FollowTrajectory(drive, path),  # pickup ball 2
+            FollowTrajectory(drive, path),  # get away!
             WaitCommand(constants.kAutoTimeFromStopToShoot),
             HoldBall(indexer),
+            RetractIntake(intake),
         )
 
 
