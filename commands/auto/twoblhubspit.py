@@ -41,13 +41,17 @@ class TwoBLHubspitMovements(SequentialCommandGroup):
         super().__init__(
             ResetDrive(drive, pathA.getInitialState().pose),
             HoldBall(indexer),
-            DeployIntake(intake),
-            FollowTrajectory(drive, pathA),  # pickup balls 3 and 4
+            DeployIntake(intake),  # pickup second preload
             WaitCommand(constants.kAutoTimeFromStopToShoot),
             FeedForward(indexer),  # shoot balls 1 and 2
             WaitCommand(constants.kAutoTimeFromShootToMove),
             HoldBall(indexer),
-            FollowTrajectory(drive, pathB),  # pickup balls 3 and 4
+            FollowTrajectory(drive, pathA),  # pickup ball 3
+            WaitCommand(constants.kAutoTimeFromStopToShoot),
+            FeedForward(indexer),  # shoot ball 3
+            WaitCommand(constants.kAutoTimeFromShootToMove),
+            HoldBall(indexer),
+            FollowTrajectory(drive, pathB),  # pickup balls 4 and 5
             WaitCommand(constants.kAutoTimeFromStopToShoot),
             ReverseBallPath(intake, indexer),
             WaitCommand(constants.kAutoTimeFromShootToMove),
