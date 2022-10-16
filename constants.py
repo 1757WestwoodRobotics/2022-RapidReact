@@ -628,9 +628,27 @@ kShootingMotorIGain = 0
 kShootingMotorDGain = 0
 kShootingMotorInverted = True
 
-kShootingMappingFunction = (
-    lambda x: 3663 - 449 * x + 168 * x * x + 125
-)  # derived from testing at multiple points, distance is input variable and exponential curve of best fit
+kShootingMappingValues = [
+    (1.6, 3300),
+    (1.72, 3400),
+    (1.89, 3385),
+    (2.18, 3500),
+    (2.41, 3560),
+    (2.63, 3637.5),
+    (2.76, 3700),
+    (2.78, 3700),
+    (2.84, 3760),
+    (3.28, 4116.666667),
+    (3.5, 4250),
+    (3.74, 4450),
+    (3.78, 4275),
+    (3.79, 4400),
+    (4.2, 4700),
+    (4.23, 4900),
+    (4.51, 4916.666667),
+    (4.7, 4800),
+    (5.49, 6650),
+]  # derived from testing at multiple points, mapping from multiple distances (m) to RPM
 
 kTurretMotorPIDSlot = 0
 kTurretMotorPGain = 0.06
@@ -648,9 +666,27 @@ kHoodMotorInverted = True
 
 kHoodGearRatio = (1 / 5) * (13 / 360)
 
-kHoodMappingFunction = (
-    lambda x: 8.65 - 1.04 * x + 0.268 * x * x
-)  # see above for derivation method
+kHoodMappingValues = [
+    (1.6, 4),
+    (1.72, 9.5),
+    (1.89, 7.05),
+    (2.18, 8),
+    (2.41, 8.4),
+    (2.63, 7.425),
+    (2.76, 7),
+    (2.78, 9),
+    (2.84, 8.65),
+    (3.28, 7),
+    (3.5, 8.1),
+    (3.74, 8.7),
+    (3.78, 9.75),
+    (3.79, 9),
+    (4.2, 8.1),
+    (4.23, 9),
+    (4.51, 9.393333333),
+    (4.7, 10),
+    (5.49, 11),
+]  # derived from testing at multiple points, mapping from multiple distances (m) to hood angles (degrees)
 
 kTurretMotorName = "shooting_turret"
 kShootingMotorName = "shooting_shooting"
