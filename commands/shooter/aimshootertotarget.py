@@ -31,7 +31,7 @@ class AimShooterToTarget(CommandBase):
         ballExtraTranslation = Translation2d(
             robotVel.X() * timeToHitTarget, robotVel.Y() * timeToHitTarget
         )
-        movementDistanceChange = ballExtraTranslation.distance(Translation2d(0, 0))
+        movementDistanceChange = ballExtraTranslation.norm()
 
         currentPose = Pose2d(
             *SmartDashboard.getNumberArray(
@@ -65,8 +65,12 @@ class AimShooterToTarget(CommandBase):
         wheelSpeed = constants.kShootingMappingFunction(
             distance + distanceChange
         ) + SmartDashboard.getNumber(constants.kWheelSpeedTweakKey, 0)
-        self.shooter.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
-        self.shooter.setWheelSpeed(wheelSpeed)
+        self.shooter.setHoodAngle(
+            Rotation2d.fromDegrees(hoodAngle)
+        )  # change hood in order to prep for instant shots
+        self.shooter.setWheelSpeed(
+            wheelSpeed
+        )  # change wheel speed in order to prep for instant shots
 
         if SmartDashboard.getBoolean(
             constants.kReadyToFireKey, False
