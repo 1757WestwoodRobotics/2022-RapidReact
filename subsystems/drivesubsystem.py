@@ -2,7 +2,7 @@ from enum import Enum, auto
 
 from typing import Tuple
 from commands2 import SubsystemBase
-from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
+from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer, RobotState
 from ctre import (
     AbsoluteSensorRange,
     CANCoder,
@@ -485,7 +485,7 @@ class DriveSubsystem(SubsystemBase):
 
         if SmartDashboard.getBoolean(
             constants.kRobotVisionPoseArrayKeys.validKey, False
-        ):
+        ) and not RobotState.isAutonomous():
             visionPose = Pose2d(
                 *SmartDashboard.getNumberArray(
                     constants.kRobotVisionPoseArrayKeys.valueKey, robotPoseArray

@@ -42,7 +42,7 @@ class FiveBRMovements(SequentialCommandGroup):
             ResetDrive(drive, pathA.getInitialState().pose),
             HoldBall(indexer),
             DeployIntake(intake),  # pickup second preload
-            WaitCommand(constants.kAutoTimeFromStopToShoot),
+            WaitCommand(constants.kAutoTimeFromStopToShoot * 2),
             FeedForward(indexer),  # shoot balls 1 and 2
             WaitCommand(constants.kAutoTimeFromShootToMove),
             HoldBall(indexer),

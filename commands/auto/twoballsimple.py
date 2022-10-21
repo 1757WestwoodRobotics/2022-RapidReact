@@ -39,6 +39,7 @@ class TwoBASimpleMovements(SequentialCommandGroup):
             ResetDrive(drive, path.getInitialState().pose),
             DeployIntake(intake),
             HoldBall(indexer),
+            WaitCommand(constants.kAutoTimeFromStopToShoot),
             FeedForward(indexer),  # shoot balls 1 and 2
             WaitCommand(constants.kAutoTimeFromStopToShoot),
             HoldBall(indexer),

@@ -49,36 +49,55 @@ class AimShooterToTarget(CommandBase):
         return (movementDistanceChange, deltaAngle)
 
     def execute(self) -> None:
-        currentPose = Pose2d(
-            *SmartDashboard.getNumberArray(
-                constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0]
-            )
-        )
-
-        staticDifference = Transform2d(currentPose, constants.kSimDefaultTargetLocation)
-        staticRotation = rotationFromTranslation(staticDifference.translation())
-
-        distance = staticDifference.translation().norm()
-        distanceChange, angleChange = self.calculateDistanceAndAngleOffsets()
-
-        hoodAngle = constants.kHoodMappingFunction(distance + distanceChange)
-        wheelSpeed = constants.kShootingMappingFunction(
-            distance + distanceChange
-        ) + SmartDashboard.getNumber(constants.kWheelSpeedTweakKey, 0)
-        self.shooter.setHoodAngle(
-            Rotation2d.fromDegrees(hoodAngle)
-        )  # change hood in order to prep for instant shots
-        self.shooter.setWheelSpeed(
-            wheelSpeed
-        )  # change wheel speed in order to prep for instant shots
-
         if SmartDashboard.getBoolean(
             constants.kReadyToFireKey, False
-        ):  # only rotate turret when ball in place
-            self.shooter.rotateTurret(
-                optimizeAngle(
-                    constants.kTurretRelativeForwardAngle,
-                    staticRotation + angleChange,
+        ):  # only start tracking when ready to fire
+            distance = SmartDashboard.getNumber(
+                constants.kTargetDistanceRelativeToRobotKeys.valueKey, 0
+            )
+            currentPose = Pose2d(
+                *SmartDashboard.getNumberArray(
+                    constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0]
                 )
+            )
+
+            staticDifference = Transform2d(
+                currentPose, constants.kSimDefaultTargetLocation
+            )
+            staticRotation = rotationFromTranslation(staticDifference.translation())
+
+            self.shooter.rotateTurret(
+                optimizeAngle(constants.kTurretRelativeForwardAngle, staticRotation)
                 + constants.kTurretOffsetFromRobotAngle
             )
+            hoodAngle = constants.kHoodMappingFunction(distance)
+            wheelSpeed = constants.kShootingMappingFunction(
+                distance
+            ) + SmartDashboard.getNumber(constants.kWheelSpeedTweakKey, 0)
+            self.shooter.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
+            self.shooter.setWheelSpeed(wheelSpeed)
+
+            if SmartDashboard.getBoolean(
+                constants.kTargetAngleRelativeToRobotKeys.validKey, False
+            ):  # if we have an angle, use the relative angle to adjust the turret for precision
+                angle = SmartDashboard.getNumber(
+                    constants.kTargetAngleRelativeToRobotKeys.valueKey, 0.0
+                )
+
+                self.shooter.trackTurret(angle)  # always track the turret
+            else:  # ...otherwise use odometry to estimate where the target SHOULD be
+                currentPose = Pose2d(
+                    *SmartDashboard.getNumberArray(
+                        constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0]
+                    )
+                )
+
+                staticDifference = Transform2d(
+                    currentPose, constants.kSimDefaultTargetLocation
+                )
+                staticRotation = rotationFromTranslation(staticDifference.translation())
+
+                self.shooter.rotateTurret(
+                    optimizeAngle(constants.kTurretRelativeForwardAngle, staticRotation)
+                    + constants.kTurretOffsetFromRobotAngle
+                )
