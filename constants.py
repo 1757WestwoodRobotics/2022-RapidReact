@@ -404,7 +404,7 @@ kAutoFrontwaysDistance = 24 * kMetersPerInch
 kAutoSidewaysDistance = 24 * kMetersPerInch
 """meters"""
 
-kAutoDistanceThreshold = 6 * kMetersPerInch
+kAutoDistanceThreshold = 10 * kMetersPerInch
 """meters"""
 
 kAutoDriveSpeedFactor = 0.5
@@ -455,7 +455,7 @@ kDriveToTargetAngularVelocityTolerance = 5 * kRadiansPerDegree / 1
 """radians / second"""
 
 # Trajectory Following
-kTrajectoryPositionPGain = 6
+kTrajectoryPositionPGain = 4
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
@@ -650,7 +650,7 @@ kHoodMotorInverted = True
 kHoodGearRatio = (1 / 5) * (13 / 360)
 
 kHoodMappingFunction = (
-    lambda x: 8.65 - 1.04 * x + 0.268 * x * x
+    lambda x: 9.15 - 1.04 * x + 0.268 * x * x
 )  # see above for derivation method
 
 kTurretMotorName = "shooting_turret"
