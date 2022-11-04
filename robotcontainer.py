@@ -3,7 +3,6 @@ import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
-from commands.tankdrive import TankDrive
 
 
 import constants
@@ -14,9 +13,10 @@ from commands.indexer.feedforward import FeedForward
 from commands.indexer.holdball import HoldBall
 from commands.drivedistance import DriveDistance
 from commands.drivetotarget import DriveToTarget
-from commands.targetrelativedrive import TargetRelativeDrive
-from commands.robotrelativedrive import RobotRelativeDrive
 from commands.absoluterelativedrive import AbsoluteRelativeDrive
+from commands.robotrelativedrive import RobotRelativeDrive
+from commands.fieldrelativedrive import FieldRelativeDrive
+from commands.tankdrive import TankDrive
 from commands.climber.pivotclimbersformid import PivotBothClimbersToVertical
 from commands.climber.moveclimberstomiddlerungcaptureposition import (
     MoveBothClimbersToMiddleRungCapturePositionMovements,
@@ -156,17 +156,60 @@ class RobotContainer:
 
         self.configureButtonBindings()
 
-        self.drive.setDefaultCommand(
+        self.driveChooser = wpilib.SendableChooser()
+
+        self.driveChooser.setDefaultOption(
+            "Absolute Drive",
             AbsoluteRelativeDrive(
                 self.drive,
                 lambda: self.operatorInterface.chassisControls.forwardsBackwards()
-                * constants.kNormalSpeedMultiplier,
+                * (
+                    constants.kTurboSpeedMultiplier  # this turbo speed adjustment needs to be a lambda function, likely a better rewrite exists but this was quick and easy
+                    if self.operatorInterface.turboSpeed[0].getRawButton(
+                        self.operatorInterface.turboSpeed[1]
+                    )
+                    else constants.kNormalSpeedMultiplier
+                ),
                 lambda: self.operatorInterface.chassisControls.sideToSide()
-                * constants.kNormalSpeedMultiplier,
+                * (
+                    constants.kTurboSpeedMultiplier
+                    if self.operatorInterface.turboSpeed[0].getRawButton(
+                        self.operatorInterface.turboSpeed[1]
+                    )
+                    else constants.kNormalSpeedMultiplier
+                ),
                 self.operatorInterface.chassisControls.rotationX,
                 self.operatorInterface.chassisControls.rotationY,
-            )
+            ),
         )
+        self.driveChooser.addOption(
+            "Tank Drive",
+            TankDrive(
+                self.drive,
+                self.operatorInterface.chassisControls.forwardsBackwards,
+                self.operatorInterface.chassisControls.rotationY,
+            ),
+        )
+        self.driveChooser.addOption(
+            "Robot Relative Drive",
+            RobotRelativeDrive(
+                self.drive,
+                self.operatorInterface.chassisControls.forwardsBackwards,
+                self.operatorInterface.chassisControls.sideToSide,
+                self.operatorInterface.chassisControls.rotationX,
+            ),
+        )
+        self.driveChooser.addOption(
+            "Field Relative Drive",
+            FieldRelativeDrive(
+                self.drive,
+                self.operatorInterface.chassisControls.forwardsBackwards,
+                self.operatorInterface.chassisControls.sideToSide,
+                self.operatorInterface.chassisControls.rotationX,
+            ),
+        )
+
+        wpilib.SmartDashboard.putData("Drivetrain", self.driveChooser)
 
         self.rightClimber.setDefaultCommand(HoldRightClimberPosition(self.rightClimber))
         self.leftClimber.setDefaultCommand(HoldLeftClimberPosition(self.leftClimber))
@@ -204,41 +247,6 @@ class RobotContainer:
         ).whenActive(
             NormalBallPath(self.intake, self.indexer)
         )  # when let go of just the reverse button, go back to normal ball path
-
-        commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whileHeld(
-            AbsoluteRelativeDrive(
-                self.drive,
-                lambda: self.operatorInterface.chassisControls.forwardsBackwards()
-                * constants.kTurboSpeedMultiplier,
-                lambda: self.operatorInterface.chassisControls.sideToSide()
-                * constants.kTurboSpeedMultiplier,
-                self.operatorInterface.chassisControls.rotationX,
-                self.operatorInterface.chassisControls.rotationY,
-            )
-        )
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.fieldRelativeCoordinateModeControl
-        ).toggleWhenPressed(
-            TankDrive(self.drive, self.operatorInterface.chassisControls.forwardsBackwards, self.operatorInterface.chassisControls.rotationY)
-            # RobotRelativeDrive(
-            #     self.drive,
-            #     self.operatorInterface.chassisControls.forwardsBackwards,
-            #     self.operatorInterface.chassisControls.sideToSide,
-            #     self.operatorInterface.chassisControls.rotationX,
-            # )
-        )
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.targetRelativeCoordinateModeControl
-        ).whileHeld(
-            TargetRelativeDrive(
-                self.drive,
-                self.operatorInterface.chassisControls.forwardsBackwards,
-                self.operatorInterface.chassisControls.sideToSide,
-                self.operatorInterface.chassisControls.rotationX,
-            )
-        )
 
         commands2.button.JoystickButton(*self.operatorInterface.resetGyro).whenPressed(
             ResetDrive(self.drive, Pose2d(0, 0, 0))
@@ -321,3 +329,6 @@ class RobotContainer:
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()
+
+    def getDriveCommand(self) -> commands2.Command:
+        return self.driveChooser.getSelected()

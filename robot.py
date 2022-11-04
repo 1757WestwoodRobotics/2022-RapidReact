@@ -16,6 +16,7 @@ class MentorBot(commands2.TimedCommandRobot):
     """
 
     autonomousCommand: typing.Optional[commands2.Command] = None
+    driveCommand: typing.Optional[commands2.Command] = None
 
     def __init__(self):
         super().__init__()
@@ -57,6 +58,15 @@ class MentorBot(commands2.TimedCommandRobot):
 
     def teleopPeriodic(self) -> None:
         """This function is called periodically during operator control"""
+        if self.driveCommand is None:
+            self.driveCommand = self.container.getDriveCommand()
+            self.driveCommand.schedule()
+
+        if self.driveCommand != (currentSelectedDriveCommand := self.container.getDriveCommand()):
+            self.driveCommand.cancel()
+            self.driveCommand = currentSelectedDriveCommand
+            self.driveCommand.schedule()
+
 
     def testInit(self) -> None:
         # Cancels all running commands at the start of test mode
