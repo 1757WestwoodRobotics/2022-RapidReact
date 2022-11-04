@@ -17,26 +17,6 @@ from commands.absoluterelativedrive import AbsoluteRelativeDrive
 from commands.robotrelativedrive import RobotRelativeDrive
 from commands.fieldrelativedrive import FieldRelativeDrive
 from commands.tankdrive import TankDrive
-from commands.climber.pivotclimbersformid import PivotBothClimbersToVertical
-from commands.climber.moveclimberstomiddlerungcaptureposition import (
-    MoveBothClimbersToMiddleRungCapturePositionMovements,
-)
-from commands.climber.moveclimberstomiddlerunghangposition import (
-    MoveBothClimbersToMiddleRungHangPosition,
-)
-from commands.climber.holdcimbersposition import (
-    HoldBothClimbersPosition,
-    HoldLeftClimberPosition,
-)
-from commands.climber.moveclimberstofullhangingposition import (
-    MoveLeftClimberToFullHangingPosition,
-    MoveRightClimberToFullHangingPosition,
-)
-from commands.climber.moveclimberstonextrungcaptureposition import (
-    MoveLeftClimberToNextRungCapturePosition,
-    MoveRightClimberToNextRungCapturePosition,
-)
-from commands.climber.holdcimbersposition import HoldRightClimberPosition
 
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
@@ -48,10 +28,6 @@ from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
 from commands.shooter.aimshootertotarget import AimShooterToTarget
 from commands.shooter.aimshootermanual import AimShooterManually
-from commands.shooter.stopaimsystem import StopMovingParts
-from commands.shooter.decreaseshooterspeed import DecreaseShooterSpeed
-from commands.shooter.increaseshooterspeed import IncreaseShooterSpeed
-from commands.shooter.resetshooteroffset import ResetShooterOffset
 
 from commands.auto.fivebrstandard import FiveBRStandard
 from commands.auto.fourblnoninvasive import FourBLNoninvasive
@@ -68,7 +44,6 @@ from subsystems.shootersubsystem import ShooterSubsystem
 from subsystems.lightsubsystem import LightSubsystem
 
 from operatorinterface import OperatorInterface
-from util.helpfultriggerwrappers import SmartDashboardButton
 
 
 class RobotContainer:
@@ -211,9 +186,7 @@ class RobotContainer:
 
         wpilib.SmartDashboard.putData("Drivetrain", self.driveChooser)
 
-        self.rightClimber.setDefaultCommand(HoldRightClimberPosition(self.rightClimber))
-        self.leftClimber.setDefaultCommand(HoldLeftClimberPosition(self.leftClimber))
-        self.shooter.setDefaultCommand(AimShooterToTarget(self.shooter))
+        self.shooter.setDefaultCommand(AimShooterManually(self.shooter))
 
     def configureButtonBindings(self):
         """
@@ -261,51 +234,6 @@ class RobotContainer:
         ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.pivotBothClimbers
-        ).whenPressed(
-            commands2.SequentialCommandGroup(
-                WaitCommand(constants.kClimberPauseBeforeMovement),
-                PivotBothClimbersToVertical(self.leftClimber, self.rightClimber),
-            ),
-        ).whenPressed(
-            StopMovingParts(self.indexer, self.shooter)
-        )
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.moveBothClimbersToMiddleRungCapturePosition
-        ).whenPressed(
-            MoveBothClimbersToMiddleRungCapturePositionMovements(
-                self.leftClimber, self.rightClimber
-            )
-        )
-        commands2.button.JoystickButton(
-            *self.operatorInterface.moveBothClimbersToMiddleRungHangPosition
-        ).whenPressed(
-            MoveBothClimbersToMiddleRungHangPosition(
-                self.leftClimber, self.rightClimber
-            )
-        )
-        commands2.button.JoystickButton(
-            *self.operatorInterface.holdBothClimbersPosition
-        ).whenPressed(HoldBothClimbersPosition(self.leftClimber, self.rightClimber))
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.leftClimberToNextRungCapturePosition
-        ).whenPressed(MoveLeftClimberToNextRungCapturePosition(self.leftClimber))
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.rightClimberToNextRungCapturePosition
-        ).whenPressed(MoveRightClimberToNextRungCapturePosition(self.rightClimber))
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.leftClimberToHangingPosition
-        ).whenPressed(MoveLeftClimberToFullHangingPosition(self.leftClimber))
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.rightClimberToHangingPosition
-        ).whenPressed(MoveRightClimberToFullHangingPosition(self.rightClimber))
-
-        commands2.button.JoystickButton(
             *self.operatorInterface.autoBallIntakeControl
         ).whenHeld(AutoBallIntake(self.drive, self.intake))
 
@@ -313,19 +241,6 @@ class RobotContainer:
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
 
-        SmartDashboardButton(constants.kShootingManualModeKey).whileHeld(
-            AimShooterManually(self.shooter)
-        )
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.increaseSpeed
-        ).whenPressed(IncreaseShooterSpeed())
-        commands2.button.JoystickButton(
-            *self.operatorInterface.decreaseSpeed
-        ).whenPressed(DecreaseShooterSpeed())
-        commands2.button.JoystickButton(*self.operatorInterface.resetSpeed).whenPressed(
-            ResetShooterOffset()
-        )
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()
