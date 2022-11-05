@@ -1,9 +1,9 @@
 import typing
 from commands2 import CommandBase
-from subsystems.drivesubsystem import DriveSubsystem
-import constants
 from pyfrc.physics import motor_cfgs, tankmodel
 from pyfrc.physics.units import units
+from subsystems.drivesubsystem import DriveSubsystem
+import constants
 
 
 class TankDrive(CommandBase):
@@ -21,7 +21,8 @@ class TankDrive(CommandBase):
             robot_mass=124 * units.lbs,
             gearing=constants.kDriveGearingRatio,
             nmotors=2,
-            x_wheelbase=constants.kSwerveModuleCenterToCenterSideDistance * units.meters,
+            x_wheelbase=constants.kSwerveModuleCenterToCenterSideDistance
+            * units.meters,
             wheel_diameter=constants.kWheelDiameter * units.meters,
         )
 

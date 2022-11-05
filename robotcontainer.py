@@ -1,4 +1,3 @@
-from commands2 import WaitCommand
 import wpilib
 from wpimath.geometry import Pose2d
 import commands2
@@ -13,10 +12,10 @@ from commands.indexer.feedforward import FeedForward
 from commands.indexer.holdball import HoldBall
 from commands.drivedistance import DriveDistance
 from commands.drivetotarget import DriveToTarget
-from commands.absoluterelativedrive import AbsoluteRelativeDrive
-from commands.robotrelativedrive import RobotRelativeDrive
-from commands.fieldrelativedrive import FieldRelativeDrive
-from commands.tankdrive import TankDrive
+from commands.drive.absoluterelativedrive import AbsoluteRelativeDrive
+from commands.drive.robotrelativedrive import RobotRelativeDrive
+from commands.drive.fieldrelativedrive import FieldRelativeDrive
+from commands.drive.tankdrive import TankDrive
 
 from commands.reverseballpath import ReverseBallPath
 from commands.normalballpath import NormalBallPath
