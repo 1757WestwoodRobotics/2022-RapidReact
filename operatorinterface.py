@@ -2,7 +2,7 @@ import typing
 import json
 
 from os import path
-from wpilib import Joystick
+from wpilib import Joystick, Preferences
 
 import constants
 from util.convenientmath import map_range, number
@@ -85,6 +85,16 @@ class OperatorInterface:
 
         controllers = {}
 
+        self.prefs = Preferences
+
+        for control in controlScheme:
+            binding = controlScheme[control]
+            self.prefs.setInt(control + " controller", binding[0])
+            if "Button" in binding[1].keys():
+                self.prefs.setInt(control + " button", binding[1]["Button"])
+            elif "Axis" in binding[1].keys():
+                self.prefs.setInt(control + " axis", binding[1]["Axis"])
+
         for num in controllerNumbers:
             controller = Joystick(num)
             print(
@@ -92,13 +102,18 @@ class OperatorInterface:
             )
             controllers[num] = controller
 
-        def getButtonBindingOfName(name: str) -> typing.Tuple[Joystick, int]:
-            binding = controlScheme[name]
-            return (controllers[binding[0]], binding[1]["Button"])
+        def getButtonBindingOfName(
+            name: str,
+        ) -> typing.Callable[[], typing.Tuple[Joystick, int]]:
+            return lambda: (
+                controllers[self.prefs.getInt(name + " controller")],
+                self.prefs.getInt(name + " button"),
+            )
 
         def getAxisBindingOfName(name: str) -> AnalogInput:
-            binding = controlScheme[name]
-            return lambda: controllers[binding[0]].getRawAxis(binding[1]["Axis"])
+            return lambda: controllers[
+                self.prefs.getInt(name + " controller")
+            ].getRawAxis(self.prefs.getInt(name + " axis"))
 
         self.fieldRelativeCoordinateModeControl = getButtonBindingOfName(
             constants.kFieldRelativeCoordinateModeControlButtonName

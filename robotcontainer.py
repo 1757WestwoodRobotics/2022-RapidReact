@@ -140,16 +140,16 @@ class RobotContainer:
                 lambda: self.operatorInterface.chassisControls.forwardsBackwards()
                 * (
                     constants.kTurboSpeedMultiplier  # this turbo speed adjustment needs to be a lambda function, likely a better rewrite exists but this was quick and easy
-                    if self.operatorInterface.turboSpeed[0].getRawButton(
-                        self.operatorInterface.turboSpeed[1]
+                    if self.operatorInterface.turboSpeed()[0].getRawButton(
+                        self.operatorInterface.turboSpeed()[1]
                     )
                     else constants.kNormalSpeedMultiplier
                 ),
                 lambda: self.operatorInterface.chassisControls.sideToSide()
                 * (
                     constants.kTurboSpeedMultiplier
-                    if self.operatorInterface.turboSpeed[0].getRawButton(
-                        self.operatorInterface.turboSpeed[1]
+                    if self.operatorInterface.turboSpeed()[0].getRawButton(
+                        self.operatorInterface.turboSpeed()[1]
                     )
                     else constants.kNormalSpeedMultiplier
                 ),
@@ -196,51 +196,50 @@ class RobotContainer:
         """
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.deployIntakeControl,
+            *self.operatorInterface.deployIntakeControl(),
         ).whenHeld(DeployIntake(self.intake)).whenReleased(RetractIntake(self.intake))
 
         (
             commands2.button.JoystickButton(
-                *self.operatorInterface.deployIntakeControl,
+                *self.operatorInterface.deployIntakeControl(),
             ).and_(
                 commands2.button.JoystickButton(
-                    *self.operatorInterface.reverseBallPath,
+                    *self.operatorInterface.reverseBallPath(),
                 )
             )
         ).whenActive(ReverseBallPath(self.intake, self.indexer))
 
         (
             commands2.button.JoystickButton(
-                *self.operatorInterface.deployIntakeControl,
+                *self.operatorInterface.deployIntakeControl(),
             ).and_(
                 commands2.button.JoystickButton(
-                    *self.operatorInterface.reverseBallPath,
+                    *self.operatorInterface.reverseBallPath(),
                 ).not_()
             )
         ).whenActive(
             NormalBallPath(self.intake, self.indexer)
         )  # when let go of just the reverse button, go back to normal ball path
 
-        commands2.button.JoystickButton(*self.operatorInterface.resetGyro).whenPressed(
-            ResetDrive(self.drive, Pose2d(0, 0, 0))
-        )
+        commands2.button.JoystickButton(
+            *self.operatorInterface.resetGyro()
+        ).whenPressed(ResetDrive(self.drive, Pose2d(0, 0, 0)))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.defenseStateControl
-        ).whileHeld(DefenseState(self.drive))
+            *self.operatorInterface.defenseStateControl()
+        ).whenPressed(DefenseState(self.drive))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.driveToTargetControl
+            *self.operatorInterface.driveToTargetControl()
         ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.autoBallIntakeControl
+            *self.operatorInterface.autoBallIntakeControl()
         ).whenHeld(AutoBallIntake(self.drive, self.intake))
 
-        commands2.button.JoystickButton(*self.operatorInterface.shootBall).whenHeld(
+        commands2.button.JoystickButton(*self.operatorInterface.shootBall()).whenHeld(
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
-
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()

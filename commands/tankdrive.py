@@ -1,7 +1,5 @@
 import typing
 from commands2 import CommandBase
-from wpilib import SmartDashboard
-from wpimath.geometry import Transform2d
 from subsystems.drivesubsystem import DriveSubsystem
 import constants
 from pyfrc.physics import motor_cfgs, tankmodel

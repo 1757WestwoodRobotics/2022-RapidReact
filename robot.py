@@ -7,7 +7,7 @@ import commands2
 from robotcontainer import RobotContainer
 
 
-class MentorBot(commands2.TimedCommandRobot):
+class Skadi(commands2.TimedCommandRobot):
     """
     Our default robot class, pass it to wpilib.run
 
@@ -60,13 +60,15 @@ class MentorBot(commands2.TimedCommandRobot):
         """This function is called periodically during operator control"""
         if self.driveCommand is None:
             self.driveCommand = self.container.getDriveCommand()
-            self.driveCommand.schedule()
 
-        if self.driveCommand != (currentSelectedDriveCommand := self.container.getDriveCommand()):
+        if self.driveCommand != (
+            currentSelectedDriveCommand := self.container.getDriveCommand()
+        ):  # walrus is used here to reduce calls to getDriveCommand
             self.driveCommand.cancel()
             self.driveCommand = currentSelectedDriveCommand
-            self.driveCommand.schedule()
 
+        if not self.driveCommand.isScheduled():
+            self.driveCommand.schedule()
 
     def testInit(self) -> None:
         # Cancels all running commands at the start of test mode
@@ -74,4 +76,4 @@ class MentorBot(commands2.TimedCommandRobot):
 
 
 if __name__ == "__main__":
-    wpilib.run(MentorBot)
+    wpilib.run(Skadi)
