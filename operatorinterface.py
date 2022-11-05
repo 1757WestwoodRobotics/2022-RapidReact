@@ -79,7 +79,7 @@ class OperatorInterface:
             controlScheme = json.load(file)
 
         controllerNumbers = set(
-            i[0] for i in controlScheme.values()
+            [0,1,2,3,4,5]
         )  # set ensures no duplicates
         print(f"Looking for controllers: {controllerNumbers} ...")
 
