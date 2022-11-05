@@ -1,6 +1,6 @@
 from enum import Enum, auto
 
-from typing import Callable
+from typing import Callable, Tuple
 from commands2.button import Button
 from wpilib import Joystick, SmartDashboard
 
@@ -21,6 +21,13 @@ class SmartDashboardButton(Button):
     def __init__(self, key: str) -> None:
         super().__init__(lambda: SmartDashboard.getBoolean(key, False))
 
+class ModifiableJoystickButton(Button):
+    def _active(self):
+        joystick, button = self.call()
+        return joystick.getRawButton(button)
+    def __init__(self, call: Callable[[],Tuple[Joystick,int]]):
+        self.call = call
+        super().__init__(self._active)
 
 class DPadButton(Button):
     """a trigger that can be fired by a d pad button"""

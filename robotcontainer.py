@@ -43,6 +43,7 @@ from subsystems.shootersubsystem import ShooterSubsystem
 from subsystems.lightsubsystem import LightSubsystem
 
 from operatorinterface import OperatorInterface
+from util.helpfultriggerwrappers import ModifiableJoystickButton
 
 
 class RobotContainer:
@@ -194,49 +195,45 @@ class RobotContainer:
         and then passing it to a JoystickButton.
         """
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.deployIntakeControl(),
-        ).whenHeld(DeployIntake(self.intake)).whenReleased(RetractIntake(self.intake))
+        ModifiableJoystickButton(self.operatorInterface.deployIntakeControl,).whenHeld(
+            DeployIntake(self.intake)
+        ).whenReleased(RetractIntake(self.intake))
 
         (
-            commands2.button.JoystickButton(
-                *self.operatorInterface.deployIntakeControl(),
-            ).and_(
-                commands2.button.JoystickButton(
-                    *self.operatorInterface.reverseBallPath(),
+            ModifiableJoystickButton(self.operatorInterface.deployIntakeControl,).and_(
+                ModifiableJoystickButton(
+                    self.operatorInterface.reverseBallPath,
                 )
             )
         ).whenActive(ReverseBallPath(self.intake, self.indexer))
 
         (
-            commands2.button.JoystickButton(
-                *self.operatorInterface.deployIntakeControl(),
-            ).and_(
-                commands2.button.JoystickButton(
-                    *self.operatorInterface.reverseBallPath(),
+            ModifiableJoystickButton(self.operatorInterface.deployIntakeControl,).and_(
+                ModifiableJoystickButton(
+                    self.operatorInterface.reverseBallPath,
                 ).not_()
             )
         ).whenActive(
             NormalBallPath(self.intake, self.indexer)
         )  # when let go of just the reverse button, go back to normal ball path
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.resetGyro()
-        ).whenPressed(ResetDrive(self.drive, Pose2d(0, 0, 0)))
+        ModifiableJoystickButton(self.operatorInterface.resetGyro).whenPressed(
+            ResetDrive(self.drive, Pose2d(0, 0, 0))
+        )
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.defenseStateControl()
+        ModifiableJoystickButton(
+            self.operatorInterface.defenseStateControl
         ).whenPressed(DefenseState(self.drive))
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.driveToTargetControl()
-        ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
+        ModifiableJoystickButton(self.operatorInterface.driveToTargetControl).whenHeld(
+            DriveToTarget(self.drive, constants.kAutoTargetOffset)
+        )
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.autoBallIntakeControl()
-        ).whenHeld(AutoBallIntake(self.drive, self.intake))
+        ModifiableJoystickButton(self.operatorInterface.autoBallIntakeControl).whenHeld(
+            AutoBallIntake(self.drive, self.intake)
+        )
 
-        commands2.button.JoystickButton(*self.operatorInterface.shootBall()).whenHeld(
+        ModifiableJoystickButton(self.operatorInterface.shootBall).whenHeld(
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
 
