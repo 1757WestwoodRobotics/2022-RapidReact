@@ -2,6 +2,7 @@ import wpilib
 from wpimath.geometry import Pose2d
 import commands2
 import commands2.button
+from commands.drive.arcardedrive import ArcadeDrive
 
 
 import constants
@@ -167,6 +168,14 @@ class RobotContainer:
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
                 self.operatorInterface.chassisControls.rotationX,
+            ),
+        )
+        self.driveChooser.addOption(
+            "Arcade Drive",
+            ArcadeDrive(
+                self.drive,
+                self.operatorInterface.chassisControls.forwardsBackwards,
+                self.operatorInterface.chassisControls.sideToSide,
             ),
         )
 
