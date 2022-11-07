@@ -1,9 +1,33 @@
 import typing
 from commands2 import CommandBase
-from pyfrc.physics import motor_cfgs, tankmodel
-from pyfrc.physics.units import units
+from wpimath.trajectory import TrapezoidProfile
+from wpimath.controller import ProfiledPIDController
+from wpimath.kinematics import DifferentialDriveKinematics
+from wpimath.kinematics._kinematics import DifferentialDriveWheelSpeeds
 from subsystems.drivesubsystem import DriveSubsystem
 import constants
+
+
+class ControlledMotor:
+    """
+    you shouldn't need to construct this class
+    it is simply a wrapper for TankDrive command
+    """
+
+    def __init__(self, control: typing.Callable[[], float]) -> None:
+        self.control = lambda: control() * constants.kMaxForwardLinearVelocity
+        self.pid = ProfiledPIDController(
+            constants.kDrivePGain,
+            constants.kDriveIGain,
+            constants.kDriveDGain,
+            TrapezoidProfile.Constraints(
+                constants.kMaxForwardLinearVelocity,
+                constants.kMaxForwardLinearAcceleration,
+            ),
+        )
+
+    def __call__(self) -> float:
+        return self.pid.calculate(self.control())
 
 
 class TankDrive(CommandBase):
@@ -16,31 +40,23 @@ class TankDrive(CommandBase):
         CommandBase.__init__(self)
         self.setName(__class__.__name__)
 
-        self.drivetrain = tankmodel.TankModel.theory(
-            motor_cfgs.MOTOR_CFG_FALCON_500,
-            robot_mass=124 * units.lbs,
-            gearing=constants.kDriveGearingRatio,
-            nmotors=2,
-            x_wheelbase=constants.kSwerveModuleCenterToCenterSideDistance
-            * units.meters,
-            wheel_diameter=constants.kWheelDiameter * units.meters,
+        self.drivetrain = DifferentialDriveKinematics(
+            constants.kSwerveModuleCenterToCenterSideDistance * 2
         )
 
         self.drive = drive
-        self.left = left
-        self.right = right
+        self.left = ControlledMotor(left)
+        self.right = ControlledMotor(right)
 
         self.addRequirements([self.drive])
 
     def execute(self) -> None:
-        l = self.left()
-        r = -self.right()
+        l = self.left() * constants.kMaxForwardLinearVelocity
+        r = self.right() * constants.kMaxForwardLinearVelocity
 
-        target_pos = self.drivetrain.calculate(l, r, 0.02)
+        target_pos = self.drivetrain.toChassisSpeeds(DifferentialDriveWheelSpeeds(l, r))
 
-        self.drive.arcadeDriveWithFactors(
-            target_pos.X() * 12,
-            target_pos.Y() * 12,
-            target_pos.rotation().radians(),
+        self.drive.arcadeDriveWithSpeeds(
+            target_pos,
             DriveSubsystem.CoordinateMode.RobotRelative,
         )
