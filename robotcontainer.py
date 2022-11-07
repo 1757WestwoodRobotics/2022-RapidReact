@@ -137,22 +137,8 @@ class RobotContainer:
             "Absolute Drive",
             AbsoluteRelativeDrive(
                 self.drive,
-                lambda: self.operatorInterface.chassisControls.forwardsBackwards()
-                * (
-                    constants.kTurboSpeedMultiplier  # this turbo speed adjustment needs to be a lambda function, likely a better rewrite exists but this was quick and easy
-                    if self.operatorInterface.turboSpeed()[0].getRawButton(
-                        self.operatorInterface.turboSpeed()[1]
-                    )
-                    else constants.kNormalSpeedMultiplier
-                ),
-                lambda: self.operatorInterface.chassisControls.sideToSide()
-                * (
-                    constants.kTurboSpeedMultiplier
-                    if self.operatorInterface.turboSpeed()[0].getRawButton(
-                        self.operatorInterface.turboSpeed()[1]
-                    )
-                    else constants.kNormalSpeedMultiplier
-                ),
+                self.operatorInterface.chassisControls.forwardsBackwards,
+                self.operatorInterface.chassisControls.sideToSide,
                 self.operatorInterface.chassisControls.rotationX,
                 self.operatorInterface.chassisControls.rotationY,
             ),

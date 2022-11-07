@@ -51,8 +51,8 @@ class TankDrive(CommandBase):
         self.addRequirements([self.drive])
 
     def execute(self) -> None:
-        l = self.left() * constants.kMaxForwardLinearVelocity
-        r = self.right() * constants.kMaxForwardLinearVelocity
+        l = -self.left() * constants.kMaxForwardLinearVelocity**2
+        r = -self.right() * constants.kMaxForwardLinearVelocity**2
 
         target_pos = self.drivetrain.toChassisSpeeds(DifferentialDriveWheelSpeeds(l, r))
 

@@ -184,31 +184,50 @@ class OperatorInterface:
         self.stopMovingParts = getButtonBindingOfName(
             constants.kStopMovingPartsButtonName
         )
+        self.speedControl = lambda: (
+            constants.kTurboSpeedMultiplier
+            if (joy := self.turboSpeed())[0].getRawButton(joy[1])
+            else constants.kNormalSpeedMultiplier
+        )
 
         self.chassisControls = HolonomicInput(
-            Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisForwardsBackwardsAxisName),
-                    constants.kXboxJoystickDeadband,
+            Multiply(
+                Invert(
+                    Deadband(
+                        getAxisBindingOfName(
+                            constants.kChassisForwardsBackwardsAxisName
+                        ),
+                        constants.kXboxJoystickDeadband,
+                    ),
                 ),
+                self.speedControl,
             ),
-            Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisSideToSideAxisName),
-                    constants.kXboxJoystickDeadband,
+            Multiply(
+                Invert(
+                    Deadband(
+                        getAxisBindingOfName(constants.kChassisSideToSideAxisName),
+                        constants.kXboxJoystickDeadband,
+                    ),
                 ),
+                self.speedControl,
             ),
-            Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisRotationXAxisName),
-                    constants.kXboxJoystickDeadband,
+            Multiply(
+                Invert(
+                    Deadband(
+                        getAxisBindingOfName(constants.kChassisRotationXAxisName),
+                        constants.kXboxJoystickDeadband,
+                    ),
                 ),
+                self.speedControl,
             ),
-            Invert(
-                Deadband(
-                    getAxisBindingOfName(constants.kChassisRotationYAxisName),
-                    constants.kXboxJoystickDeadband,
-                )
+            Multiply(
+                Invert(
+                    Deadband(
+                        getAxisBindingOfName(constants.kChassisRotationYAxisName),
+                        constants.kXboxJoystickDeadband,
+                    )
+                ),
+                self.speedControl,
             ),
         )
 
