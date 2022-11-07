@@ -134,3 +134,5 @@ dmypy.json
 simgui-ds.json
 simgui-window.json
 simgui.json
+networktables.ini.bak
+networktables.ini

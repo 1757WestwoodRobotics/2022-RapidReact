@@ -15,7 +15,7 @@ class ControlledMotor:
     """
 
     def __init__(self, control: typing.Callable[[], float]) -> None:
-        self.control = lambda: control() * constants.kMaxForwardLinearVelocity
+        self.control = lambda: control() * constants.kMaxForwardLinearVelocity ** 2 * 2
         self.pid = ProfiledPIDController(
             constants.kDrivePGain,
             constants.kDriveIGain,
@@ -51,8 +51,8 @@ class TankDrive(CommandBase):
         self.addRequirements([self.drive])
 
     def execute(self) -> None:
-        l = -self.left() * constants.kMaxForwardLinearVelocity**2
-        r = -self.right() * constants.kMaxForwardLinearVelocity**2
+        l = -self.left()
+        r = -self.right()
 
         target_pos = self.drivetrain.toChassisSpeeds(DifferentialDriveWheelSpeeds(l, r))
 
