@@ -4,6 +4,7 @@ import commands2
 import commands2.button
 from commands.drive.arcardedrive import ArcadeDrive
 from commands.drive.curvaturedrive import CurvatureDrive
+from commands.drive.pivotdrive import PivotDrive
 
 
 import constants
@@ -182,6 +183,14 @@ class RobotContainer:
         self.driveChooser.addOption(
             "Curvature Drive",
             CurvatureDrive(
+                self.drive,
+                self.operatorInterface.chassisControls.forwardsBackwards,
+                self.operatorInterface.chassisControls.sideToSide,
+            ),
+        )
+        self.driveChooser.addOption(
+            "Pivot Drive",
+            PivotDrive(
                 self.drive,
                 self.operatorInterface.chassisControls.forwardsBackwards,
                 self.operatorInterface.chassisControls.sideToSide,
