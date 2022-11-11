@@ -576,7 +576,7 @@ class DriveSubsystem(SubsystemBase):
                 chassisSpeeds.vx,
                 chassisSpeeds.vy,
                 chassisSpeeds.omega,
-                self.odometry.getPose().rotation(),
+                self.getRotation()
             )
         elif coordinateMode is DriveSubsystem.CoordinateMode.TargetRelative:
             if SmartDashboard.getBoolean(
