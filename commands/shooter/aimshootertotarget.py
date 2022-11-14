@@ -1,11 +1,12 @@
+from typing import Tuple
 from commands2 import CommandBase
 from wpilib import SmartDashboard
-from wpimath.geometry import Rotation2d, Pose2d, Transform2d
+from wpimath.geometry import Rotation2d, Pose2d, Transform2d, Translation2d
 
 from subsystems.shootersubsystem import ShooterSubsystem
 import constants
 from util.angleoptimize import optimizeAngle
-from util.convenientmath import rotationFromTranslation
+from util.convenientmath import Interpolator, rotationFromTranslation, number
 
 
 class AimShooterToTarget(CommandBase):
@@ -16,16 +17,48 @@ class AimShooterToTarget(CommandBase):
         self.shooter = shooter
         self.addRequirements([self.shooter])
 
+        self.timeInterp = Interpolator(constants.kTimeOfFlightList)
+
+    def calculateDistanceAndAngleOffsets(self) -> Tuple[number, Rotation2d]:
+        distance = SmartDashboard.getNumber(
+            constants.kTargetDistanceRelativeToRobotKeys.valueKey, 0
+        )
+        robotVel = Transform2d(
+            *SmartDashboard.getNumberArray(constants.kDriveVelocityKeys, [0, 0, 0])
+        )
+
+        timeToHitTarget = self.timeInterp.interpolate(distance)
+        ballExtraTranslation = Translation2d(
+            robotVel.X() * timeToHitTarget, robotVel.Y() * timeToHitTarget
+        )
+        movementDistanceChange = ballExtraTranslation.distance(Translation2d(0, 0))
+
+        currentPose = Pose2d(
+            *SmartDashboard.getNumberArray(
+                constants.kRobotPoseArrayKeys.valueKey, [0, 0, 0]
+            )
+        )
+
+        staticDifference = Transform2d(currentPose, constants.kSimDefaultTargetLocation)
+        oldAngle = rotationFromTranslation(staticDifference.translation())
+        newAngle = rotationFromTranslation(
+            staticDifference.translation() - ballExtraTranslation
+        )
+        deltaAngle = newAngle - oldAngle
+
+        return (movementDistanceChange, deltaAngle)
+
     def execute(self) -> None:
+        distanceChange, angleChange = self.calculateDistanceAndAngleOffsets()
         if SmartDashboard.getBoolean(
             constants.kReadyToFireKey, False
         ):  # only start tracking when ready to fire
             distance = SmartDashboard.getNumber(
                 constants.kTargetDistanceRelativeToRobotKeys.valueKey, 0
             )
-            hoodAngle = constants.kHoodMappingFunction(distance)
+            hoodAngle = constants.kHoodMappingFunction(distance + distanceChange)
             wheelSpeed = constants.kShootingMappingFunction(
-                distance
+                distance + distanceChange
             ) + SmartDashboard.getNumber(constants.kWheelSpeedTweakKey, 0)
             self.shooter.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
             self.shooter.setWheelSpeed(wheelSpeed)
@@ -37,7 +70,9 @@ class AimShooterToTarget(CommandBase):
                     constants.kTargetAngleRelativeToRobotKeys.valueKey, 0.0
                 )
 
-                self.shooter.trackTurret(angle)  # always track the turret
+                self.shooter.trackTurret(
+                    angle + angleChange.radians()
+                )  # always track the turret
             else:  # ...otherwise use odometry to estimate where the target SHOULD be
                 currentPose = Pose2d(
                     *SmartDashboard.getNumberArray(
@@ -51,6 +86,9 @@ class AimShooterToTarget(CommandBase):
                 staticRotation = rotationFromTranslation(staticDifference.translation())
 
                 self.shooter.rotateTurret(
-                    optimizeAngle(constants.kTurretRelativeForwardAngle, staticRotation)
+                    optimizeAngle(
+                        constants.kTurretRelativeForwardAngle,
+                        staticRotation + angleChange,
+                    )
                     + constants.kTurretOffsetFromRobotAngle
                 )
