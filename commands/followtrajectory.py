@@ -1,17 +1,24 @@
 from math import pi
-from commands2 import Swerve4ControllerCommand
+from commands2 import CommandBase
+from pathplannerlib import PathPlannerTrajectory
+from wpilib import Timer
 from wpimath.controller import (
     PIDController,
     ProfiledPIDControllerRadians,
+    HolonomicDriveController,
 )
-from wpimath.trajectory import Trajectory, TrapezoidProfileRadians
+from wpimath.trajectory import TrapezoidProfileRadians
 
 from subsystems.drivesubsystem import DriveSubsystem
 import constants
 
 
-class FollowTrajectory(Swerve4ControllerCommand):
-    def __init__(self, drive: DriveSubsystem, trajectory: Trajectory) -> None:
+class FollowTrajectory(CommandBase):
+    def __init__(
+        self, drive: DriveSubsystem, trajectory: PathPlannerTrajectory
+    ) -> None:
+        CommandBase.__init__(self)
+
         self.drive = drive
 
         self.xController = PIDController(
@@ -35,16 +42,37 @@ class FollowTrajectory(Swerve4ControllerCommand):
         )
         self.thetaController.enableContinuousInput(-pi, pi)
 
-        super().__init__(
-            trajectory,
-            self.drive.getPose,
-            self.drive.kinematics,
-            self.xController,
-            self.yController,
-            self.thetaController,
-            self.drive.applyStates,
-            [self.drive],
+        self.controller = HolonomicDriveController(
+            self.xController, self.yController, self.thetaController
         )
+
+        self.trajectory = trajectory
+
+        self.timer = Timer()
+
+        self.addRequirements([self.drive])
+        self.setName(__class__.__name__)
+
+    def initialize(self):
+        self.timer.reset()
+        self.timer.start()
+
+    def execute(self) -> None:
+        curTime = self.timer.get()
+        desiredState = self.trajectory.sample(curTime)
+        targetChassisSpeeds = self.controller.calculate(
+            self.drive.getPose(),
+            desiredState.pose,
+            desiredState.velocity,
+            desiredState.holonomicRotation,
+        )
+
+        self.drive.arcadeDriveWithSpeeds(
+            targetChassisSpeeds, DriveSubsystem.CoordinateMode.RobotRelative
+        )
+
+    def isFinished(self) -> bool:
+        return self.timer.hasElapsed(self.trajectory.getTotalTime())
 
     def end(self, _interrupted: bool) -> None:
         self.drive.arcadeDriveWithFactors(

@@ -417,11 +417,12 @@ kAutoTargetOffset = Translation2d(2, 0)
 """[meters, meters]"""
 
 kAuto5BallFilename = "5ba"
-kAutoTimeFromStopToShoot = 1
+kAutoTimeFromStopToShoot = 0.5
 """seconds"""
 kAutoTimeFromShootToMove = 1
 """seconds"""
 kAutoTerminalWaitTime = 2
+"""seconds"""
 
 # Target relative drive
 kTargetRelativeDriveAnglePGain = 1
@@ -454,11 +455,11 @@ kDriveToTargetAngularVelocityTolerance = 5 * kRadiansPerDegree / 1
 """radians / second"""
 
 # Trajectory Following
-kTrajectoryPositionPGain = 2.0
+kTrajectoryPositionPGain = 6
 kTrajectoryPositionIGain = 0
 kTrajectoryPositionDGain = 0
 
-kTrajectoryAnglePGain = 2.5
+kTrajectoryAnglePGain = 6
 kTrajectoryAngleIGain = 0
 kTrajectoryAngleDGain = 0
 

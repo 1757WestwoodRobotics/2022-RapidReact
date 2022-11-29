@@ -1,13 +1,12 @@
-from os import path
-
 from commands2 import ParallelCommandGroup, SequentialCommandGroup, WaitCommand
-from wpimath.trajectory import TrajectoryConfig, TrajectoryUtil
+from wpimath.trajectory import TrajectoryConfig
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
 from subsystems.shootersubsystem import ShooterSubsystem
 
+from commands.auto.autohelper import trajectoryFromFile
 from commands.resetdrive import ResetDrive
 from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
@@ -34,66 +33,24 @@ class FiveBRMovements(SequentialCommandGroup):
         )
         trajectoryConfig.setKinematics(drive.kinematics)
 
-        pathA = TrajectoryUtil.fromPathweaverJson(
-            path.join(
-                path.dirname(path.realpath(__file__)),
-                "..",
-                "..",
-                "deploy",
-                "pathplanner",
-                "generatedJSON",
-                "5bR-standard-a.wpilib.json",
-            )
-        )
-        pathB = TrajectoryUtil.fromPathweaverJson(
-            path.join(
-                path.dirname(path.realpath(__file__)),
-                "..",
-                "..",
-                "deploy",
-                "pathplanner",
-                "generatedJSON",
-                "5bR-standard-b.wpilib.json",
-            )
-        )
-        pathC = TrajectoryUtil.fromPathweaverJson(
-            path.join(
-                path.dirname(path.realpath(__file__)),
-                "..",
-                "..",
-                "deploy",
-                "pathplanner",
-                "generatedJSON",
-                "5bR-standard-c.wpilib.json",
-            )
-        )
-        pathD = TrajectoryUtil.fromPathweaverJson(
-            path.join(
-                path.dirname(path.realpath(__file__)),
-                "..",
-                "..",
-                "deploy",
-                "pathplanner",
-                "generatedJSON",
-                "5bR-standard-d.wpilib.json",
-            )
-        )
+        pathA = trajectoryFromFile("5bR-standard-a")
+        pathB = trajectoryFromFile("5bR-standard-b")
+        pathC = trajectoryFromFile("5bR-standard-c")
+        pathD = trajectoryFromFile("5bR-standard-d")
 
         super().__init__(
-            ResetDrive(drive, pathA.initialPose()),
+            ResetDrive(drive, pathA.getInitialState().pose),
             HoldBall(indexer),
-            DeployIntake(intake),
-            FollowTrajectory(drive, pathA),  # pickup ball 2
+            DeployIntake(intake),  # pickup second preload
             WaitCommand(constants.kAutoTimeFromStopToShoot),
-            RetractIntake(intake),
             FeedForward(indexer),  # shoot balls 1 and 2
             WaitCommand(constants.kAutoTimeFromShootToMove),
-            DeployIntake(intake),
             HoldBall(indexer),
-            FollowTrajectory(drive, pathB),  # pickup ball 3
+            FollowTrajectory(drive, pathA),  # pickup ball 3
+            FollowTrajectory(drive, pathB),  # pickup ball 4
             WaitCommand(constants.kAutoTimeFromStopToShoot),
             RetractIntake(intake),
-            FeedForward(indexer),  # shoot ball 3
+            FeedForward(indexer),  # shoot ball 3/4
             WaitCommand(constants.kAutoTimeFromShootToMove),
             HoldBall(indexer),
             DeployIntake(intake),
@@ -104,7 +61,7 @@ class FiveBRMovements(SequentialCommandGroup):
             RetractIntake(intake),
             FollowTrajectory(drive, pathD),  # go back to shooting range
             WaitCommand(constants.kAutoTimeFromStopToShoot),
-            FeedForward(indexer),  # shoot balls 4 and 5
+            FeedForward(indexer),  # shoot balls 5/6
             WaitCommand(constants.kAutoTimeFromShootToMove),
             HoldBall(indexer),
         )

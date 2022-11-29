@@ -14,52 +14,44 @@ from commands.indexer.feedforward import FeedForward
 from commands.indexer.holdball import HoldBall
 from commands.followtrajectory import FollowTrajectory
 from commands.shooter.aimshootertotarget import AimShooterToTarget
-from commands.reverseballpath import ReverseBallPath
-from commands.normalballpath import NormalBallPath
 
 
 import constants
 
 
-class TwoBLHangerOuttakeMovements(SequentialCommandGroup):
+class TwoBASimpleMovements(SequentialCommandGroup):
     def __init__(
-        self, drive: DriveSubsystem, intake: IntakeSubsystem, indexer: IndexerSubsystem
+        self,
+        drive: DriveSubsystem,
+        intake: IntakeSubsystem,
+        indexer: IndexerSubsystem,
     ):
 
         trajectoryConfig = TrajectoryConfig(
-            constants.kMaxForwardLinearVelocity, constants.kMaxForwardLinearAcceleration
+            constants.kMaxForwardLinearVelocity,
+            constants.kMaxForwardLinearAcceleration,
         )
         trajectoryConfig.setKinematics(drive.kinematics)
 
-        pathA = trajectoryFromFile("2bL-hangerouttake-a")
-        pathB = trajectoryFromFile("2bL-hangerouttake-b")
-        pathC = trajectoryFromFile("2bL-hangerouttake-c")
+        path = trajectoryFromFile("2b-simple")
 
         super().__init__(
-            ResetDrive(drive, pathA.getInitialState().pose),
+            ResetDrive(drive, path.getInitialState().pose),
             DeployIntake(intake),
-            WaitCommand(constants.kAutoTimeFromStopToShoot),
+            HoldBall(indexer),
             FeedForward(indexer),  # shoot balls 1 and 2
-            WaitCommand(constants.kAutoTimeFromShootToMove),
-            HoldBall(indexer),
-            FollowTrajectory(drive, pathA),  # pickup ball 2
             WaitCommand(constants.kAutoTimeFromStopToShoot),
-            FeedForward(indexer),
+            HoldBall(indexer),
+            FollowTrajectory(drive, path),  # pickup ball 3
+            WaitCommand(constants.kAutoTimeFromStopToShoot),
+            FeedForward(indexer),  # shoot ball 3
             WaitCommand(constants.kAutoTimeFromShootToMove),
             HoldBall(indexer),
-            DeployIntake(intake),
-            FollowTrajectory(drive, pathB),  # grab the red ball
-            FollowTrajectory(drive, pathC),
-            ReverseBallPath(intake, indexer),
-            WaitCommand(
-                constants.kAutoTimeFromShootToMove
-            ),  # Make sure it gets ejected
-            NormalBallPath(intake, indexer),
             RetractIntake(intake),
         )
 
 
-class TwoBLHangerOuttake(ParallelCommandGroup):
+class TwoBASimple(ParallelCommandGroup):
     def __init__(
         self,
         shooter: ShooterSubsystem,
@@ -70,5 +62,5 @@ class TwoBLHangerOuttake(ParallelCommandGroup):
         self.setName(__class__.__name__)
         super().__init__(
             AimShooterToTarget(shooter),
-            TwoBLHangerOuttakeMovements(drive, intake, indexer),
+            TwoBASimpleMovements(drive, intake, indexer),
         )

@@ -56,6 +56,9 @@ from commands.auto.fivebrstandard import FiveBRStandard
 from commands.auto.fourblnoninvasive import FourBLNoninvasive
 from commands.auto.twoblhangerouttake import TwoBLHangerOuttake
 from commands.auto.threebrstandard import ThreeBRStandard
+from commands.auto.oneballandrun import OneBARun
+from commands.auto.twoballsimple import TwoBASimple
+from commands.auto.twoblhubspit import TwoBLHubspit
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
@@ -135,6 +138,13 @@ class RobotContainer:
         self.threeBRStandard = ThreeBRStandard(
             self.shooter, self.drive, self.intake, self.indexer
         )
+        self.twoBASimple = TwoBASimple(
+            self.shooter, self.drive, self.intake, self.indexer
+        )
+        self.oneBLRun = OneBARun(self.shooter, self.drive, self.intake, self.indexer)
+        self.twoBLSpit = TwoBLHubspit(
+            self.shooter, self.drive, self.intake, self.indexer
+        )
 
         # Chooser
         self.chooser = wpilib.SendableChooser()
@@ -148,7 +158,10 @@ class RobotContainer:
         self.chooser.addOption("4 Ball Left Noninvasive Auto", self.fourBLNoninvasive)
         self.chooser.addOption("5 Ball Right Standard Auto", self.fiveBRStandard)
         self.chooser.addOption("3 Ball Right Standard Auto", self.threeBRStandard)
-        self.chooser.setDefaultOption("Simple Auto", self.simpleAuto)
+        self.chooser.addOption("Simple Auto - NO PATH", self.simpleAuto)
+        self.chooser.addOption("1 Ball Left and RUN", self.oneBLRun)
+        self.chooser.addOption("2 Ball Left hubspit", self.twoBLSpit)
+        self.chooser.setDefaultOption("Simple Auto", self.twoBASimple)
 
         # Put the chooser on the dashboard
         wpilib.SmartDashboard.putData("Autonomous", self.chooser)
