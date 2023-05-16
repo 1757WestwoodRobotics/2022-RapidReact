@@ -4,12 +4,10 @@ from typing import Tuple
 from commands2 import SubsystemBase
 from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer
 from ctre import (
-    AbsoluteSensorRange,
-    CANCoder,
     ControlMode,
-    SensorInitializationStrategy,
     WPI_TalonFX,
 )
+from ctre.sensors import AbsoluteSensorRange, CANCoder, SensorInitializationStrategy
 from navx import AHRS
 from wpimath.geometry import Pose2d, Rotation2d, Translation2d
 from wpimath.filter import SlewRateLimiter
@@ -18,6 +16,7 @@ from wpimath.kinematics import (
     SwerveModuleState,
     SwerveDrive4Kinematics,
     SwerveDrive4Odometry,
+    SwerveModulePosition,
 )
 
 import constants
@@ -42,6 +41,9 @@ class SwerveModule:
     def getWheelLinearVelocity(self) -> float:
         raise NotImplementedError("Must be implemented by subclass")
 
+    def getWheelTotalPosition(self) -> float:
+        raise NotImplementedError("Must be implemented by subclass")
+
     def setWheelLinearVelocityTarget(self, wheelLinearVelocityTarget: float) -> None:
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -50,6 +52,9 @@ class SwerveModule:
 
     def optimizedAngle(self, targetAngle: Rotation2d) -> Rotation2d:
         return optimizeAngle(self.getSwerveAngle(), targetAngle)
+
+    def getPosition(self) -> SwerveModulePosition:
+        return SwerveModulePosition(self.getWheelTotalPosition(), self.getSwerveAngle())
 
     def getState(self) -> SwerveModuleState:
         return SwerveModuleState(
@@ -107,6 +112,9 @@ class PWMSwerveModule(SwerveModule):
 
     def getWheelLinearVelocity(self) -> float:
         return self.wheelEncoder.getRate()
+
+    def getWheelTotalPosition(self) -> float:
+        return self.wheelEncoder.getDistance()
 
     def setWheelLinearVelocityTarget(self, wheelLinearVelocityTarget: float) -> None:
         speedFactor = wheelLinearVelocityTarget / constants.kMaxWheelLinearVelocity
@@ -411,7 +419,17 @@ class DriveSubsystem(SubsystemBase):
 
         # Create the an object for our odometry, which will utilize sensor data to
         # keep a record of our position on the field.
-        self.odometry = SwerveDrive4Odometry(self.kinematics, self.gyro.getRotation2d())
+        self.odometry = SwerveDrive4Odometry(
+            self.kinematics,
+            self.gyro.getRotation2d(),
+            (
+                self.frontLeftModule.getPosition(),
+                self.frontRightModule.getPosition(),
+                self.backLeftModule.getPosition(),
+                self.backRightModule.getPosition(),
+            ),
+            Pose2d(),
+        )
 
         self.printTimer = Timer()
         self.vxLimiter = SlewRateLimiter(constants.kDriveAccelLimit)

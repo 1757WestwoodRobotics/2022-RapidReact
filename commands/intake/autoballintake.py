@@ -2,7 +2,7 @@ from commands2 import CommandBase
 from networktables import NetworkTables
 from wpimath.trajectory import TrapezoidProfile, TrapezoidProfileRadians
 from wpimath.controller import ProfiledPIDController, ProfiledPIDControllerRadians
-from wpilib.geometry import Rotation2d
+from wpimath.geometry import Rotation2d
 from wpilib import SmartDashboard
 
 import constants

@@ -25,7 +25,14 @@ Swerve Module Layout:
 
 import math
 from ctre import SupplyCurrentLimitConfiguration
-from wpimath.geometry import Pose2d, Rotation2d, Translation2d
+from wpimath.geometry import (
+    Pose2d,
+    Rotation2d,
+    Translation2d,
+    Transform3d,
+    Pose3d,
+    Rotation3d,
+)
 from wpimath.system.plant import DCMotor
 
 from util.keyorganization import OptionalValueKeys
@@ -208,6 +215,12 @@ kLimelightTargetHorizontalAngleKey = "tx"
 kLimelightTargetVerticalAngleKey = "ty"
 kLimelightLEDModeKey = "ledMode"
 
+# POV FROM LIMELIGHT, FAKE VALUES
+kLimelightRelativeToRobotTransform = Transform3d(
+    Pose3d(),
+    Pose3d(0.1, 0, 0, Rotation3d()),
+)
+
 
 # Limelight (cargo)
 kLimelightCargoNetworkTableName = "limelight-cargo"
@@ -389,6 +402,60 @@ kRobotVisionPoseArrayKeys = OptionalValueKeys("VisionRobotPose")
 
 kTargetName = "Target"
 
+kApriltagPositionDict = {  # thanks 6328 for FieldConstants!
+    1: Pose3d(
+        (kMetersPerInch * 610.77),
+        (kMetersPerInch * 42.19),
+        (kMetersPerInch * 18.22),
+        Rotation3d(0.0, 0.0, math.pi),
+    ),
+    2: Pose3d(
+        (kMetersPerInch * 610.77),
+        (kMetersPerInch * 108.19),
+        (kMetersPerInch * 18.22),
+        Rotation3d(0.0, 0.0, math.pi),
+    ),
+    3: Pose3d(
+        (kMetersPerInch * 610.77),
+        (kMetersPerInch * 174.19),  # FIRST's diagram has a typo (it says 147.19)
+        (kMetersPerInch * 18.22),
+        Rotation3d(0.0, 0.0, math.pi),
+    ),
+    4: Pose3d(
+        (kMetersPerInch * 636.96),
+        (kMetersPerInch * 265.74),
+        (kMetersPerInch * 27.38),
+        Rotation3d(0.0, 0.0, math.pi),
+    ),
+    5: Pose3d(
+        (kMetersPerInch * 14.25),
+        (kMetersPerInch * 265.74),
+        (kMetersPerInch * 27.38),
+        Rotation3d(),
+    ),
+    6: Pose3d(
+        (kMetersPerInch * 40.45),
+        (kMetersPerInch * 174.19),  # FIRST's diagram has a typo (it says 147.19)
+        (kMetersPerInch * 18.22),
+        Rotation3d(),
+    ),
+    7: Pose3d(
+        (kMetersPerInch * 40.45),
+        (kMetersPerInch * 108.19),
+        (kMetersPerInch * 18.22),
+        Rotation3d(),
+    ),
+    8: Pose3d(
+        (kMetersPerInch * 40.45),
+        (kMetersPerInch * 42.19),
+        (kMetersPerInch * 18.22),
+        Rotation3d(),
+    ),
+}
+
+# ARBITRARY, CHANGE LATER
+kApriltagToNodeOffset = Translation2d(0.2, 0)
+kNodeLevelKeys = OptionalValueKeys("NodeLevel")
 
 kBallAngleRelativeToRobotKeys = OptionalValueKeys("BallAngleRelativeToRobot")
 kBallDistanceRelativeToRobotKeys = OptionalValueKeys("BallDistanceRelativeToRobot")
@@ -632,6 +699,13 @@ kShootingMappingFunction = (
     lambda x: 3663 - 449 * x + 168 * x * x + 125
 )  # derived from testing at multiple points, distance is input variable and exponential curve of best fit
 
+# ARBITRARY, TESTING NEEDED
+kHighCubeMappingFunction = lambda x: x**3
+kMidCubeMappingFunction = lambda x: x**2
+kHybridCubeMappingFunction = lambda x: x
+kAutoWheelSpeedKey = "AutoWheelSpeed"
+kStaticWheelSpeed = 3000
+
 kTurretMotorPIDSlot = 0
 kTurretMotorPGain = 0.06
 kTurretMotorIGain = 0
@@ -740,3 +814,13 @@ kIntakeReversedKey = "intake/reversed"
 kIntakeSystemStateKey = "intakeState"
 kIndexerSystemStateKey = "indexerState"
 # Names are stored further up, about line 335
+
+# photonvision parameters
+kPhotonvisionCameraName = "cam"
+kPhotonvisionAmbiguityCutoff = 0.2
+"""dimensionless"""
+kPhotonvisionCameraDiagonalFOV = 75.1
+"""degrees"""
+kPhotonvisionCameraPixelDimensions = (960, 720)
+kApriltagWidth = 8.125 * kMetersPerInch
+kApriltagHeight = kApriltagWidth

@@ -1,11 +1,15 @@
+from typing import List, Tuple
 import typing
 
 from commands2 import SubsystemBase
 from networktables import NetworkTables
 from wpilib import SmartDashboard
-from wpimath.geometry import Pose2d, Rotation2d, Transform2d
+from wpimath.geometry import Pose2d, Rotation2d, Transform2d, Transform3d
 import constants
 from util import convenientmath
+
+from photonvision import PhotonCamera
+from ntcore import NetworkTableInstance
 
 
 class TrackingModule:
@@ -188,8 +192,43 @@ class VisionSubsystem(SubsystemBase):
         self.trackingModule = LimelightTrackingModule(
             constants.kLimelightTrackerModuleName
         )
-
+        self.camera = PhotonCamera(
+            NetworkTableInstance.getDefault(), constants.kPhotonvisionCameraName
+        )
         self.updateTimer = 0
+
+    def getCameraToTargetTransforms(
+        self,
+    ) -> Tuple[List[Tuple[int, Transform3d]], float]:
+        """this function returns a list of the type (target_id, transformCameraToTarget) for every target"""
+        photonResult = self.camera.getLatestResult()
+        if photonResult.hasTargets():
+            return (
+                [
+                    (target.getFiducialId(), target.getBestCameraToTarget())
+                    for target in photonResult.getTargets()
+                    if target.getPoseAmbiguity()
+                    < constants.kPhotonvisionAmbiguityCutoff
+                ],
+                photonResult.getTimestamp(),
+            )
+        else:
+            return ([], 0)
+
+    def getNearestTarget(self) -> Tuple[int, Transform3d]:
+        targets = self.getCameraToTargetTransforms()[0]
+        if not targets:
+            return []
+
+        nearest = targets[0]
+
+        if len(targets) == 1:
+            return nearest
+
+        for target in targets:
+            if target[1].translation().norm() < nearest.translation().norm():
+                nearest = target
+        return nearest
 
     def resetTrackingModule(self):
         self.trackingModule.reset()
