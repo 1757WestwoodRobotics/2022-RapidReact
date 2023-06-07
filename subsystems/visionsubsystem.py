@@ -129,7 +129,6 @@ class LimelightTrackingModule(TrackingModule):
         self.targetDistance = None
         self.targetFacingAngle = None
 
-        NetworkTables.initialize()
         self.limelightNetworkTable = NetworkTables.getTable(
             constants.kLimelightNetworkTableName
         )

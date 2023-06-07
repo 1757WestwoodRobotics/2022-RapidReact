@@ -2,7 +2,14 @@ from enum import Enum, auto
 
 from typing import Tuple
 from commands2 import SubsystemBase
-from wpilib import Encoder, PWMVictorSPX, RobotBase, SmartDashboard, Timer, RobotState
+from wpilib import (
+    Encoder,
+    PWMVictorSPX,
+    RobotBase,
+    SmartDashboard,
+    Timer,
+    DataLogManager,
+)
 from ctre import (
     AbsoluteSensorRange,
     CANCoder,
@@ -18,6 +25,7 @@ from wpimath.kinematics import (
     SwerveModuleState,
     SwerveDrive4Kinematics,
     SwerveDrive4Odometry,
+    SwerveModulePosition,
 )
 
 import constants
@@ -42,6 +50,9 @@ class SwerveModule:
     def getWheelLinearVelocity(self) -> float:
         raise NotImplementedError("Must be implemented by subclass")
 
+    def getWheelTotalPosition(self) -> float:
+        raise NotImplementedError("Must be implemented by subclass")
+
     def setWheelLinearVelocityTarget(self, wheelLinearVelocityTarget: float) -> None:
         raise NotImplementedError("Must be implemented by subclass")
 
@@ -50,6 +61,9 @@ class SwerveModule:
 
     def optimizedAngle(self, targetAngle: Rotation2d) -> Rotation2d:
         return optimizeAngle(self.getSwerveAngle(), targetAngle)
+
+    def getPosition(self) -> SwerveModulePosition:
+        return SwerveModulePosition(self.getWheelTotalPosition(), self.getSwerveAngle())
 
     def getState(self) -> SwerveModuleState:
         return SwerveModuleState(
@@ -108,6 +122,9 @@ class PWMSwerveModule(SwerveModule):
     def getWheelLinearVelocity(self) -> float:
         return self.wheelEncoder.getRate()
 
+    def getWheelTotalPosition(self) -> float:
+        return self.wheelEncoder.getDistance()
+
     def setWheelLinearVelocityTarget(self, wheelLinearVelocityTarget: float) -> None:
         speedFactor = wheelLinearVelocityTarget / constants.kMaxWheelLinearVelocity
         speedFactorClamped = min(max(speedFactor, -1), 1)
@@ -144,8 +161,8 @@ class CTRESwerveModule(SwerveModule):
         self.swerveEncoder = swerveEncoder
         self.swerveEncoderOffset = swerveEncoderOffset
 
-        print(f"Initializing swerve module: {self.name}")
-        print(
+        DataLogManager.log(f"Initializing swerve module: {self.name}")
+        DataLogManager.log(
             f"   Configuring swerve encoder: CAN ID: {self.swerveEncoder.getDeviceNumber()}"
         )
 
@@ -187,8 +204,10 @@ class CTRESwerveModule(SwerveModule):
             ),
         ):
             return
-        print("   ... Done")
-        print(f"   Configuring drive motor: CAN ID: {self.driveMotor.getDeviceID()}")
+        DataLogManager.log("   ... Done")
+        DataLogManager.log(
+            f"   Configuring drive motor: CAN ID: {self.driveMotor.getDeviceID()}"
+        )
         if not ctreCheckError(
             "configFactoryDefault",
             self.driveMotor.configFactoryDefault(constants.kConfigurationTimeoutLimit),
@@ -230,9 +249,11 @@ class CTRESwerveModule(SwerveModule):
             ),
         ):
             return
-        print("   ... Done")
+        DataLogManager.log("   ... Done")
 
-        print(f"   Configuring steer motor: CAN ID: {self.steerMotor.getDeviceID()}")
+        DataLogManager.log(
+            f"   Configuring steer motor: CAN ID: {self.steerMotor.getDeviceID()}"
+        )
         if not ctreCheckError(
             "configFactoryDefault",
             self.steerMotor.configFactoryDefault(constants.kConfigurationTimeoutLimit),
@@ -266,9 +287,9 @@ class CTRESwerveModule(SwerveModule):
             ),
         ):
             return
-        print("   ... Done")
+        DataLogManager.log("   ... Done")
 
-        print("... Done")
+        DataLogManager.log("... Done")
 
     def getSwerveAngle(self) -> Rotation2d:
         steerEncoderPulses = self.steerMotor.getSelectedSensorPosition()
@@ -297,6 +318,15 @@ class CTRESwerveModule(SwerveModule):
         )
         return wheelLinearVelocity
 
+    def getWheelTotalPosition(self) -> float:
+        driveEncoderPulses = self.driveMotor.getSelectedSensorPosition()
+        driveDistance = (
+            driveEncoderPulses
+            / constants.kWheelEncoderPulsesPerRadian
+            * constants.kWheelRadius
+        )
+        return driveDistance
+
     def setWheelLinearVelocityTarget(self, wheelLinearVelocityTarget: float) -> None:
         driveEncoderPulsesPerSecond = (
             wheelLinearVelocityTarget * constants.kWheelEncoderPulsesPerMeter
@@ -323,6 +353,8 @@ class DriveSubsystem(SubsystemBase):
         SubsystemBase.__init__(self)
         self.setName(__class__.__name__)
         SmartDashboard.putBoolean(constants.kRobotPoseArrayKeys.validKey, False)
+
+        self.rotationOffset = 0
 
         if RobotBase.isReal():
             self.frontLeftModule = CTRESwerveModule(
@@ -411,29 +443,43 @@ class DriveSubsystem(SubsystemBase):
 
         # Create the an object for our odometry, which will utilize sensor data to
         # keep a record of our position on the field.
-        self.odometry = SwerveDrive4Odometry(self.kinematics, self.gyro.getRotation2d())
-
+        self.odometry = SwerveDrive4Odometry(
+            self.kinematics,
+            self.getRotation(),
+            (
+                self.frontLeftModule.getPosition(),
+                self.frontRightModule.getPosition(),
+                self.backLeftModule.getPosition(),
+                self.backRightModule.getPosition(),
+            ),
+            Pose2d(),
+        )
         self.printTimer = Timer()
         self.vxLimiter = SlewRateLimiter(constants.kDriveAccelLimit)
         self.vyLimiter = SlewRateLimiter(constants.kDriveAccelLimit)
 
+        self.visionEstimate = Pose2d()
+
     def resetSwerveModules(self):
         for module in self.modules:
             module.reset()
-        self.gyro.reset()
-        self.odometry.resetPosition(Pose2d(), self.gyro.getRotation2d())
+        self.resetGyro(Pose2d())
 
     def setOdometryPosition(self, pose: Pose2d):
-        self.gyro.setAngleAdjustment(pose.rotation().degrees())
-        self.odometry.resetPosition(pose, self.gyro.getRotation2d())
+        # self.gyro.setAngleAdjustment(pose.rotation().degrees())
+        self.rotationOffset = pose.rotation().degrees()
+        self.resetOdometryAtPosition(pose)
 
     def resetGyro(self, pose: Pose2d):
         self.gyro.reset()
-        self.gyro.setAngleAdjustment(pose.rotation().degrees())
-        self.odometry.resetPosition(pose, self.gyro.getRotation2d())
+        # self.gyro.setAngleAdjustment(pose.rotation().degrees())
+        self.rotationOffset = pose.rotation().degrees()
+        self.resetOdometryAtPosition(pose)
 
     def getPose(self) -> Pose2d:
-        return self.odometry.getPose()
+        translation = self.odometry.getPose().translation()
+        rotation = self.getRotation()
+        return Pose2d(translation, rotation)
 
     def applyStates(self, moduleStates: Tuple[SwerveModuleState]) -> None:
         (
@@ -444,70 +490,105 @@ class DriveSubsystem(SubsystemBase):
         ) = SwerveDrive4Kinematics.desaturateWheelSpeeds(
             moduleStates, constants.kMaxWheelLinearVelocity
         )
+
+        # SmartDashboard.putNumberArray(
+        #     constants.kSwerveExpectedStatesKey,
+        #     [
+        #         frontLeftState.angle.degrees(),
+        #         frontLeftState.speed,
+        #         frontRightState.angle.degrees(),
+        #         frontRightState.speed,
+        #         backLeftState.angle.degrees(),
+        #         backLeftState.speed,
+        #         backRightState.angle.degrees(),
+        #         backRightState.speed,
+        #     ],
+        # )
         self.frontLeftModule.applyState(frontLeftState)
         self.frontRightModule.applyState(frontRightState)
         self.backLeftModule.applyState(backLeftState)
         self.backRightModule.applyState(backRightState)
 
     def getRotation(self) -> Rotation2d:
-        return self.gyro.getRotation2d()
+        return Rotation2d.fromDegrees(((self.gyro.getRotation2d().degrees() / 0.98801) % 360) + self.rotationOffset)
+
+    def getPitch(self) -> Rotation2d:
+        return Rotation2d.fromDegrees(-self.gyro.getPitch() + 180)
+
+    def resetOdometryAtPosition(self, pose: Pose2d):
+        self.odometry.resetPosition(
+            self.getRotation(),
+            pose,
+            self.frontLeftModule.getPosition(),
+            self.frontRightModule.getPosition(),
+            self.backLeftModule.getPosition(),
+            self.backRightModule.getPosition(),
+        )
 
     def periodic(self):
         """
         Called periodically when it can be called. Updates the robot's
         odometry with sensor data.
         """
+
         pastPose = self.odometry.getPose()
 
         self.odometry.update(
-            self.gyro.getRotation2d(),
-            self.frontLeftModule.getState(),
-            self.frontRightModule.getState(),
-            self.backLeftModule.getState(),
-            self.backRightModule.getState(),
+            self.getRotation(),
+            self.frontLeftModule.getPosition(),
+            self.frontRightModule.getPosition(),
+            self.backLeftModule.getPosition(),
+            self.backRightModule.getPosition(),
         )
-        robotPose = self.odometry.getPose()
+        robotPose = self.getPose()
 
-        velocity = self.kinematics.toChassisSpeeds(
-            (
-                self.frontLeftModule.getState(),
-                self.frontRightModule.getState(),
-                self.backLeftModule.getState(),
-                self.backRightModule.getState(),
-            )
-        )
+        deltaPose = robotPose - pastPose
+        # SmartDashboard.putNumberArray(
+        #     constants.kSwerveActualStatesKey,
+        #     [
+        #         self.frontLeftModule.getSwerveAngle().degrees(),
+        #         self.frontLeftModule.getWheelLinearVelocity(),
+        #         self.frontRightModule.getSwerveAngle().degrees(),
+        #         self.frontRightModule.getWheelLinearVelocity(),
+        #         self.backLeftModule.getSwerveAngle().degrees(),
+        #         self.backLeftModule.getWheelLinearVelocity(),
+        #         self.backRightModule.getSwerveAngle().degrees(),
+        #         self.backRightModule.getWheelLinearVelocity(),
+        #     ],
+        # )
         SmartDashboard.putNumberArray(
             constants.kDriveVelocityKeys,
-            [velocity.vx, velocity.vy, velocity.omega],
+            [
+                deltaPose.X()
+                / constants.kRobotUpdatePeriod,  # velocity is delta pose / delta time
+                deltaPose.Y() / constants.kRobotUpdatePeriod,
+                deltaPose.rotation().radians() / constants.kRobotUpdatePeriod,
+            ],
         )
 
         robotPoseArray = [robotPose.X(), robotPose.Y(), robotPose.rotation().radians()]
 
         if SmartDashboard.getBoolean(
             constants.kRobotVisionPoseArrayKeys.validKey, False
-        ) and not RobotState.isAutonomous():
-            visionPose = Pose2d(
-                *SmartDashboard.getNumberArray(
-                    constants.kRobotVisionPoseArrayKeys.valueKey, robotPoseArray
-                )
-            )
+        ):
+            visionPose = self.visionEstimate
+
             weightedPose = Pose2d(
                 visionPose.X() * constants.kRobotVisionPoseWeight
                 + robotPose.X() * (1 - constants.kRobotVisionPoseWeight),
                 visionPose.Y() * constants.kRobotVisionPoseWeight
                 + robotPose.Y() * (1 - constants.kRobotVisionPoseWeight),
-                visionPose.rotation() * constants.kRobotVisionPoseWeight
-                + robotPose.rotation() * (1 - constants.kRobotVisionPoseWeight),
+                robotPose.rotation(),
             )
-            self.odometry.resetPosition(weightedPose, self.gyro.getRotation2d())
+            self.resetOdometryAtPosition(weightedPose)
 
         SmartDashboard.putNumberArray(
             constants.kRobotPoseArrayKeys.valueKey, robotPoseArray
         )
         SmartDashboard.putBoolean(constants.kRobotPoseArrayKeys.validKey, True)
 
-        if self.printTimer.hasPeriodPassed(constants.kPrintPeriod):
-            print(
+        if self.printTimer.hasElapsed(constants.kPrintPeriod):
+            DataLogManager.log(
                 # pylint:disable-next=consider-using-f-string
                 "r: {:.1f}, {:.1f}, {:.0f}* fl: {:.0f}* {:.1f} fr: {:.0f}* {:.1f} bl: {:.0f}* {:.1f} br: {:.0f}* {:.1f}".format(
                     robotPose.X(),
@@ -577,7 +658,7 @@ class DriveSubsystem(SubsystemBase):
                 chassisSpeeds.vx,
                 chassisSpeeds.vy,
                 chassisSpeeds.omega,
-                self.odometry.getPose().rotation(),
+                self.getRotation(),
             )
         elif coordinateMode is DriveSubsystem.CoordinateMode.TargetRelative:
             if SmartDashboard.getBoolean(

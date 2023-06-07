@@ -42,7 +42,6 @@ from commands.normalballpath import NormalBallPath
 from commands.shootball import ShootBall
 from commands.defensestate import DefenseState
 
-from commands.intake.autoballintake import AutoBallIntake
 from commands.intake.deployintake import DeployIntake
 from commands.intake.retractintake import RetractIntake
 from commands.shooter.aimshootertotarget import AimShooterToTarget
@@ -62,8 +61,6 @@ from commands.auto.twoblhubspit import TwoBLHubspit
 
 from subsystems.drivesubsystem import DriveSubsystem
 from subsystems.visionsubsystem import VisionSubsystem
-from subsystems.climbers.leftclimbersubsystem import LeftClimber
-from subsystems.climbers.rightclimbersubsystem import RightClimber
 from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
 from subsystems.shootersubsystem import ShooterSubsystem
@@ -89,8 +86,6 @@ class RobotContainer:
         # The robot's subsystems
         self.drive = DriveSubsystem()
         self.vision = VisionSubsystem()
-        self.leftClimber = LeftClimber()
-        self.rightClimber = RightClimber()
         self.shooter = ShooterSubsystem()
         self.intake = IntakeSubsystem()
         self.indexer = IndexerSubsystem()
@@ -180,8 +175,6 @@ class RobotContainer:
             )
         )
 
-        self.rightClimber.setDefaultCommand(HoldRightClimberPosition(self.rightClimber))
-        self.leftClimber.setDefaultCommand(HoldLeftClimberPosition(self.leftClimber))
         self.shooter.setDefaultCommand(AimShooterToTarget(self.shooter))
 
     def configureButtonBindings(self):
@@ -263,54 +256,40 @@ class RobotContainer:
             *self.operatorInterface.driveToTargetControl
         ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.pivotBothClimbers
-        ).whenPressed(
-            commands2.SequentialCommandGroup(
-                WaitCommand(constants.kClimberPauseBeforeMovement),
-                PivotBothClimbersToVertical(self.leftClimber, self.rightClimber),
-            ),
-        ).whenPressed(
-            StopMovingParts(self.indexer, self.shooter)
-        )
+        # commands2.button.JoystickButton(
+        #     *self.operatorInterface.pivotBothClimbers
+        # ).whenPressed(
+        #     commands2.SequentialCommandGroup(
+        #         WaitCommand(constants.kClimberPauseBeforeMovement),
+        #         PivotBothClimbersToVertical(self.leftClimber, self.rightClimber),
+        #     ),
+        # ).whenPressed(
+        #     StopMovingParts(self.indexer, self.shooter)
+        # )
+        # ModifiableJoystickButton(self.operatorInterface.autoBallIntakeControl).whenHeld(
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.moveBothClimbersToMiddleRungCapturePosition
-        ).whenPressed(
-            MoveBothClimbersToMiddleRungCapturePositionMovements(
-                self.leftClimber, self.rightClimber
-            )
-        )
-        commands2.button.JoystickButton(
-            *self.operatorInterface.moveBothClimbersToMiddleRungHangPosition
-        ).whenPressed(
-            MoveBothClimbersToMiddleRungHangPosition(
-                self.leftClimber, self.rightClimber
-            )
-        )
-        commands2.button.JoystickButton(
-            *self.operatorInterface.holdBothClimbersPosition
-        ).whenPressed(HoldBothClimbersPosition(self.leftClimber, self.rightClimber))
+        #     AutoBallIntake(self.drive, self.intake)
+        # )
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.leftClimberToNextRungCapturePosition
-        ).whenPressed(MoveLeftClimberToNextRungCapturePosition(self.leftClimber))
+        # commands2.button.JoystickButton(
+        #     *self.operatorInterface.leftClimberToNextRungCapturePosition
+        # ).whenPressed(MoveLeftClimberToNextRungCapturePosition(self.leftClimber))
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.rightClimberToNextRungCapturePosition
-        ).whenPressed(MoveRightClimberToNextRungCapturePosition(self.rightClimber))
+        # commands2.button.JoystickButton(
+        #     *self.operatorInterface.rightClimberToNextRungCapturePosition
+        # ).whenPressed(MoveRightClimberToNextRungCapturePosition(self.rightClimber))
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.leftClimberToHangingPosition
-        ).whenPressed(MoveLeftClimberToFullHangingPosition(self.leftClimber))
+        # commands2.button.JoystickButton(
+        #     *self.operatorInterface.leftClimberToHangingPosition
+        # ).whenPressed(MoveLeftClimberToFullHangingPosition(self.leftClimber))
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.rightClimberToHangingPosition
-        ).whenPressed(MoveRightClimberToFullHangingPosition(self.rightClimber))
+        # commands2.button.JoystickButton(
+        #     *self.operatorInterface.rightClimberToHangingPosition
+        # ).whenPressed(MoveRightClimberToFullHangingPosition(self.rightClimber))
 
-        commands2.button.JoystickButton(
-            *self.operatorInterface.autoBallIntakeControl
-        ).whenHeld(AutoBallIntake(self.drive, self.intake))
+        # commands2.button.JoystickButton(
+        #     *self.operatorInterface.autoBallIntakeControl
+        # ).whenHeld(AutoBallIntake(self.drive, self.intake))
 
         commands2.button.JoystickButton(*self.operatorInterface.shootBall).whenHeld(
             ShootBall(self.indexer)

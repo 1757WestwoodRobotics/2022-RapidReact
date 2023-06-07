@@ -101,7 +101,7 @@ class SwerveDriveSim:
             )
             states.append(state)
 
-        chassisSpeed = self.kinematics.toChassisSpeeds(states)
+        chassisSpeed = self.kinematics.toChassisSpeeds(*states)
         deltaHeading = chassisSpeed.omega * deltaT
         deltaX = chassisSpeed.vx * deltaT
         deltaY = chassisSpeed.vy * deltaT

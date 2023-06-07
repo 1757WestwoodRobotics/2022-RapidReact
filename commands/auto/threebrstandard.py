@@ -62,7 +62,6 @@ class ThreeBRStandard(ParallelCommandGroup):
         intake: IntakeSubsystem,
         indexer: IndexerSubsystem,
     ):
-        self.setName(__class__.__name__)
         super().__init__(
             AimShooterToTarget(shooter),
             ThreeBRStandardMovements(drive, intake, indexer),
