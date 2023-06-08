@@ -167,15 +167,8 @@ class RobotContainer:
         self.shooter.setDefaultCommand(
             SetShooterAngles(
                 self.shooter,
-                map_range(self.operatorInterface.controlHoodAngle(), -1, 1, 0, 11),
-                map_range(
-                    self.operatorInterface.chassisControls.sideToSide(),
-                    -1,
-                    1,
-                    -1,
-                    1,
-                )
-                + self.shooter.getTurretRotation().degrees(),
+                self.operatorInterface.controlHoodAngle,
+                self.operatorInterface.chassisControls.sideToSide
             )
         )
         self.intake.setDefaultCommand(DeployIntake(self.intake))
