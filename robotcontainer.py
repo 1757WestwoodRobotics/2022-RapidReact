@@ -1,6 +1,6 @@
 from commands2 import WaitCommand
 import wpilib
-from wpimath.geometry import Pose2d
+from wpimath.geometry import Pose2d, Rotation2d
 import commands2
 import commands2.button
 
@@ -50,6 +50,7 @@ from commands.shooter.stopaimsystem import StopMovingParts
 from commands.shooter.decreaseshooterspeed import DecreaseShooterSpeed
 from commands.shooter.increaseshooterspeed import IncreaseShooterSpeed
 from commands.shooter.resetshooteroffset import ResetShooterOffset
+from commands.shooter.setshooterangles import SetShooterAngles
 
 from commands.auto.fivebrstandard import FiveBRStandard
 from commands.auto.fourblnoninvasive import FourBLNoninvasive
@@ -68,6 +69,7 @@ from subsystems.lightsubsystem import LightSubsystem
 
 from operatorinterface import OperatorInterface
 from util.helpfultriggerwrappers import SmartDashboardButton
+from util.convenientmath import map_range
 
 
 class RobotContainer:
@@ -79,7 +81,6 @@ class RobotContainer:
     """
 
     def __init__(self) -> None:
-
         # The operator interface (driver controls)
         self.operatorInterface = OperatorInterface()
 
@@ -163,19 +164,21 @@ class RobotContainer:
 
         self.configureButtonBindings()
 
-        self.drive.setDefaultCommand(
-            AbsoluteRelativeDrive(
-                self.drive,
-                lambda: self.operatorInterface.chassisControls.forwardsBackwards()
-                * constants.kNormalSpeedMultiplier,
-                lambda: self.operatorInterface.chassisControls.sideToSide()
-                * constants.kNormalSpeedMultiplier,
-                self.operatorInterface.chassisControls.rotationX,
-                self.operatorInterface.chassisControls.rotationY,
+        self.shooter.setDefaultCommand(
+            SetShooterAngles(
+                self.shooter,
+                map_range(self.operatorInterface.controlHoodAngle(), -1, 1, 0, 11),
+                map_range(
+                    self.operatorInterface.chassisControls.sideToSide(),
+                    -1,
+                    1,
+                    -1,
+                    1,
+                )
+                + self.shooter.getTurretRotation().degrees(),
             )
         )
-
-        self.shooter.setDefaultCommand(AimShooterToTarget(self.shooter))
+        self.intake.setDefaultCommand(DeployIntake(self.intake))
 
     def configureButtonBindings(self):
         """
@@ -185,119 +188,17 @@ class RobotContainer:
         """
 
         commands2.button.JoystickButton(
-            *self.operatorInterface.deployIntakeControl,
-        ).whenHeld(DeployIntake(self.intake)).whenReleased(RetractIntake(self.intake))
-
-        (
-            commands2.button.JoystickButton(
-                *self.operatorInterface.deployIntakeControl,
-            ).and_(
-                commands2.button.JoystickButton(
-                    *self.operatorInterface.reverseBallPath,
-                )
-            )
+            *self.operatorInterface.reverseBallPath,
         ).whenActive(ReverseBallPath(self.intake, self.indexer))
 
-        (
-            commands2.button.JoystickButton(
-                *self.operatorInterface.deployIntakeControl,
-            ).and_(
-                commands2.button.JoystickButton(
-                    *self.operatorInterface.reverseBallPath,
-                ).not_()
-            )
-        ).whenActive(
-            NormalBallPath(self.intake, self.indexer)
-        )  # when let go of just the reverse button, go back to normal ball path
-
-        commands2.button.JoystickButton(*self.operatorInterface.turboSpeed).whileHeld(
-            AbsoluteRelativeDrive(
-                self.drive,
-                lambda: self.operatorInterface.chassisControls.forwardsBackwards()
-                * constants.kTurboSpeedMultiplier,
-                lambda: self.operatorInterface.chassisControls.sideToSide()
-                * constants.kTurboSpeedMultiplier,
-                self.operatorInterface.chassisControls.rotationX,
-                self.operatorInterface.chassisControls.rotationY,
-            )
-        )
-
         commands2.button.JoystickButton(
-            *self.operatorInterface.fieldRelativeCoordinateModeControl
-        ).toggleWhenPressed(
-            RobotRelativeDrive(
-                self.drive,
-                self.operatorInterface.chassisControls.forwardsBackwards,
-                self.operatorInterface.chassisControls.sideToSide,
-                self.operatorInterface.chassisControls.rotationX,
-            )
-        )
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.targetRelativeCoordinateModeControl
-        ).whileHeld(
-            TargetRelativeDrive(
-                self.drive,
-                self.operatorInterface.chassisControls.forwardsBackwards,
-                self.operatorInterface.chassisControls.sideToSide,
-                self.operatorInterface.chassisControls.rotationX,
-            )
-        )
-
-        commands2.button.JoystickButton(*self.operatorInterface.resetGyro).whenPressed(
-            ResetDrive(self.drive, Pose2d(0, 0, 0))
-        )
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.defenseStateControl
-        ).whileHeld(DefenseState(self.drive))
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.driveToTargetControl
-        ).whenHeld(DriveToTarget(self.drive, constants.kAutoTargetOffset))
-
-        # commands2.button.JoystickButton(
-        #     *self.operatorInterface.pivotBothClimbers
-        # ).whenPressed(
-        #     commands2.SequentialCommandGroup(
-        #         WaitCommand(constants.kClimberPauseBeforeMovement),
-        #         PivotBothClimbersToVertical(self.leftClimber, self.rightClimber),
-        #     ),
-        # ).whenPressed(
-        #     StopMovingParts(self.indexer, self.shooter)
-        # )
-        # ModifiableJoystickButton(self.operatorInterface.autoBallIntakeControl).whenHeld(
-
-        #     AutoBallIntake(self.drive, self.intake)
-        # )
-
-        # commands2.button.JoystickButton(
-        #     *self.operatorInterface.leftClimberToNextRungCapturePosition
-        # ).whenPressed(MoveLeftClimberToNextRungCapturePosition(self.leftClimber))
-
-        # commands2.button.JoystickButton(
-        #     *self.operatorInterface.rightClimberToNextRungCapturePosition
-        # ).whenPressed(MoveRightClimberToNextRungCapturePosition(self.rightClimber))
-
-        # commands2.button.JoystickButton(
-        #     *self.operatorInterface.leftClimberToHangingPosition
-        # ).whenPressed(MoveLeftClimberToFullHangingPosition(self.leftClimber))
-
-        # commands2.button.JoystickButton(
-        #     *self.operatorInterface.rightClimberToHangingPosition
-        # ).whenPressed(MoveRightClimberToFullHangingPosition(self.rightClimber))
-
-        # commands2.button.JoystickButton(
-        #     *self.operatorInterface.autoBallIntakeControl
-        # ).whenHeld(AutoBallIntake(self.drive, self.intake))
+            *self.operatorInterface.reverseBallPath,
+        ).not_().whenActive(NormalBallPath(self.intake, self.indexer))
+        # when let go of just the reverse button, go back to normal ball path
 
         commands2.button.JoystickButton(*self.operatorInterface.shootBall).whenHeld(
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
-
-        SmartDashboardButton(constants.kShootingManualModeKey).whileHeld(
-            AimShooterManually(self.shooter)
-        )
 
         commands2.button.JoystickButton(
             *self.operatorInterface.increaseSpeed

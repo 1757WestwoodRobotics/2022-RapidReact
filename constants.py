@@ -489,6 +489,7 @@ kTurboSpeedButtonName = "turboSpeed"
 kNormalSpeedMultiplier = 0.45  # half full on normal
 kTurboSpeedMultiplier = 0.90  # full speed!!!
 
+kHoodAngleButtonName = "hoodAngle"
 # Simulation Parameters
 kSimTargetName = "SimTarget"
 kSimDefaultTargetLocation = Pose2d(
@@ -672,7 +673,7 @@ kHoodStartingAngle = 0
 
 kTurretMaximumAngle = Rotation2d.fromDegrees(160)
 kTurretMinimumAngle = Rotation2d.fromDegrees(-160)
-kTurretSoftLimitBuffer = Rotation2d.fromDegrees(40)
+kTurretSoftLimitBuffer = Rotation2d.fromDegrees(70)
 
 kTurretRelativeForwardAngle = Rotation2d.fromDegrees(0)
 kTurretOffsetFromRobotAngle = Rotation2d.fromDegrees(180)  # shooter 0 is robot 180
@@ -721,7 +722,7 @@ kStagingGearRatio = 5 / 1
 
 kIntakeSpeed = 3000
 """rpm"""
-kStagingSpeed = 600 * 3/2
+kStagingSpeed = 600 * 3 / 2
 """rpm"""
 kIndexerSpeed = 600
 """rpm"""

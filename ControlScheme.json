@@ -194,5 +194,12 @@
       "Axis": 0
     },
     "Stick X Axis (Thrustmaster)"
+  ],
+  "hoodAngle": [
+    1,
+    {
+      "Axis": 3
+    },
+    "Bottom Slider (Thrustmaster)"
   ]
 }

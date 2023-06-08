@@ -172,6 +172,8 @@ class OperatorInterface:
             constants.kStopMovingPartsButtonName
         )
 
+        self.controlHoodAngle = getAxisBindingOfName(constants.kHoodAngleButtonName)
+
         self.chassisControls = HolonomicInput(
             Invert(
                 Deadband(
