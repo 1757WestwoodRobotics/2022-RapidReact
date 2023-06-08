@@ -754,3 +754,9 @@ kIntakeReversedKey = "intake/reversed"
 kIntakeSystemStateKey = "intakeState"
 kIndexerSystemStateKey = "indexerState"
 # Names are stored further up, about line 335
+
+kAxisMin = -1
+kAxisMax = 1
+kShooterRotationSpeed = 20
+kHoodMinAngle = 0
+kHoodMaxAngle = 11

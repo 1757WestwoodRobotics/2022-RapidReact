@@ -30,13 +30,25 @@ class SetShooterAngles(CommandBase):
         hoodDemand = self.hoodControl()
         turretDemand = self.turretControl()
 
-        hoodAngle = map_range(hoodDemand, -1, 1, 0, 11)
+        hoodAngle = map_range(
+            hoodDemand,
+            constants.kAxisMin,
+            constants.kAxisMax,
+            constants.kHoodMinAngle,
+            constants.kHoodMaxAngle,
+        )
         turretAngle = (
-            map_range(turretDemand, -1, 1, -1, 1)
+            map_range(
+                turretDemand,
+                constants.kAxisMin,
+                constants.kAxisMax,
+                constants.kShooterRotationSpeed * -1,
+                constants.kShooterRotationSpeed,
+            )
             + self.shooter.getTurretRotation().degrees()
         )
+        wheelSpeed = SmartDashboard.getNumber(constants.kShootingWheelSpeedKey, 500)
 
-        SmartDashboard.putNumber(constants.kShootingHoodAngleKey, hoodAngle)
-        SmartDashboard.putNumber(constants.kShootingTurretAngleKey, turretAngle)
         self.shooter.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
         self.shooter.rotateTurret(Rotation2d.fromDegrees(turretAngle))
+        self.shooter.setWheelSpeed(wheelSpeed)

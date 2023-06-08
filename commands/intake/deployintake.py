@@ -11,13 +11,15 @@ class DeployIntake(CommandBase):
         self.addRequirements([self.intake])
 
     def initialize(self) -> None:
-        print(f"Command: {self.getName()}")
+        # print(f"Command: {self.getName()}")
+        pass
 
     def execute(self) -> None:
         self.intake.deployIntake()
 
     def end(self, _interrupted: bool) -> None:
-        print("... DONE")
+        # print("... DONE")
+        pass
 
     def isFinished(self) -> bool:
         return True
