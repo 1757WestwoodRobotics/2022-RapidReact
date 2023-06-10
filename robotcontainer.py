@@ -168,7 +168,7 @@ class RobotContainer:
             SetShooterAngles(
                 self.shooter,
                 self.operatorInterface.controlHoodAngle,
-                self.operatorInterface.chassisControls.sideToSide
+                self.operatorInterface.chassisControls.sideToSide,
             )
         )
         self.intake.setDefaultCommand(DeployIntake(self.intake))
@@ -192,16 +192,6 @@ class RobotContainer:
         commands2.button.JoystickButton(*self.operatorInterface.shootBall).whenHeld(
             ShootBall(self.indexer)
         ).whenReleased(HoldBall(self.indexer))
-
-        commands2.button.JoystickButton(
-            *self.operatorInterface.increaseSpeed
-        ).whenPressed(IncreaseShooterSpeed())
-        commands2.button.JoystickButton(
-            *self.operatorInterface.decreaseSpeed
-        ).whenPressed(DecreaseShooterSpeed())
-        commands2.button.JoystickButton(*self.operatorInterface.resetSpeed).whenPressed(
-            ResetShooterOffset()
-        )
 
     def getAutonomousCommand(self) -> commands2.Command:
         return self.chooser.getSelected()
