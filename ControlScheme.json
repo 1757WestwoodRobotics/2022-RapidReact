@@ -140,11 +140,11 @@
     "Bottom POV up (ThrustmasterTWCSThrottle)"
   ],
   "reverseBallPath": [
-    1,
+    0,
     {
       "Button": 2
     },
-    "Pinky (ThrustmasterTWCSThrottle)"
+    "bottom button on top of joystick (ThrustmasterT16000M)"
   ],
   "rightClimberToHangingPosition": [
     0,
