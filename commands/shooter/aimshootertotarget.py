@@ -5,7 +5,7 @@ from wpimath.geometry import Rotation2d, Pose2d, Transform2d
 from subsystems.shootersubsystem import ShooterSubsystem
 import constants
 from util.angleoptimize import optimizeAngle
-from util.convenientmath import rotationFromTranslation
+from util.convenientmath import Interpolator, rotationFromTranslation
 
 
 class AimShooterToTarget(CommandBase):
@@ -16,6 +16,9 @@ class AimShooterToTarget(CommandBase):
         self.shooter = shooter
         self.addRequirements([self.shooter])
 
+        self.shooterMapping = Interpolator(constants.kShootingMappingValues)
+        self.hoodMapping = Interpolator(constants.kHoodMappingValues)
+
     def execute(self) -> None:
         if SmartDashboard.getBoolean(
             constants.kReadyToFireKey, False
@@ -23,8 +26,8 @@ class AimShooterToTarget(CommandBase):
             distance = SmartDashboard.getNumber(
                 constants.kTargetDistanceRelativeToRobotKeys.valueKey, 0
             )
-            hoodAngle = constants.kHoodMappingFunction(distance)
-            wheelSpeed = constants.kShootingMappingFunction(
+            hoodAngle = self.hoodMapping.interpolate(distance)
+            wheelSpeed = self.shooterMapping.interpolate(
                 distance
             ) + SmartDashboard.getNumber(constants.kWheelSpeedTweakKey, 0)
             self.shooter.setHoodAngle(Rotation2d.fromDegrees(hoodAngle))
