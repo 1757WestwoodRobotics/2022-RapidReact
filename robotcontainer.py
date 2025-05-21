@@ -61,7 +61,6 @@ from commands.auto.twoballsimple import TwoBASimple
 from commands.auto.twoblhubspit import TwoBLHubspit
 
 from subsystems.drivesubsystem import DriveSubsystem
-from subsystems.visionsubsystem import VisionSubsystem
 from subsystems.intakesubsystem import IntakeSubsystem
 from subsystems.indexersubsystem import IndexerSubsystem
 from subsystems.shootersubsystem import ShooterSubsystem
@@ -86,7 +85,6 @@ class RobotContainer:
 
         # The robot's subsystems
         self.drive = DriveSubsystem()
-        self.vision = VisionSubsystem()
         self.shooter = ShooterSubsystem()
         self.intake = IntakeSubsystem()
         self.indexer = IndexerSubsystem()
